@@ -22,6 +22,9 @@ return [
           ],
     ],
     'components' => [
+        'authManager' => [
+            'class' => 'yii\rbac\DbManager', // use 'yii\rbac\DbManager' or 'yii\rbac\PhpManager
+        ],
         'log' => [
             'targets' => [
                 [
