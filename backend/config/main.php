@@ -26,7 +26,7 @@ return [
             'controllerMap' => [
                 'assignment' => [
                     'class' => 'mdm\admin\controllers\AssignmentController',
-                    /* 'userClassName' => 'app\models\User', */
+                     // 'userClassName' => 'app\models\User', 
                     'idField' => 'user_id',
                     'usernameField' => 'username',
                     'fullnameField' => 'profile.full_name',
@@ -55,9 +55,9 @@ return [
                     ],
                     'searchClass' => 'app\models\UserSearch'
                 ],
-                'other' => [
-                    // 'class' => 'path\to\OtherController', // add another controller
-                ],
+                /*'other' => [
+                    'class' => 'path\to\OtherController', // add another controller
+                ],*/
             ],
         ],
     ],
