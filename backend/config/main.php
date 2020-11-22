@@ -73,16 +73,20 @@ return [
             ]
         ],
         'authManager' => [
-            'class' => 'yii\rbac\DbManager', // use 'yii\rbac\DbManager' or 'yii\rbac\PhpManager
+            'class' => 'yii\rbac\DbManager', // use 'yii\rbac\DbManager' or 'yii\rbac\PhpManager'
         ],
         'request' => [
             'csrfParam' => '_csrf-backend',
         ],
         'user' => [
+            'identityClass' => 'mdm\admin\models\User',
+            'loginUrl' => ['admin/user/login'],
+        ],
+        /*'user' => [
             'identityClass' => 'common\models\User',
             'enableAutoLogin' => true,
             'identityCookie' => ['name' => '_identity-backend', 'httpOnly' => true],
-        ],
+        ],*/
         'session' => [
             // this is the name of the session cookie used for login on the backend
             'name' => 'advanced-backend',
