@@ -24,7 +24,7 @@ return [
             ],*/
             'class' => 'mdm\admin\Module',
             'controllerMap' => [
-                 'assignment' => [
+                'assignment' => [
                     'class' => 'mdm\admin\controllers\AssignmentController',
                     /* 'userClassName' => 'app\models\User', */
                     'idField' => 'user_id',
@@ -55,6 +55,9 @@ return [
                     ],
                     'searchClass' => 'app\models\UserSearch'
                 ],
+                'other' => [
+                    // 'class' => 'path\to\OtherController', // add another controller
+                ],
             ],
         ],
     ],
@@ -64,7 +67,7 @@ return [
             'allowActions' => [
                 'site/*',
                 'admin/*',
-                'some-controller/some-action',
+                // 'some-controller/some-action',
                 // The actions listed here will be allowed to everyone including guests.
                 // So, 'admin/*' should not appear here in the production, of course.
                 // But in the earlier stages of your development, you may probably want to
