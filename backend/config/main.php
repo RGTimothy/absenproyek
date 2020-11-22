@@ -13,7 +13,7 @@ return [
     'bootstrap' => ['log'],
     'modules' => [
         'admin' => [
-            'layout' => 'left-menu', // defaults to null, using the application's layout without the menu
+            'layout' => null, // defaults to null, using the application's layout without the menu
                                      // other available values are 'right-menu' and 'top-menu'
             'mainLayout' => '@app/views/layouts/main.php',
             /*'menus' => [
@@ -71,7 +71,8 @@ return [
         ],
         'user' => [
             'identityClass' => 'mdm\admin\models\User',
-            'loginUrl' => ['admin/user/login'],
+            // 'loginUrl' => ['admin/user/login'],
+            'loginUrl' => ['site/login'],
         ],
         /*'user' => [
             'identityClass' => 'common\models\User',

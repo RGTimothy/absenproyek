@@ -9,6 +9,8 @@ use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
 use yii\widgets\Breadcrumbs;
 use common\widgets\Alert;
+use mdm\admin\components\MenuHelper;
+use mdm\admin\components\Helper;
 
 AppAsset::register($this);
 ?>
@@ -35,13 +37,13 @@ AppAsset::register($this);
             'class' => 'navbar-inverse navbar-fixed-top',
         ],
     ]);
-    $menuItems = [
-        ['label' => 'Home', 'url' => ['/site/index']],
+    $baseMenuItems = [
+        // ['label' => 'Home', 'url' => ['/site/index']],
     ];
     if (Yii::$app->user->isGuest) {
-        $menuItems[] = ['label' => 'Login', 'url' => ['/site/login']];
+        $baseMenuItems[] = ['label' => 'Login', 'url' => ['/site/login']];
     } else {
-        $menuItems[] = '<li>'
+        $baseMenuItems[] = '<li>'
             . Html::beginForm(['/site/logout'], 'post')
             . Html::submitButton(
                 'Logout (' . Yii::$app->user->identity->username . ')',
@@ -50,6 +52,39 @@ AppAsset::register($this);
             . Html::endForm()
             . '</li>';
     }
+    /*$menuItems = [
+        ['label' => 'Home', 'url' => ['/site/index']],
+        ['label' => 'About', 'url' => ['/site/about']],
+        ['label' => 'Contact', 'url' => ['/site/contact']],
+        ['label' => 'Login', 'url' => ['/user/login']],
+        [
+            'label' => 'Logout (' . \Yii::$app->user->identity->username . ')',
+            'url' => ['/site/logout'],
+            'linkOptions' => ['data-method' => 'post']
+        ],
+        ['label' => 'App', 'items' => [
+            ['label' => 'New Sales', 'url' => ['/sales/pos']],
+            ['label' => 'New Purchase', 'url' => ['/purchase/create']],
+            ['label' => 'GR', 'url' => ['/movement/create', 'type' => 'receive']],
+            ['label' => 'GI', 'url' => ['/movement/create', 'type' => 'issue']],
+        ]]
+    ];*/
+
+    $adminMenuItems = MenuHelper::getAssignedMenu(Yii::$app->user->id, $sideMenuId);
+
+    //declare array to store all navbar menu
+    $menuItems = array();
+
+    //merge all menu from DB
+    foreach ($adminMenuItems as $item) {
+        array_push($menuItems, $item);
+    }
+
+    //merge login/logout navbar
+    foreach ($baseMenuItems as $item) {
+        array_push($menuItems, $item);
+    }
+
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav navbar-right'],
         'items' => $menuItems,
