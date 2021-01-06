@@ -9,14 +9,13 @@ class UserController extends ActiveController
 {
 	public $modelClass = 'api\modules\v1\models\User';
 
-	public function actions()
-    {
+	public function actions() {
         $actions = parent::actions();
-        unset($actions['create']);
+        // unset($actions['create']);
         return $actions;
     }
 
-    public function actionCreate(){
+    public function actionCreate() {
     	$request = Yii::$app->getRequest()->getBodyParams();
         return $request['username'];
     }

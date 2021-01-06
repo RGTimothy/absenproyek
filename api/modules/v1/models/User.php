@@ -36,10 +36,11 @@ class User extends \yii\db\ActiveRecord
         return [
             [
                 [
-                    'username', 
+                    // 'username', 
                     // 'auth_key', 
-                    'password_hash', 
-                    // 'email', 
+                    // 'password_hash', 
+                    // 'email',
+                    'phone',
                     // 'created_at', 
                     // 'updated_at'
                 ], 
@@ -50,8 +51,13 @@ class User extends \yii\db\ActiveRecord
             [['auth_key'], 'string', 'max' => 32],
             [['username'], 'unique'],
             [['email'], 'unique'],
+            ['phone', 'filter', 'filter' => [$this, 'normalizePhone']],
             [['password_reset_token'], 'unique'],
         ];
+    }
+
+    public function normalizePhone($value) {
+        return $value;
     }
 
     /**
@@ -66,6 +72,7 @@ class User extends \yii\db\ActiveRecord
             'password_hash' => 'Password Hash',
             'password_reset_token' => 'Password Reset Token',
             'email' => 'Email',
+            'phone' => 'Phone',
             'status' => 'Status',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
