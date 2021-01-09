@@ -3,8 +3,11 @@
 namespace api\modules\v1\controllers;
 
 use yii;
+use yii\base\Model;
 use yii\rest\ActiveController;
+use api\modules\v1\models\Register;
 use api\modules\v1\models\User;
+use api\modules\v1\models\Login;
 
 class UserController extends ActiveController
 {
@@ -26,24 +29,17 @@ class UserController extends ActiveController
     	// $request = Yii::$app->getRequest()->getBodyParams();
         // return $request['username'];
 
-        $model = new User();
+        $model = new Register();
         $params = Yii::$app->request->post();
         $model->username = $params['username'];
         $model->phone = $params['phone'];
         $model->email = $params['email'];
         $model->password = $params['password'];
-        $model->status = User::STATUS_ACTIVE;
 
-        //generate required values
-        $model->setPassword($params['password']);
-        $model->generateAuthKey();
-        $model->generateEmailVerificationToken();
-
-        if ($model->save()) {
+        if ($model->signup()) {
             $response['isSuccess'] = 201;
             $response['message'] = 'You are now a member!';
             $response['user'] = User::findByUsername($model->username);
-            return $response;
         }
         else {
             // $model->validate();
@@ -53,8 +49,24 @@ class UserController extends ActiveController
             $response['errors'] = $model->getErrors();
             
             // return $model;
-            
-            return $response;
         }
+
+        return $response;
+    }
+
+    public function actionLogin() {
+        $model = new Login();
+        if ($model->load(Yii::$app->getRequest()->getBodyParams(), '') && $model->login()) {
+            $response = ['access_token' => Yii::$app->user->identity->getAuthKey()];
+        } else {
+            // $model->validate();
+            // return $model;
+
+            $model->getErrors();
+            $response['hasErrors'] = $model->hasErrors();
+            $response['errors'] = $model->getErrors();
+        }
+
+        return $response;
     }
 }

@@ -1,36 +1,32 @@
 <?php
-
 namespace api\modules\v1\models;
 
 use Yii;
+use yii\base\NotSupportedException;
+use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 use yii\web\IdentityInterface;
-use yii\base\NotSupportedException;
 
 /**
- * This is the model class for table "user".
+ * User model
  *
- * @property int $id
+ * @property integer $id
  * @property string $username
- * @property string $auth_key
  * @property string $password_hash
- * @property string|null $password_reset_token
+ * @property string $password_reset_token
+ * @property string $verification_token
  * @property string $email
- * @property int $status
- * @property int $created_at
- * @property int $updated_at
- * @property string|null $verification_token
+ * @property string $auth_key
+ * @property integer $status
+ * @property integer $created_at
+ * @property integer $updated_at
+ * @property string $password write-only password
  */
 class User extends ActiveRecord implements IdentityInterface
 {
     const STATUS_DELETED = 0;
     const STATUS_INACTIVE = 9;
     const STATUS_ACTIVE = 10;
-
-    // public $username;
-    // public $phone;
-    // public $email;
-    public $password;
 
     /**
      * {@inheritdoc}
@@ -43,76 +39,22 @@ class User extends ActiveRecord implements IdentityInterface
     /**
      * {@inheritdoc}
      */
-    public function rules()
+    public function behaviors()
     {
         return [
-            ['username', 'trim'],
-            ['username', 'required'],
-            ['username', 'unique', 'targetClass' => '\api\modules\v1\models\User', 'message' => 'This username has already been taken.'],
-            ['username', 'string', 'min' => 2, 'max' => 255],
-
-            ['phone', 'required'],
-            ['phone', 'unique'],
-            ['phone', 'filter', 'filter' => [$this, 'normalizePhone']],
-
-            ['email', 'trim'],
-            ['email', 'email'],
-            ['email', 'string', 'max' => 255],
-            ['email', 'unique', 'targetClass' => '\api\modules\v1\models\User', 'message' => 'This email address has already been taken.'],
-
-            ['password', 'required'],
-            ['password', 'string', 'min' => Yii::$app->params['user.passwordMinLength']],
-
-            ['status', 'default', 'value' => self::STATUS_INACTIVE],
-            ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_INACTIVE, self::STATUS_DELETED]],
-
-            [['password_hash', 'password_reset_token', 'verification_token'], 'string', 'max' => 255],
-            [['auth_key'], 'string', 'max' => 32],
-            [['password_reset_token'], 'unique'],
+            // TimestampBehavior::className(),
         ];
-    }
-
-    public function normalizePhone($value) {
-        return $value;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function attributeLabels()
+    public function rules()
     {
         return [
-            'id' => 'ID',
-            'username' => 'Username',
-            'auth_key' => 'Auth Key',
-            'password_hash' => 'Password Hash',
-            'password_reset_token' => 'Password Reset Token',
-            'email' => 'Email',
-            'phone' => 'Phone',
-            'status' => 'Status',
-            'created_at' => 'Created At',
-            'updated_at' => 'Updated At',
-            'verification_token' => 'Verification Token',
+            ['status', 'default', 'value' => self::STATUS_INACTIVE],
+            ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_INACTIVE, self::STATUS_DELETED]],
         ];
-    }
-
-    /**
-     * Sends confirmation email to user
-     * @param User $user user model to with email should be send
-     * @return bool whether the email was sent
-     */
-    protected function sendEmail($user)
-    {
-        return Yii::$app
-            ->mailer
-            ->compose(
-                ['html' => 'emailVerify-html', 'text' => 'emailVerify-text'],
-                ['user' => $user]
-            )
-            ->setFrom([Yii::$app->params['supportEmail'] => Yii::$app->name . ' robot'])
-            ->setTo($this->email)
-            ->setSubject('Account registration at ' . Yii::$app->name)
-            ->send();
     }
 
     /**
@@ -129,6 +71,17 @@ class User extends ActiveRecord implements IdentityInterface
     public static function findIdentityByAccessToken($token, $type = null)
     {
         throw new NotSupportedException('"findIdentityByAccessToken" is not implemented.');
+    }
+
+    /**
+     * Finds user by phone
+     *
+     * @param string $phone
+     * @return static|null
+     */
+    public static function findByPhone($phone)
+    {
+        return static::findOne(['phone' => $phone, 'status' => self::STATUS_ACTIVE]);
     }
 
     /**

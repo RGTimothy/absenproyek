@@ -24,7 +24,7 @@ return [
             ],
         ],
         'user' => [
-            'identityClass' => 'common\models\User',
+            'identityClass' => 'api\modules\v1\models\User',
             'enableAutoLogin' => false,
         ],
         'log' => [
@@ -47,6 +47,7 @@ return [
                     'extraPatterns' => [
                         'GET ping' => 'ping',
                         'POST register' => 'register',
+                        'POST login' => 'login',
                     ],
                     'tokens' => [
                         // '{id}' => '<id:\\w+>',
