@@ -44,11 +44,14 @@ return [
                 [
                     'class' => 'yii\rest\UrlRule', 
                     'controller' => 'v1/user',
+                    'extraPatterns' => [
+                        'GET ping' => 'ping',
+                        'POST register' => 'register',
+                    ],
                     'tokens' => [
-                        '{id}' => '<id:\\w+>'
+                        // '{id}' => '<id:\\w+>',
                     ]
-                    
-                ]
+                ],
             ],        
         ]
     ],
