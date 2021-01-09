@@ -24,7 +24,7 @@ return [
             ],
         ],
         'user' => [
-            'identityClass' => 'common\models\User',
+            'identityClass' => 'api\modules\v1\models\User',
             'enableAutoLogin' => false,
         ],
         'log' => [
@@ -44,11 +44,15 @@ return [
                 [
                     'class' => 'yii\rest\UrlRule', 
                     'controller' => 'v1/user',
+                    'extraPatterns' => [
+                        'GET ping' => 'ping',
+                        'POST register' => 'register',
+                        'POST login' => 'login',
+                    ],
                     'tokens' => [
-                        '{id}' => '<id:\\w+>'
+                        // '{id}' => '<id:\\w+>',
                     ]
-                    
-                ]
+                ],
             ],        
         ]
     ],
