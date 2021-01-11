@@ -42,7 +42,8 @@ return [
             'showScriptName' => false,
             'rules' => [
                 [
-                    'class' => 'yii\rest\UrlRule', 
+                    'class' => 'yii\rest\UrlRule',
+                    'pluralize' => false,
                     'controller' => 'v1/user',
                     'extraPatterns' => [
                         'GET ping' => 'ping',
@@ -52,6 +53,14 @@ return [
                     'tokens' => [
                         // '{id}' => '<id:\\w+>',
                     ]
+                ],
+                [
+                    'class' => 'yii\rest\UrlRule',
+                    'pluralize' => false,
+                    'controller' => 'v1/company-information',
+                    'extraPatterns' => [
+                        'GET list' => 'list',
+                    ],
                 ],
             ],        
         ]
