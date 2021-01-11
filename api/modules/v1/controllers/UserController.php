@@ -34,20 +34,31 @@ class UserController extends ActiveController
         $model->username = $params['username'];
         $model->phone = $params['phone'];
         $model->email = $params['email'];
+
         $model->password = $params['password'];
 
         if ($model->signup()) {
-            $response['isSuccess'] = 201;
+            // $response['isSuccess'] = 201;
+            $response['hasErrors'] = $model->hasErrors();
             $response['message'] = 'You are now a member!';
-            $response['user'] = User::findByUsername($model->username);
+            // $response['user'] = User::findByUsername($model->username);
         }
         else {
             // $model->validate();
-
-            $model->getErrors();
+            $errors = $model->getErrors();
             $response['hasErrors'] = $model->hasErrors();
-            $response['errors'] = $model->getErrors();
-            
+
+            $errorList = array();
+            foreach ($errors as $key => $value) {
+                array_push($errorList, [
+                    'errorField' => $key,
+                    'errorMessage' => $value[0]
+                ]);
+            }
+
+            $response['message'] = $errorList[0]['errorMessage'];
+
+            // $response['errors'] = $errorList;
             // return $model;
         }
 
@@ -57,14 +68,25 @@ class UserController extends ActiveController
     public function actionLogin() {
         $model = new Login();
         if ($model->load(Yii::$app->getRequest()->getBodyParams(), '') && $model->login()) {
-            $response = ['access_token' => Yii::$app->user->identity->getAuthKey()];
+            // $response['isSuccess'] = 200;
+            $response['hasErrors'] = $model->hasErrors();
+            $response['access_token'] = Yii::$app->user->identity->getAuthKey();
         } else {
             // $model->validate();
             // return $model;
 
-            $model->getErrors();
+            $errors = $model->getErrors();
             $response['hasErrors'] = $model->hasErrors();
-            $response['errors'] = $model->getErrors();
+            // $response['errors'] = $model->getErrors();
+
+            $errorList = array();
+            foreach ($errors as $key => $value) {
+                array_push($errorList, [
+                    'errorField' => $key,
+                    'errorMessage' => $value[0]
+                ]);
+            }
+            $response['message'] = $errorList[0]['errorMessage'];
         }
 
         return $response;

@@ -50,6 +50,7 @@ class Register extends ActiveRecord
 
             ['email', 'trim'],
             ['email', 'email'],
+            ['email', 'default', 'value' => null],
             ['email', 'string', 'max' => 255],
             ['email', 'unique', 'targetClass' => '\api\modules\v1\models\User', 'message' => 'This email address has already been taken.'],
 
