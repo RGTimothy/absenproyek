@@ -3,9 +3,11 @@ namespace api\modules\v1\models;
 
 use Yii;
 use yii\db\ActiveRecord;
-use yii\web\IdentityInterface;
+// use yii\web\IdentityInterface;
+use api\modules\v1\models\User;
+use api\modules\v1\models\Company;
 
-class CompanyInformation extends ActiveRecord implements IdentityInterface
+class CompanyInformation extends ActiveRecord
 {
     /**
      * {@inheritdoc}
@@ -13,5 +15,14 @@ class CompanyInformation extends ActiveRecord implements IdentityInterface
     public static function tableName()
     {
         return '{{%company_information}}';
+    }
+
+    public function getCompany() {
+        return $this->hasOne(Company::className(), ['id' => 'company_id']);
+    }
+
+    public static function findByCompanyId($companyID)
+    {
+        return static::find()->where(['company_id' => $companyID]);
     }
 }

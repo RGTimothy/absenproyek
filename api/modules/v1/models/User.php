@@ -6,6 +6,7 @@ use yii\base\NotSupportedException;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 use yii\web\IdentityInterface;
+use api\modules\v1\models\Company;
 
 /**
  * User model
@@ -132,6 +133,10 @@ class User extends ActiveRecord implements IdentityInterface
         $timestamp = (int) substr($token, strrpos($token, '_') + 1);
         $expire = Yii::$app->params['user.passwordResetTokenExpire'];
         return $timestamp + $expire >= time();
+    }
+
+    public function getCompany() {
+        return $this->hasOne(Company::className(), ['id' => 'company_id']);
     }
 
     /**

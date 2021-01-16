@@ -18,12 +18,32 @@ return [
         ]
     ],
     'components' => [
+        'response' => [
+            'class' => 'yii\web\Response',
+            'on beforeSend' => function ($event) {
+                $response = $event->sender;
+                if (!$response->isSuccessful) {
+                    $response->data = [
+                        'hasErrors' => true,
+                        'message' => $response->data['message'],
+                    ];
+                }
+                /*if ($response->data !== null) {
+                    $response->data = [
+                        'success' => $response->isSuccessful,
+                        'data' => $response->data,
+                    ];
+                    $response->statusCode = 200;
+                }*/
+            },
+        ],
         'request' => [
             'parsers' => [
                 'application/json' => 'yii\web\JsonParser',
             ],
         ],
         'user' => [
+            'enableSession' => false,
             'identityClass' => 'api\modules\v1\models\User',
             'enableAutoLogin' => false,
         ],
@@ -61,6 +81,9 @@ return [
                     'extraPatterns' => [
                         'GET list' => 'list',
                     ],
+                    'tokens' => [
+                        // '{id}' => '<id:\\w+>',
+                    ]
                 ],
             ],        
         ]
