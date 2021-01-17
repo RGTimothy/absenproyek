@@ -23,10 +23,14 @@ return [
             'on beforeSend' => function ($event) {
                 $response = $event->sender;
                 if (!$response->isSuccessful) {
-                    $response->data = [
-                        'hasErrors' => true,
-                        'message' => $response->data['message'],
-                    ];
+                    $errorMessage = '';
+                    if (isset($response->data['message'])) {
+                        $errorMessage = $response->data['message'];
+                        $response->data = [
+                            'hasErrors' => true,
+                            'message' => $errorMessage,
+                        ];
+                    }
                 }
                 /*if ($response->data !== null) {
                     $response->data = [
@@ -80,6 +84,19 @@ return [
                     'controller' => 'v1/company-information',
                     'extraPatterns' => [
                         'GET list' => 'list',
+                    ],
+                    'tokens' => [
+                        // '{id}' => '<id:\\w+>',
+                    ]
+                ],
+                [
+                    'class' => 'yii\rest\UrlRule',
+                    'pluralize' => false,
+                    'controller' => 'v1/company-project-attendance',
+                    'extraPatterns' => [
+                        'GET status' => 'status',
+                        'POST clock-in' => 'clock-in',
+                        'POST clock-out' => 'clock-out',
                     ],
                     'tokens' => [
                         // '{id}' => '<id:\\w+>',
