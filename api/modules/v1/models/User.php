@@ -6,6 +6,7 @@ use yii\base\NotSupportedException;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 use yii\web\IdentityInterface;
+use api\modules\v1\models\Company;
 
 /**
  * User model
@@ -133,6 +134,19 @@ class User extends ActiveRecord implements IdentityInterface
         $expire = Yii::$app->params['user.passwordResetTokenExpire'];
         return $timestamp + $expire >= time();
     }
+
+    public function getCompany() {
+        return $this->hasOne(Company::className(), ['id' => 'company_id']);
+    }
+
+    public function getCompanyProjects() {
+        return $this->hasMany(CompanyProject::className(), ['id' => 'company_project_id'])
+                    ->viaTable('company_project_user', ['user_id' => 'id']);
+    }
+
+    // public function getCompanyProject() {
+    //     return $this->hasMany(CompanyProject::className(), ['id' => 'company_project_id'])->via('companyProjectUser');
+    // }
 
     /**
      * {@inheritdoc}

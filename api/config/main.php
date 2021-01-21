@@ -18,12 +18,36 @@ return [
         ]
     ],
     'components' => [
+        'response' => [
+            'class' => 'yii\web\Response',
+            'on beforeSend' => function ($event) {
+                $response = $event->sender;
+                if (!$response->isSuccessful) {
+                    $errorMessage = '';
+                    if (isset($response->data['message'])) {
+                        $errorMessage = $response->data['message'];
+                        $response->data = [
+                            'hasErrors' => true,
+                            'message' => $errorMessage,
+                        ];
+                    }
+                }
+                /*if ($response->data !== null) {
+                    $response->data = [
+                        'success' => $response->isSuccessful,
+                        'data' => $response->data,
+                    ];
+                    $response->statusCode = 200;
+                }*/
+            },
+        ],
         'request' => [
             'parsers' => [
                 'application/json' => 'yii\web\JsonParser',
             ],
         ],
         'user' => [
+            'enableSession' => false,
             'identityClass' => 'api\modules\v1\models\User',
             'enableAutoLogin' => false,
         ],
@@ -61,6 +85,22 @@ return [
                     'extraPatterns' => [
                         'GET list' => 'list',
                     ],
+                    'tokens' => [
+                        // '{id}' => '<id:\\w+>',
+                    ]
+                ],
+                [
+                    'class' => 'yii\rest\UrlRule',
+                    'pluralize' => false,
+                    'controller' => 'v1/company-project-attendance',
+                    'extraPatterns' => [
+                        'GET status' => 'status',
+                        'POST clock-in' => 'clock-in',
+                        'POST clock-out' => 'clock-out',
+                    ],
+                    'tokens' => [
+                        // '{id}' => '<id:\\w+>',
+                    ]
                 ],
             ],        
         ]

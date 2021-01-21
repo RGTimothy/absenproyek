@@ -17,7 +17,6 @@ class Login extends ActiveRecord
 
     private $_user;
 
-
     /**
      * {@inheritdoc}
      */
