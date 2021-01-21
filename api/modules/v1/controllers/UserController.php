@@ -74,14 +74,18 @@ class UserController extends ActiveController
             $response['access_token'] = Yii::$app->user->identity->getAuthKey();
 
             $dataUser = User::findIdentity($userID);
+            $logoUrl = $dataUser->company->image_filename;
             $response['data'] = [
                 'userUsername' => $dataUser->username,
                 'companyID' => $dataUser->company_id,
                 'companyName' => $dataUser->company->name,
+                'companyLogoUrl' => $logoUrl,
                 'companyProjects' => [
                     'companyProjectID' => $dataUser->companyProjects[0]->id,
                     'companyProjectName' => $dataUser->companyProjects[0]->name,
                     'companyProjectDescription' => $dataUser->companyProjects[0]->description,
+                    'companyProjectLatitude' => $dataUser->companyProjects[0]->latitude,
+                    'companyProjectLongitude' => $dataUser->companyProjects[0]->longitude,
                     'companyProjectClockInTime' => $dataUser->companyProjects[0]->clock_in,
                     'companyProjectClockOutTime' => $dataUser->companyProjects[0]->clock_out,
                     'companyProjectCreatedAt' => $dataUser->companyProjects[0]->created_at,
