@@ -86,6 +86,7 @@ class UserController extends ActiveController
                     'companyProjectDescription' => $dataUser->companyProjects[0]->description,
                     'companyProjectLatitude' => $dataUser->companyProjects[0]->latitude,
                     'companyProjectLongitude' => $dataUser->companyProjects[0]->longitude,
+                    'companyProjectRadius' => $dataUser->companyProjects[0]->radius,
                     'companyProjectClockInTime' => $dataUser->companyProjects[0]->clock_in,
                     'companyProjectClockOutTime' => $dataUser->companyProjects[0]->clock_out,
                     'companyProjectCreatedAt' => $dataUser->companyProjects[0]->created_at,

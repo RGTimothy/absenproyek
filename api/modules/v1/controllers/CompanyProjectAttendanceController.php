@@ -93,6 +93,14 @@ class CompanyProjectAttendanceController extends ActiveController
 		$companyProjectID = $params['companyProjectID'];
 		$latitude = $params['latitude'];
 		$longitude = $params['longitude'];
+		$image = $params['image'];
+
+		if (is_null($image)) {
+			return [
+				'hasErrors' => true,
+				'message' => 'Image is required.'
+			];
+		}
 
 		//get current attendance status
 		$attendance = self::actionStatus();
@@ -104,6 +112,16 @@ class CompanyProjectAttendanceController extends ActiveController
 			$model->company_project_id = $companyProjectID;
 			$model->latitude = $latitude;
 			$model->longitude = $longitude;
+			
+			$explodeImageString = explode(',', $image, 2); // limit to 2 parts, i.e: find the first comma
+            $explodeFirstline = explode(';', $explodeImageString[0], 2)[0];
+            $fileExtension = explode('/', $explodeFirstline, 2)[1];
+            $encodedImage = $explodeImageString[1]; // pick up the 2nd part
+
+            //save large image raw without resizing
+            $decodedImage = base64_decode($encodedImage);
+
+            $model->image = $decodedImage;
 			$model->status = self::CLOCK_IN;
 
 			if ($model->save()) {
