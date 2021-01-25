@@ -27,6 +27,7 @@ class Register extends ActiveRecord
     public $phone;
     public $email;
     public $password;
+    public $code;
 
     public static function tableName()
     {
@@ -63,7 +64,20 @@ class Register extends ActiveRecord
             [['password_hash', 'password_reset_token', 'verification_token'], 'string', 'max' => 255],
             [['auth_key'], 'string', 'max' => 32],
             [['password_reset_token'], 'unique'],
+
+            ['code', 'string', 'max' => 100],
+            ['code', 'required'],
+            ['code', 'filter', 'filter' => [$this, 'getCompanyIdByCode']],
         ];
+    }
+
+    public function getCompanyIdByCode() {
+        $company = Company::findByCode($this->code)->one();
+        if (is_null($company)) {
+            $this->addError($attribute, 'Your company code is not found. Please contact us to use this app for your company.');
+        } else {
+            return $company->id;
+        }
     }
 
     public function normalizePhone($value) {
@@ -86,6 +100,7 @@ class Register extends ActiveRecord
         $user->email = $this->email;
         $user->phone = $this->phone;
         $user->status = $user::STATUS_ACTIVE;
+        $user->company_id = intval($this->code);
         $user->setPassword($this->password);
         $user->generateAuthKey();
         $user->generateEmailVerificationToken();

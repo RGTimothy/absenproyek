@@ -22,6 +22,15 @@ class CompanyProjectAttendance extends ActiveRecord
             ['latitude', 'required'],
             
             ['longitude', 'required'],
+
+            [
+                'image',
+                'file',
+                'extensions' => 'jpg, gif, png, bmp, jpeg',
+                // 'maxSize' => 1024 * 1024 * 10, // 10MB
+                // 'tooBig' => 'The file was larger than 10MB. Please upload a smaller file.',
+            ],
+            ['image', 'required'],
         ];
     }
 

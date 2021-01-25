@@ -8,6 +8,7 @@ use yii\rest\ActiveController;
 use api\modules\v1\models\Register;
 use api\modules\v1\models\User;
 use api\modules\v1\models\Login;
+use api\modules\v1\models\Company;
 
 class UserController extends ActiveController
 {
@@ -34,7 +35,7 @@ class UserController extends ActiveController
         $model->username = $params['username'];
         $model->phone = $params['phone'];
         $model->email = $params['email'];
-
+        $model->code = $params['code'];
         $model->password = $params['password'];
 
         if ($model->signup()) {
@@ -86,6 +87,7 @@ class UserController extends ActiveController
                     'companyProjectDescription' => $dataUser->companyProjects[0]->description,
                     'companyProjectLatitude' => $dataUser->companyProjects[0]->latitude,
                     'companyProjectLongitude' => $dataUser->companyProjects[0]->longitude,
+                    'companyProjectRadius' => $dataUser->companyProjects[0]->radius,
                     'companyProjectClockInTime' => $dataUser->companyProjects[0]->clock_in,
                     'companyProjectClockOutTime' => $dataUser->companyProjects[0]->clock_out,
                     'companyProjectCreatedAt' => $dataUser->companyProjects[0]->created_at,
