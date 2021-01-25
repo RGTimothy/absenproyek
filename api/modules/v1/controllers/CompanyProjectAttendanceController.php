@@ -95,13 +95,6 @@ class CompanyProjectAttendanceController extends ActiveController
 		$longitude = $params['longitude'];
 		$image = $params['image'];
 
-		if (is_null($image)) {
-			return [
-				'hasErrors' => true,
-				'message' => 'Image is required.'
-			];
-		}
-
 		//get current attendance status
 		$attendance = self::actionStatus();
 
@@ -129,7 +122,23 @@ class CompanyProjectAttendanceController extends ActiveController
 				$response['message'] = 'Clock in success!';
 				$response['data'] = [];
 
-				$companyProjectAttendance = CompanyProjectAttendance::findByUserId($userID)->where(['status' => self::CLOCK_IN])->one();
+				$headers = Yii::$app->request->headers;
+
+				//set user's timezone
+				$timezone =  $headers->get('timezone');
+				if (is_null($timezone)) {
+					$timezone = 'Asia/Jakarta';
+				}
+
+				//get current date
+				$now = new \DateTime("now", new \DateTimeZone($timezone) );
+				$currentDate = $now->format('Y-m-d');
+
+				$companyProjectAttendance = CompanyProjectAttendance::findByUserId($userID)
+											->where(['status' => self::CLOCK_IN])
+											->andWhere(['DATE(created_at)' => $currentDate])
+											->one();
+
 				if (count($companyProjectAttendance > 0)) {
 					$response['data'] = [
 						'companyProjectAttendanceID' => $companyProjectAttendance->id,
@@ -177,6 +186,7 @@ class CompanyProjectAttendanceController extends ActiveController
 		$companyProjectID = $params['companyProjectID'];
 		$latitude = $params['latitude'];
 		$longitude = $params['longitude'];
+		$image = $params['image'];
 
 		//get current attendance status
 		$attendance = self::actionStatus();
@@ -188,6 +198,16 @@ class CompanyProjectAttendanceController extends ActiveController
 			$model->company_project_id = $companyProjectID;
 			$model->latitude = $latitude;
 			$model->longitude = $longitude;
+
+			$explodeImageString = explode(',', $image, 2); // limit to 2 parts, i.e: find the first comma
+            $explodeFirstline = explode(';', $explodeImageString[0], 2)[0];
+            $fileExtension = explode('/', $explodeFirstline, 2)[1];
+            $encodedImage = $explodeImageString[1]; // pick up the 2nd part
+
+            //save large image raw without resizing
+            $decodedImage = base64_decode($encodedImage);
+
+            $model->image = $decodedImage;
 			$model->status = self::CLOCK_OUT;
 
 			if ($model->save()) {
@@ -195,7 +215,23 @@ class CompanyProjectAttendanceController extends ActiveController
 				$response['message'] = 'Clock out success!';
 				$response['data'] = [];
 
-				$companyProjectAttendance = CompanyProjectAttendance::findByUserId($userID)->where(['status' => self::CLOCK_OUT])->one();
+				$headers = Yii::$app->request->headers;
+
+				//set user's timezone
+				$timezone =  $headers->get('timezone');
+				if (is_null($timezone)) {
+					$timezone = 'Asia/Jakarta';
+				}
+
+				//get current date
+				$now = new \DateTime("now", new \DateTimeZone($timezone) );
+				$currentDate = $now->format('Y-m-d');
+
+				$companyProjectAttendance = CompanyProjectAttendance::findByUserId($userID)
+											->where(['status' => self::CLOCK_OUT])
+											->andWhere(['DATE(created_at)' => $currentDate])
+											->one();
+
 				if (count($companyProjectAttendance > 0)) {
 					$response['data'] = [
 						'companyProjectAttendanceID' => $companyProjectAttendance->id,

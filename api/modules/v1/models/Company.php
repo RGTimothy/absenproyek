@@ -15,4 +15,8 @@ class Company extends ActiveRecord
     {
         return '{{%company}}';
     }
+
+    public static function findByCode($code) {
+    	return static::find()->where(['code' => $code]);
+    }
 }

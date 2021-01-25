@@ -30,7 +30,7 @@ class CompanyProjectAttendance extends ActiveRecord
                 // 'maxSize' => 1024 * 1024 * 10, // 10MB
                 // 'tooBig' => 'The file was larger than 10MB. Please upload a smaller file.',
             ],
-            // ['image', 'required'],
+            ['image', 'required'],
         ];
     }
 

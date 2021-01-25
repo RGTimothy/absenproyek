@@ -8,6 +8,7 @@ use yii\rest\ActiveController;
 use api\modules\v1\models\Register;
 use api\modules\v1\models\User;
 use api\modules\v1\models\Login;
+use api\modules\v1\models\Company;
 
 class UserController extends ActiveController
 {
@@ -34,7 +35,7 @@ class UserController extends ActiveController
         $model->username = $params['username'];
         $model->phone = $params['phone'];
         $model->email = $params['email'];
-
+        $model->code = $params['code'];
         $model->password = $params['password'];
 
         if ($model->signup()) {
