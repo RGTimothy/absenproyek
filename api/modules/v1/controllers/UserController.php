@@ -37,6 +37,7 @@ class UserController extends ActiveController
         $model->email = $params['email'];
         $model->code = $params['code'];
         $model->password = $params['password'];
+        $model->company_role = User::COMPANY_ROLE_WORKER;
 
         if ($model->signup()) {
             // $response['isSuccess'] = 201;
