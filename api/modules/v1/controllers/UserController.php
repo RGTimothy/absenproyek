@@ -75,23 +75,29 @@ class UserController extends ActiveController
             $response['access_token'] = Yii::$app->user->identity->getAuthKey();
 
             $dataUser = User::findIdentity($userID);
+            
+            $companyProjects = array();
+            foreach ($dataUser->companyProjects as $item) {
+                array_push($companyProjects, [
+                    'companyProjectID' => $item->id,
+                    'companyProjectName' => $item->name,
+                    'companyProjectDescription' => $item->description,
+                    'companyProjectLatitude' => $item->latitude,
+                    'companyProjectLongitude' => $item->longitude,
+                    'companyProjectRadius' => is_null($item->radius) ? null : (string) $item->radius,
+                    'companyProjectClockInTime' => $item->clock_in,
+                    'companyProjectClockOutTime' => $item->clock_out,
+                    'companyProjectCreatedAt' => $item->created_at,
+                ]);
+            }
+
             $logoUrl = $dataUser->company->image_filename;
             $response['data'] = [
                 'userUsername' => $dataUser->username,
                 'companyID' => $dataUser->company_id,
                 'companyName' => $dataUser->company->name,
                 'companyLogoUrl' => $logoUrl,
-                'companyProjects' => [
-                    'companyProjectID' => $dataUser->companyProjects[0]->id,
-                    'companyProjectName' => $dataUser->companyProjects[0]->name,
-                    'companyProjectDescription' => $dataUser->companyProjects[0]->description,
-                    'companyProjectLatitude' => $dataUser->companyProjects[0]->latitude,
-                    'companyProjectLongitude' => $dataUser->companyProjects[0]->longitude,
-                    'companyProjectRadius' => $dataUser->companyProjects[0]->radius,
-                    'companyProjectClockInTime' => $dataUser->companyProjects[0]->clock_in,
-                    'companyProjectClockOutTime' => $dataUser->companyProjects[0]->clock_out,
-                    'companyProjectCreatedAt' => $dataUser->companyProjects[0]->created_at,
-                ],
+                'companyProjects' => $companyProjects,
             ];
 
         } else {
