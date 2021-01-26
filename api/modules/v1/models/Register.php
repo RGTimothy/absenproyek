@@ -101,6 +101,7 @@ class Register extends ActiveRecord
         $user->phone = $this->phone;
         $user->status = $user::STATUS_ACTIVE;
         $user->company_id = intval($this->code);
+        $user->company_role = $this->company_role;
         $user->setPassword($this->password);
         $user->generateAuthKey();
         $user->generateEmailVerificationToken();

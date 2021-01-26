@@ -105,7 +105,7 @@ class CompanyProjectAttendanceController extends ActiveController
 			$model->company_project_id = $companyProjectID;
 			$model->latitude = $latitude;
 			$model->longitude = $longitude;
-			
+
 			$explodeImageString = explode(',', $image, 2); // limit to 2 parts, i.e: find the first comma
             $explodeFirstline = explode(';', $explodeImageString[0], 2)[0];
             $fileExtension = explode('/', $explodeFirstline, 2)[1];
