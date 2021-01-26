@@ -24,6 +24,16 @@ class m210126_053712_create_company_clock_table extends Migration
         ]);
 
         $this->createIndex('idx_company', '{{%company_clock%}}', 'company_id');
+
+        // add foreign key for table `company_clock`
+        $this->addForeignKey(
+            'fk-company_clock-company_id',
+            'company_clock',
+            'company_id',
+            'company',
+            'id',
+            'CASCADE'
+        );
     }
 
     /**
@@ -31,6 +41,11 @@ class m210126_053712_create_company_clock_table extends Migration
      */
     public function safeDown()
     {
+        // drops foreign key for table `company_clock`
+        $this->dropForeignKey(
+            'fk-company_clock-company_id',
+            'company_clock'
+        );
         $this->dropIndex('idx_company', '{{%company_clock%}}');
         $this->dropTable('{{%company_clock}}');
     }
