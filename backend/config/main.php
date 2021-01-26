@@ -13,7 +13,7 @@ return [
     'bootstrap' => ['log'],
     'modules' => [
         'admin' => [
-            'layout' => null, // defaults to null, using the application's layout without the menu
+            'layout' => 'left-menu', // defaults to null, using the application's layout without the menu
                                      // other available values are 'right-menu' and 'top-menu'
             'mainLayout' => '@app/views/layouts/main.php',
             /*'menus' => [
@@ -70,7 +70,8 @@ return [
             'csrfParam' => '_csrf-backend',
         ],
         'user' => [
-            'identityClass' => 'mdm\admin\models\User',
+            // 'identityClass' => 'mdm\admin\models\User',
+            'identityClass' => 'backend\models\User',
             // 'loginUrl' => ['admin/user/login'],
             'loginUrl' => ['site/login'],
         ],
@@ -106,8 +107,14 @@ return [
         'class' => 'mdm\admin\components\AccessControl',
         'allowActions' => [
             // 'site/*',
-            // 'admin/*',
-            // 'gii/*'
+            'admin/*',
+            'gii/*',
+            'user/*',
+            'company/*',
+            'company-clock/*',
+            'company-information/*',
+            'company-project/*',
+            'company-project-attendance/*',
             // 'some-controller/some-action',
             // The actions listed here will be allowed to everyone including guests.
             // So, 'admin/*' should not appear here in the production, of course.

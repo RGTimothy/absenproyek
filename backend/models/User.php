@@ -6,7 +6,7 @@ use yii\base\NotSupportedException;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 use yii\web\IdentityInterface;
-use backend\Company;
+use backend\models\Company;
 
 /**
  * User model
@@ -28,6 +28,9 @@ class User extends ActiveRecord implements IdentityInterface
     const STATUS_DELETED = 0;
     const STATUS_INACTIVE = 9;
     const STATUS_ACTIVE = 10;
+
+    const COMPANY_ROLE_ADMIN = 'ADMIN',
+          COMPANY_ROLE_WORKER = 'WORKER';
 
     /**
      * {@inheritdoc}
