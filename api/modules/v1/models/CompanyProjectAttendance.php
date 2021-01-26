@@ -18,6 +18,7 @@ class CompanyProjectAttendance extends ActiveRecord
         return [
             ['company_project_id', 'integer'],
             ['company_project_id', 'required'],
+            ['company_project_id', 'filter', 'filter' => [$this, 'getCompanyProjectIds']],
             
             ['latitude', 'required'],
             
@@ -32,6 +33,21 @@ class CompanyProjectAttendance extends ActiveRecord
             ],
             ['image', 'required'],
         ];
+    }
+
+    public function getCompanyProjectIds() {
+        $user = User::findIdentity($this->user_id);
+        $companyProjectIds = array();
+
+        foreach ($user->companyProjects as $item) {
+            array_push($companyProjectIds, $item->id);
+        }
+
+        if (in_array($this->company_project_id, $companyProjectIds)) {
+            return $this->company_project_id;
+        } else {
+            $this->addError($attribute, 'Company Project Id is invalid.');
+        }
     }
 
     public function getCompanies() {

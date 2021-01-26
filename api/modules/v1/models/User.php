@@ -140,8 +140,8 @@ class User extends ActiveRecord implements IdentityInterface
     }
 
     public function getCompanyProjects() {
-        return $this->hasMany(CompanyProject::className(), ['id' => 'company_project_id'])
-                    ->viaTable('company_project_user', ['user_id' => 'id']);
+        return $this->hasMany(CompanyProject::className(), ['company_id' => 'id'])
+                    ->viaTable('company', ['id' => 'company_id']);
     }
 
     // public function getCompanyProject() {
