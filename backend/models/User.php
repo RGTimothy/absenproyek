@@ -1,12 +1,12 @@
 <?php
-namespace api\modules\v1\models;
+namespace backend\models;
 
 use Yii;
 use yii\base\NotSupportedException;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 use yii\web\IdentityInterface;
-use api\modules\v1\models\Company;
+use backend\Company;
 
 /**
  * User model
