@@ -7,7 +7,7 @@ use yii\widgets\Pjax;
 /* @var $searchModel backend\models\CompanyInformationSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = Yii::t('app', 'Company Informations');
+$this->title = Yii::t('app', 'Informasi Perusahaan');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="company-information-index">
@@ -15,7 +15,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a(Yii::t('app', 'Create Company Information'), ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a(Yii::t('app', 'Tambah Informasi Perusahaan'), ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
     <?php Pjax::begin(); ?>
@@ -27,11 +27,11 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            'id',
-            'company_id',
+            // 'id',
+            // 'company_id',
             'title',
             'description:ntext',
-            'start_time',
+            // 'start_time',
             //'end_time',
             //'created_at',
             //'updated_at',

@@ -6,7 +6,7 @@ use yii\widgets\DetailView;
 /* @var $this yii\web\View */
 /* @var $model backend\models\CompanyProjectAttendance */
 
-$this->title = $model->id;
+$this->title = $model->user->username;
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Company Project Attendances'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
@@ -29,18 +29,35 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
-            'id',
-            'user_id',
-            'company_project_id',
+            // 'id',
+            // 'user_id',
+            // 'company_project_id',
+            'companyProject.name',
             'latitude',
             'longitude',
             'status',
-            'image',
-            'image_filename',
-            'image_filetype',
-            'created_at',
-            'updated_at',
-            'deleted_at',
+            [
+                'label' => 'Waktu',
+                'value' => $model->created_at,
+            ],
+            // 'image',
+            [
+                'attribute'=>'Photo',
+                // 'value' => 'data:image/jpeg;base64,' . $model->image,
+                'value' => 'data:image/jpeg;base64,' . base64_encode($model->image),
+                'format' => [
+                    'image',
+                    [
+                        'width'=>'100%',
+                        'height'=>'100%'
+                    ]
+                ],
+            ],
+            // 'image_filename',
+            // 'image_filetype',
+            // 'created_at',
+            // 'updated_at',
+            // 'deleted_at',
         ],
     ]) ?>
 

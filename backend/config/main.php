@@ -7,6 +7,7 @@ $params = array_merge(
 );
 
 return [
+    'name' => 'Hadirbos',
     'id' => 'app-backend',
     'basePath' => dirname(__DIR__),
     'controllerNamespace' => 'backend\controllers',
@@ -107,14 +108,14 @@ return [
         'class' => 'mdm\admin\components\AccessControl',
         'allowActions' => [
             // 'site/*',
-            'admin/*',
-            'gii/*',
-            'user/*',
-            'company/*',
-            'company-clock/*',
-            'company-information/*',
-            'company-project/*',
-            'company-project-attendance/*',
+            // 'admin/*',
+            // 'gii/*',
+            // 'user/*',
+            // 'company/*',
+            // 'company-clock/*',
+            // 'company-information/*',
+            // 'company-project/*',
+            // 'company-project-attendance/*',
             // 'some-controller/some-action',
             // The actions listed here will be allowed to everyone including guests.
             // So, 'admin/*' should not appear here in the production, of course.

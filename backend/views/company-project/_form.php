@@ -12,7 +12,7 @@ use yii\widgets\ActiveForm;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'company_id')->textInput() ?>
+    <?php //$form->field($model, 'company_id')->textInput() ?>
 
     <?= $form->field($model, 'name')->textInput(['maxlength' => true]) ?>
 
@@ -24,15 +24,15 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'radius')->textInput() ?>
 
-    <?= $form->field($model, 'clock_in')->textInput() ?>
+    <?php //$form->field($model, 'clock_in')->textInput() ?>
 
-    <?= $form->field($model, 'clock_out')->textInput() ?>
+    <?php //$form->field($model, 'clock_out')->textInput() ?>
 
-    <?= $form->field($model, 'created_at')->textInput() ?>
+    <?php //$form->field($model, 'created_at')->textInput() ?>
 
-    <?= $form->field($model, 'updated_at')->textInput() ?>
+    <?php //$form->field($model, 'updated_at')->textInput() ?>
 
-    <?= $form->field($model, 'deleted_at')->textInput() ?>
+    <?php //$form->field($model, 'deleted_at')->textInput() ?>
 
     <div class="form-group">
         <?= Html::submitButton(Yii::t('app', 'Save'), ['class' => 'btn btn-success']) ?>
