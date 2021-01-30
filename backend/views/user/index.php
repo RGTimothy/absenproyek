@@ -8,7 +8,7 @@ use yii\helpers\Html;
 use kartik\export\ExportMenu;
 use kartik\grid\GridView;
 
-// $this->title = Yii::t('app', 'User');
+$this->title = Yii::t('app', 'User');
 $this->params['breadcrumbs'][] = $this->title;
 $search = "$('.search-button').click(function(){
 	$('.search-form').toggle(1000);
@@ -22,7 +22,7 @@ $this->registerJs($search);
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-        <?= Html::a(Yii::t('app', 'Tambah Karyawan'), ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a(Yii::t('app', 'Create User'), ['create'], ['class' => 'btn btn-success']) ?>
         <?= Html::a(Yii::t('app', 'Advance Search'), '#', ['class' => 'btn btn-info search-button']) ?>
     </p>
     <div class="search-form" style="display:none">
@@ -31,17 +31,44 @@ $this->registerJs($search);
     <?php 
     $gridColumn = [
         ['class' => 'yii\grid\SerialColumn'],
+        [
+            'class' => 'kartik\grid\ExpandRowColumn',
+            'width' => '50px',
+            'value' => function ($model, $key, $index, $column) {
+                return GridView::ROW_COLLAPSED;
+            },
+            'detail' => function ($model, $key, $index, $column) {
+                return Yii::$app->controller->renderPartial('_expand', ['model' => $model]);
+            },
+            'headerOptions' => ['class' => 'kartik-sheet-style'],
+            'expandOneOnly' => true
+        ],
         ['attribute' => 'id', 'visible' => false],
         'username',
-        // 'company_id',
+        [
+                'attribute' => 'company_id',
+                'label' => Yii::t('app', 'Company'),
+                'value' => function($model){
+                    if ($model->company)
+                    {return $model->company->name;}
+                    else
+                    {return NULL;}
+                },
+                'filterType' => GridView::FILTER_SELECT2,
+                'filter' => \yii\helpers\ArrayHelper::map(\backend\models\Company::find()->asArray()->all(), 'id', 'name'),
+                'filterWidgetOptions' => [
+                    'pluginOptions' => ['allowClear' => true],
+                ],
+                'filterInputOptions' => ['placeholder' => 'Company', 'id' => 'grid-user-search-company_id']
+            ],
         'company_role',
-        // 'auth_key',
-        // 'password_hash',
-        // 'password_reset_token',
+        'auth_key',
+        'password_hash',
+        'password_reset_token',
         'email:email',
         'phone',
         'status',
-        // 'verification_token',
+        'verification_token',
         [
             'class' => 'yii\grid\ActionColumn',
         ],

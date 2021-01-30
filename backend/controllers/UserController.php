@@ -32,7 +32,6 @@ class UserController extends Controller
      */
     public function actionIndex()
     {
-        $this->view->title = 'Karyawan';
         $searchModel = new UserSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
@@ -66,7 +65,6 @@ class UserController extends Controller
      */
     public function actionCreate()
     {
-        $this->view->title = 'Karyawan';
         $model = new User();
 
         if ($model->loadAll(Yii::$app->request->post()) && $model->saveAll()) {

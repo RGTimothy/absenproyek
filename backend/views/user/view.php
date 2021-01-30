@@ -8,14 +8,14 @@ use kartik\grid\GridView;
 /* @var $model backend\models\User */
 
 $this->title = $model->username;
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Karyawan'), 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'User'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="user-view">
 
     <div class="row">
         <div class="col-sm-9">
-            <h2><?= Yii::t('app', 'Karyawan').': '. Html::encode($this->title) ?></h2>
+            <h2><?= Yii::t('app', 'User').' '. Html::encode($this->title) ?></h2>
         </div>
         <div class="col-sm-3" style="margin-top: 15px">
 <?=             
@@ -46,15 +46,18 @@ $this->params['breadcrumbs'][] = $this->title;
     $gridColumn = [
         ['attribute' => 'id', 'visible' => false],
         'username',
-        // 'company_id',
+        [
+            'attribute' => 'company.name',
+            'label' => Yii::t('app', 'Company'),
+        ],
         'company_role',
-        // 'auth_key',
-        // 'password_hash',
-        // 'password_reset_token',
+        'auth_key',
+        'password_hash',
+        'password_reset_token',
         'email:email',
         'phone',
         'status',
-        // 'verification_token',
+        'verification_token',
     ];
     echo DetailView::widget([
         'model' => $model,
@@ -94,4 +97,20 @@ if($providerCompanyProjectAttendance->totalCount){
 ?>
 
     </div>
+    <div class="row">
+        <h4>Company<?= ' '. Html::encode($this->title) ?></h4>
+    </div>
+    <?php 
+    $gridColumnCompany = [
+        ['attribute' => 'id', 'visible' => false],
+        'name',
+        'code',
+        'image_filename',
+        'description',
+        'status',
+    ];
+    echo DetailView::widget([
+        'model' => $model->company,
+        'attributes' => $gridColumnCompany    ]);
+    ?>
 </div>

@@ -19,19 +19,25 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'username')->textInput(['maxlength' => true, 'placeholder' => 'Username']) ?>
 
-    <?php //$form->field($model, 'company_id')->textInput(['placeholder' => 'Company']) ?>
+    <?= $form->field($model, 'company_id')->widget(\kartik\widgets\Select2::classname(), [
+        'data' => \yii\helpers\ArrayHelper::map(\backend\models\Company::find()->orderBy('id')->asArray()->all(), 'id', 'name'),
+        'options' => ['placeholder' => Yii::t('app', 'Choose Company')],
+        'pluginOptions' => [
+            'allowClear' => true
+        ],
+    ]); ?>
 
     <?= $form->field($model, 'company_role')->textInput(['maxlength' => true, 'placeholder' => 'Company Role']) ?>
 
-    <?php //$form->field($model, 'auth_key')->textInput(['maxlength' => true, 'placeholder' => 'Auth Key']) ?>
+    <?= $form->field($model, 'auth_key')->textInput(['maxlength' => true, 'placeholder' => 'Auth Key']) ?>
 
     <?php /* echo $form->field($model, 'password_hash')->textInput(['maxlength' => true, 'placeholder' => 'Password Hash']) */ ?>
 
     <?php /* echo $form->field($model, 'password_reset_token')->textInput(['maxlength' => true, 'placeholder' => 'Password Reset Token']) */ ?>
 
-    <?php  echo $form->field($model, 'email')->textInput(['maxlength' => true, 'placeholder' => 'Email'])  ?>
+    <?php /* echo $form->field($model, 'email')->textInput(['maxlength' => true, 'placeholder' => 'Email']) */ ?>
 
-    <?php  echo $form->field($model, 'phone')->textInput(['maxlength' => true, 'placeholder' => 'Phone'])  ?>
+    <?php /* echo $form->field($model, 'phone')->textInput(['maxlength' => true, 'placeholder' => 'Phone']) */ ?>
 
     <?php /* echo $form->field($model, 'status')->textInput(['placeholder' => 'Status']) */ ?>
 

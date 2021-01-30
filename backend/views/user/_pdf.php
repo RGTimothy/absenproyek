@@ -24,7 +24,10 @@ $this->params['breadcrumbs'][] = $this->title;
     $gridColumn = [
         ['attribute' => 'id', 'visible' => false],
         'username',
-        'company_id',
+        [
+                'attribute' => 'company.name',
+                'label' => Yii::t('app', 'Company')
+            ],
         'company_role',
         'auth_key',
         'password_hash',
