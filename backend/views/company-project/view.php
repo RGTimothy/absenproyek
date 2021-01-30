@@ -8,14 +8,14 @@ use kartik\grid\GridView;
 /* @var $model backend\models\CompanyProject */
 
 $this->title = $model->name;
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Company Project'), 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Proyek'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="company-project-view">
 
     <div class="row">
         <div class="col-sm-9">
-            <h2><?= Yii::t('app', 'Company Project').' '. Html::encode($this->title) ?></h2>
+            <h2><?= Yii::t('app', 'Proyek').': '. Html::encode($this->title) ?></h2>
         </div>
         <div class="col-sm-3" style="margin-top: 15px">
 <?=             
@@ -54,8 +54,8 @@ $this->params['breadcrumbs'][] = $this->title;
         'latitude',
         'longitude',
         'radius',
-        'clock_in',
-        'clock_out',
+        // 'clock_in',
+        // 'clock_out',
     ];
     echo DetailView::widget([
         'model' => $model,
@@ -63,11 +63,11 @@ $this->params['breadcrumbs'][] = $this->title;
     ]);
 ?>
     </div>
-    <div class="row">
+    <!-- <div class="row">
         <h4>Company<?= ' '. Html::encode($this->title) ?></h4>
-    </div>
+    </div> -->
     <?php 
-    $gridColumnCompany = [
+    /*$gridColumnCompany = [
         ['attribute' => 'id', 'visible' => false],
         'name',
         'code',
@@ -77,7 +77,7 @@ $this->params['breadcrumbs'][] = $this->title;
     ];
     echo DetailView::widget([
         'model' => $model->company,
-        'attributes' => $gridColumnCompany    ]);
+        'attributes' => $gridColumnCompany    ]);*/
     ?>
     
     <div class="row">
@@ -93,9 +93,9 @@ if($providerCompanyProjectAttendance->totalCount){
                         'latitude',
             'longitude',
             'status',
-            'image',
-            'image_filename',
-            'image_filetype',
+            // 'image',
+            // 'image_filename',
+            // 'image_filetype',
     ];
     echo Gridview::widget([
         'dataProvider' => $providerCompanyProjectAttendance,
