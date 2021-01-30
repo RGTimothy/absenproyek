@@ -18,7 +18,7 @@ use backend\models\CompanyClock;
     public function rules()
     {
         return [
-            [['id', 'company_id', 'created_by', 'updated_by', 'deleted_by'], 'integer'],
+            [['id', 'company_id', 'allowance', 'created_by', 'updated_by', 'deleted_by'], 'integer'],
             [['name', 'clock_in', 'clock_out', 'created_at', 'updated_at', 'deleted_at'], 'safe'],
         ];
     }
@@ -60,6 +60,7 @@ use backend\models\CompanyClock;
             'company_id' => $this->company_id,
             'clock_in' => $this->clock_in,
             'clock_out' => $this->clock_out,
+            'allowance' => $this->allowance,
             'created_at' => $this->created_at,
             'created_by' => $this->created_by,
             'updated_at' => $this->updated_at,

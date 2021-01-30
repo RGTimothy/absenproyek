@@ -49,7 +49,6 @@ class CompanyClockController extends Controller
      */
     public function actionView($id)
     {
-        $this->view->title = 'Jam Kerja';
         $model = $this->findModel($id);
         return $this->render('view', [
             'model' => $this->findModel($id),
@@ -63,7 +62,10 @@ class CompanyClockController extends Controller
      */
     public function actionCreate()
     {
+        $this->view->title = 'Tambah Jam Kerja';
         $model = new CompanyClock();
+
+        $model->company_id = Yii::$app->user->company->id;
 
         if ($model->loadAll(Yii::$app->request->post()) && $model->saveAll()) {
             return $this->redirect(['view', 'id' => $model->id]);
@@ -125,8 +127,7 @@ class CompanyClockController extends Controller
             'orientation' => \kartik\mpdf\Pdf::ORIENT_PORTRAIT,
             'destination' => \kartik\mpdf\Pdf::DEST_BROWSER,
             'content' => $content,
-            'cssFile' => '@vendor/kartik-v/yii2-mpdf/src/assets/kv-mpdf-bootstrap.min.css',
-            // 'cssFile' => '@vendor/kartik-v/yii2-mpdf/assets/kv-mpdf-bootstrap.min.css',
+            'cssFile' => '@vendor/kartik-v/yii2-mpdf/assets/kv-mpdf-bootstrap.min.css',
             'cssInline' => '.kv-heading-1{font-size:18px}',
             'options' => ['title' => \Yii::$app->name],
             'methods' => [

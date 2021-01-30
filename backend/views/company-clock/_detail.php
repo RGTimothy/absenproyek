@@ -27,6 +27,7 @@ use kartik\grid\GridView;
         'name',
         'clock_in',
         'clock_out',
+        'allowance',
     ];
     echo DetailView::widget([
         'model' => $model,

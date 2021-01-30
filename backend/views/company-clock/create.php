@@ -7,7 +7,7 @@ use yii\helpers\Html;
 /* @var $model backend\models\CompanyClock */
 
 // $this->title = Yii::t('app', 'Create Company Clock');
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Company Clock'), 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Jam Kerja'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="company-clock-create">

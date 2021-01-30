@@ -23,7 +23,7 @@ $this->registerJs($search);
 
     <p>
         <?= Html::a(Yii::t('app', 'Tambah ' . $this->title), ['create'], ['class' => 'btn btn-success']) ?>
-        <?= Html::a(Yii::t('app', 'Advance Search'), '#', ['class' => 'btn btn-info search-button']) ?>
+        <?php //Html::a(Yii::t('app', 'Advance Search'), '#', ['class' => 'btn btn-info search-button']) ?>
     </p>
     <div class="search-form" style="display:none">
         <?=  $this->render('_search', ['model' => $searchModel]); ?>
@@ -63,6 +63,7 @@ $this->registerJs($search);
         'name',
         'clock_in',
         'clock_out',
+        'allowance',
         [
             'class' => 'yii\grid\ActionColumn',
         ],

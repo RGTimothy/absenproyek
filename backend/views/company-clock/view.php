@@ -15,7 +15,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <div class="row">
         <div class="col-sm-9">
-            <h2><?= Yii::t('app', 'Jam Kerja').' '. Html::encode($this->title) ?></h2>
+            <h2><?= Yii::t('app', 'Jam Kerja').': '. Html::encode($this->title) ?></h2>
         </div>
         <div class="col-sm-3" style="margin-top: 15px">
 <?=             
@@ -52,6 +52,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'name',
         'clock_in',
         'clock_out',
+        'allowance',
     ];
     echo DetailView::widget([
         'model' => $model,
@@ -59,20 +60,20 @@ $this->params['breadcrumbs'][] = $this->title;
     ]);
 ?>
     </div>
-    <div class="row">
-        <h4>Company<?= ' '. Html::encode($this->title) ?></h4>
-    </div>
+    <!-- <div class="row">
+        <h4>Company<?php //' '. Html::encode($this->title) ?></h4>
+    </div> -->
     <?php 
-    $gridColumnCompany = [
+    /*$gridColumnCompany = [
         ['attribute' => 'id', 'visible' => false],
         'name',
         'code',
-        // 'image_filename',
+        'image_filename',
         'description',
         'status',
     ];
     echo DetailView::widget([
         'model' => $model->company,
-        'attributes' => $gridColumnCompany    ]);
+        'attributes' => $gridColumnCompany    ]);*/
     ?>
 </div>
