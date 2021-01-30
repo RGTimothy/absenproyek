@@ -17,7 +17,7 @@ class CompanyClock extends BaseCompanyClock
     {
         return array_replace_recursive(parent::rules(),
 	    [
-            [['company_id'], 'integer'],
+            [['company_id', 'created_by', 'updated_by', 'deleted_by'], 'integer'],
             [['clock_in', 'clock_out', 'created_at', 'updated_at', 'deleted_at'], 'safe'],
             [['name'], 'string', 'max' => 100],
             [['lock'], 'default', 'value' => '0'],
@@ -25,17 +25,4 @@ class CompanyClock extends BaseCompanyClock
         ]);
     }
 	
-    /**
-     * @inheritdoc
-     */
-    public function attributeHints()
-    {
-        return [
-            'id' => Yii::t('app', 'ID'),
-            'company_id' => Yii::t('app', 'Company ID'),
-            'name' => Yii::t('app', 'Name'),
-            'clock_in' => Yii::t('app', 'Clock In'),
-            'clock_out' => Yii::t('app', 'Clock Out'),
-        ];
-    }
 }

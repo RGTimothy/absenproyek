@@ -16,8 +16,11 @@ use mootensai\behaviors\UUIDBehavior;
  * @property string $clock_in
  * @property string $clock_out
  * @property string $created_at
+ * @property integer $created_by
  * @property string $updated_at
+ * @property integer $updated_by
  * @property string $deleted_at
+ * @property integer $deleted_by
  *
  * @property \backend\models\Company $company
  */
@@ -57,7 +60,7 @@ class CompanyClock extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['company_id'], 'integer'],
+            [['company_id', 'created_by', 'updated_by', 'deleted_by'], 'integer'],
             [['clock_in', 'clock_out', 'created_at', 'updated_at', 'deleted_at'], 'safe'],
             [['name'], 'string', 'max' => 100],
             [['lock'], 'default', 'value' => '0'],
