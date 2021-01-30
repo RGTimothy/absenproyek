@@ -12,9 +12,9 @@ class m210130_063653_add_blameable_columns_to_company_clock_table extends Migrat
      */
     public function safeUp()
     {
-        $this->addColumn('{{%company_clock}}', 'created_by', $this->integer()->defaultValue(null)->after('created_at'));
-        $this->addColumn('{{%company_clock}}', 'updated_by', $this->integer()->defaultValue(null)->after('updated_at'));
-        $this->addColumn('{{%company_clock}}', 'deleted_by', $this->integer()->defaultValue(null)->after('deleted_at'));
+        $this->addColumn('{{%company_clock}}', 'created_by', $this->integer()->defaultValue(0)->after('created_at'));
+        $this->addColumn('{{%company_clock}}', 'updated_by', $this->integer()->defaultValue(0)->after('updated_at'));
+        $this->addColumn('{{%company_clock}}', 'deleted_by', $this->integer()->defaultValue(0)->after('deleted_at'));
     }
 
     /**

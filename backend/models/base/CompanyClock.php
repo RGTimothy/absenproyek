@@ -62,9 +62,7 @@ class CompanyClock extends \yii\db\ActiveRecord
         return [
             [['company_id', 'created_by', 'updated_by', 'deleted_by'], 'integer'],
             [['clock_in', 'clock_out', 'created_at', 'updated_at', 'deleted_at'], 'safe'],
-            [['name'], 'string', 'max' => 100],
-            [['lock'], 'default', 'value' => '0'],
-            [['lock'], 'mootensai\components\OptimisticLockValidator']
+            [['name'], 'string', 'max' => 100]
         ];
     }
 
@@ -74,17 +72,6 @@ class CompanyClock extends \yii\db\ActiveRecord
     public static function tableName()
     {
         return 'company_clock';
-    }
-
-    /**
-     *
-     * @return string
-     * overwrite function optimisticLock
-     * return string name of field are used to stored optimistic lock
-     *
-     */
-    public function optimisticLock() {
-        return 'lock';
     }
 
     /**
