@@ -44,7 +44,7 @@ $this->registerJs($search);
             'expandOneOnly' => true
         ],
         ['attribute' => 'id', 'visible' => false],
-        [
+        /*[
                 'attribute' => 'company_id',
                 'label' => Yii::t('app', 'Company'),
                 'value' => function($model){
@@ -59,7 +59,7 @@ $this->registerJs($search);
                     'pluginOptions' => ['allowClear' => true],
                 ],
                 'filterInputOptions' => ['placeholder' => 'Company', 'id' => 'grid-company-clock-search-company_id']
-            ],
+            ],*/
         'name',
         'clock_in',
         'clock_out',

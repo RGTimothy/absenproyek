@@ -8,14 +8,14 @@ use kartik\grid\GridView;
 /* @var $model backend\models\CompanyClock */
 
 $this->title = $model->name;
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Company Clock'), 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Jam Kerja'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="company-clock-view">
 
     <div class="row">
         <div class="col-sm-9">
-            <h2><?= Yii::t('app', 'Company Clock').' '. Html::encode($this->title) ?></h2>
+            <h2><?= Yii::t('app', 'Jam Kerja').' '. Html::encode($this->title) ?></h2>
         </div>
         <div class="col-sm-3" style="margin-top: 15px">
 <?=             
@@ -67,7 +67,7 @@ $this->params['breadcrumbs'][] = $this->title;
         ['attribute' => 'id', 'visible' => false],
         'name',
         'code',
-        'image_filename',
+        // 'image_filename',
         'description',
         'status',
     ];

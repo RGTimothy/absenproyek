@@ -49,6 +49,7 @@ class CompanyClockController extends Controller
      */
     public function actionView($id)
     {
+        $this->view->title = 'Jam Kerja';
         $model = $this->findModel($id);
         return $this->render('view', [
             'model' => $this->findModel($id),
