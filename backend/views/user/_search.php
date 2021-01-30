@@ -8,43 +8,38 @@ use yii\widgets\ActiveForm;
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
-<div class="user-search">
+<div class="form-user-search">
 
     <?php $form = ActiveForm::begin([
         'action' => ['index'],
         'method' => 'get',
-        'options' => [
-            'data-pjax' => 1
-        ],
     ]); ?>
 
-    <?= $form->field($model, 'id') ?>
+    <?= $form->field($model, 'id', ['template' => '{input}'])->textInput(['style' => 'display:none']); ?>
 
-    <?= $form->field($model, 'username') ?>
+    <?= $form->field($model, 'username')->textInput(['maxlength' => true, 'placeholder' => 'Username']) ?>
 
-    <?= $form->field($model, 'company_id') ?>
+    <?php //$form->field($model, 'company_id')->textInput(['placeholder' => 'Company']) ?>
 
-    <?= $form->field($model, 'auth_key') ?>
+    <?= $form->field($model, 'company_role')->textInput(['maxlength' => true, 'placeholder' => 'Company Role']) ?>
 
-    <?= $form->field($model, 'password_hash') ?>
+    <?php //$form->field($model, 'auth_key')->textInput(['maxlength' => true, 'placeholder' => 'Auth Key']) ?>
 
-    <?php // echo $form->field($model, 'password_reset_token') ?>
+    <?php /* echo $form->field($model, 'password_hash')->textInput(['maxlength' => true, 'placeholder' => 'Password Hash']) */ ?>
 
-    <?php // echo $form->field($model, 'email') ?>
+    <?php /* echo $form->field($model, 'password_reset_token')->textInput(['maxlength' => true, 'placeholder' => 'Password Reset Token']) */ ?>
 
-    <?php // echo $form->field($model, 'phone') ?>
+    <?php  echo $form->field($model, 'email')->textInput(['maxlength' => true, 'placeholder' => 'Email'])  ?>
 
-    <?php // echo $form->field($model, 'status') ?>
+    <?php  echo $form->field($model, 'phone')->textInput(['maxlength' => true, 'placeholder' => 'Phone'])  ?>
 
-    <?php // echo $form->field($model, 'created_at') ?>
+    <?php /* echo $form->field($model, 'status')->textInput(['placeholder' => 'Status']) */ ?>
 
-    <?php // echo $form->field($model, 'updated_at') ?>
-
-    <?php // echo $form->field($model, 'verification_token') ?>
+    <?php /* echo $form->field($model, 'verification_token')->textInput(['maxlength' => true, 'placeholder' => 'Verification Token']) */ ?>
 
     <div class="form-group">
         <?= Html::submitButton(Yii::t('app', 'Search'), ['class' => 'btn btn-primary']) ?>
-        <?= Html::resetButton(Yii::t('app', 'Reset'), ['class' => 'btn btn-outline-secondary']) ?>
+        <?= Html::resetButton(Yii::t('app', 'Reset'), ['class' => 'btn btn-default']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

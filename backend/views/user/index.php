@@ -1,77 +1,79 @@
 <?php
 
-use yii\helpers\Html;
-use yii\grid\GridView;
-use yii\widgets\Pjax;
-use backend\models\User;
-use yii\data\ActiveDataProvider;
 /* @var $this yii\web\View */
 /* @var $searchModel backend\models\UserSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = Yii::t('app', 'Karyawan');
+use yii\helpers\Html;
+use kartik\export\ExportMenu;
+use kartik\grid\GridView;
+
+// $this->title = Yii::t('app', 'User');
 $this->params['breadcrumbs'][] = $this->title;
+$search = "$('.search-button').click(function(){
+	$('.search-form').toggle(1000);
+	return false;
+});";
+$this->registerJs($search);
 ?>
 <div class="user-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
-
-    <p>
-        <?php //Html::a(Yii::t('app', 'Tambah Karyawan'), ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
-
-    <?php Pjax::begin(); ?>
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
+    <p>
+        <?= Html::a(Yii::t('app', 'Tambah Karyawan'), ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a(Yii::t('app', 'Advance Search'), '#', ['class' => 'btn btn-info search-button']) ?>
+    </p>
+    <div class="search-form" style="display:none">
+        <?=  $this->render('_search', ['model' => $searchModel]); ?>
+    </div>
     <?php 
-        $userID = Yii::$app->user->id;
-        $dataUser = User::findIdentity($userID);
-        $companyID = isset($dataUser->company->id) ? $dataUser->company->id : null;
-
-        if (!is_null($companyID)) {
-            $dataProvider = new ActiveDataProvider([
-                'query' => User::find()->where(['company_id' => $companyID])->andWhere(['company_role' => User::COMPANY_ROLE_WORKER]),
-                'pagination' => [
-                    'pageSize' => 20,
-                ],
-            ]);
-        }
-        // echo $dataUser->company->id;
+    $gridColumn = [
+        ['class' => 'yii\grid\SerialColumn'],
+        ['attribute' => 'id', 'visible' => false],
+        'username',
+        // 'company_id',
+        'company_role',
+        // 'auth_key',
+        // 'password_hash',
+        // 'password_reset_token',
+        'email:email',
+        'phone',
+        'status',
+        // 'verification_token',
+        [
+            'class' => 'yii\grid\ActionColumn',
+        ],
+    ]; 
     ?>
-
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
-        'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
-
-            // 'id',
-            'username',
-            // 'company_id',
-            [
-                'label' => 'Nama Perusahaan',
-                'value' => function ($model) {
-                    return $model->company->name;
-                }
-            ],
-            // 'auth_key',
-            // 'password_hash',
-            //'password_reset_token',
-            //'email:email',
-            'phone',
-            //'status',
-            // 'created_at',
-            [
-                'attribute' => 'Tanggal Daftar',
-                'value' => 'created_at',
-            ],
-            //'updated_at',
-            //'verification_token',
-
-            ['class' => 'yii\grid\ActionColumn'],
+        'columns' => $gridColumn,
+        'pjax' => true,
+        'pjaxSettings' => ['options' => ['id' => 'kv-pjax-container-user']],
+        'panel' => [
+            'type' => GridView::TYPE_PRIMARY,
+            'heading' => '<span class="glyphicon glyphicon-book"></span>  ' . Html::encode($this->title),
+        ],
+        // your toolbar can include the additional full export menu
+        'toolbar' => [
+            '{export}',
+            ExportMenu::widget([
+                'dataProvider' => $dataProvider,
+                'columns' => $gridColumn,
+                'target' => ExportMenu::TARGET_BLANK,
+                'fontAwesome' => true,
+                'dropdownOptions' => [
+                    'label' => 'Full',
+                    'class' => 'btn btn-default',
+                    'itemsBefore' => [
+                        '<li class="dropdown-header">Export All Data</li>',
+                    ],
+                ],
+            ]) ,
         ],
     ]); ?>
-
-    <?php Pjax::end(); ?>
 
 </div>
