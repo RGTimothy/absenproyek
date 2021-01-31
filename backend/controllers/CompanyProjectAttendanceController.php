@@ -8,6 +8,7 @@ use backend\models\CompanyProjectAttendanceSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\helpers\Html;
 
 /**
  * CompanyProjectAttendanceController implements the CRUD actions for CompanyProjectAttendance model.
@@ -114,7 +115,11 @@ class CompanyProjectAttendanceController extends Controller
     public function actionPdf($id) {
         $model = $this->findModel($id);
 
-        $content = $this->renderAjax('_pdf', [
+        // $content = $this->renderAjax('_pdf', [
+        //     'model' => $model,
+        // ]);
+
+        $content = $this->renderPartial('view', [
             'model' => $model,
         ]);
 
@@ -124,7 +129,7 @@ class CompanyProjectAttendanceController extends Controller
             'orientation' => \kartik\mpdf\Pdf::ORIENT_PORTRAIT,
             'destination' => \kartik\mpdf\Pdf::DEST_BROWSER,
             'content' => $content,
-            'cssFile' => '@vendor/kartik-v/yii2-mpdf/assets/kv-mpdf-bootstrap.min.css',
+            'cssFile' => '@vendor/kartik-v/yii2-mpdf/src/assets/kv-mpdf-bootstrap.min.css',
             'cssInline' => '.kv-heading-1{font-size:18px}',
             'options' => ['title' => \Yii::$app->name],
             'methods' => [
@@ -147,6 +152,10 @@ class CompanyProjectAttendanceController extends Controller
     protected function findModel($id)
     {
         if (($model = CompanyProjectAttendance::findOne($id)) !== null) {
+            $image = 'data:image/jpeg;base64,' . base64_encode($model->image);
+            $image = Html::img($image, ['alt' => '', 'width' => '100%', 'height' => '100%']);
+            $model->image = $image;
+
             return $model;
         } else {
             throw new NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));

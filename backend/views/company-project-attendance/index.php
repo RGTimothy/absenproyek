@@ -81,6 +81,13 @@ $this->registerJs($search);
         'status',
         // 'remark:ntext',
         // 'image',
+        /*[
+            'attribute'=>'image',
+            'format' => 'raw',
+            'value' => function ($model) {
+                return '<img src="data:image/jpeg;base64,' . base64_encode($model->image) . '" width="50px" height="50px">';
+            }
+        ],*/
         // 'image_filename',
         // 'image_filetype',
         [

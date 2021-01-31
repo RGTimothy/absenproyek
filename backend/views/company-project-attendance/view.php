@@ -32,14 +32,14 @@ $time = $model->created_at;
                 ]
             )?>
             
-            <?= Html::a(Yii::t('app', 'Update'), ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-            <?= Html::a(Yii::t('app', 'Delete'), ['delete', 'id' => $model->id], [
+            <?php //Html::a(Yii::t('app', 'Update'), ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
+            <?php /*Html::a(Yii::t('app', 'Delete'), ['delete', 'id' => $model->id], [
                 'class' => 'btn btn-danger',
                 'data' => [
                     'confirm' => Yii::t('app', 'Are you sure you want to delete this item?'),
                     'method' => 'post',
                 ],
-            ])
+            ])*/
             ?>
         </div>
     </div>
@@ -62,16 +62,9 @@ $time = $model->created_at;
         // 'remark:ntext',
         // 'image',
         [
-            'attribute'=>'Image',
-                // 'value' => 'data:image/jpeg;base64,' . $model->image,
-            'value' => 'data:image/jpeg;base64,' . base64_encode($model->image),
-            'format' => [
-                'image',
-                [
-                    'width'=>'100%',
-                    'height'=>'100%'
-                ]
-            ],
+            'attribute'=>'image',
+            'format' => 'raw',
+            // 'value' => 'data:image/jpeg;base64,' . base64_encode($model->image),
         ],
         // 'image_filename',
         // 'image_filetype',

@@ -12,7 +12,7 @@ use kartik\grid\GridView;
 
     <div class="row">
         <div class="col-sm-9">
-            <h2><?= Html::encode($model->id) ?></h2>
+            <h2><?= Html::encode($model->user->username) . ' (' . $model->created_at . ')' ?></h2>
         </div>
     </div>
 
@@ -25,16 +25,29 @@ use kartik\grid\GridView;
             'label' => Yii::t('app', 'User'),
         ],
         [
+            'attribute' => 'user.phone',
+            'label' => Yii::t('app', 'Phone'),
+        ],
+        [
+            'attribute' => 'user.email',
+            'label' => Yii::t('app', 'Email'),
+        ],
+        [
             'attribute' => 'companyProject.name',
             'label' => Yii::t('app', 'Company Project'),
         ],
         'latitude',
         'longitude',
         'status',
-        'remark:ntext',
-        'image',
-        'image_filename',
-        'image_filetype',
+        [
+            'attribute'=>'image',
+            'format' => 'raw',
+            'value' => '<img src="data:image/jpeg;base64,' . base64_encode($model->image) . '">',
+        ],
+        // 'remark:ntext',
+        // 'image',
+        // 'image_filename',
+        // 'image_filetype',
     ];
     echo DetailView::widget([
         'model' => $model,
