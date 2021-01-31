@@ -2,29 +2,30 @@
 
 namespace backend\models;
 
+use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use backend\models\CompanyProject;
 
 /**
- * CompanyProjectSearch represents the model behind the search form of `backend\models\CompanyProject`.
+ * backend\models\CompanyProjectSearch represents the model behind the search form about `backend\models\CompanyProject`.
  */
-class CompanyProjectSearch extends CompanyProject
+ class CompanyProjectSearch extends CompanyProject
 {
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function rules()
     {
         return [
-            [['id', 'company_id', 'radius'], 'integer'],
+            [['id', 'company_id', 'radius', 'created_by', 'updated_by', 'deleted_by'], 'integer'],
             [['name', 'description', 'clock_in', 'clock_out', 'created_at', 'updated_at', 'deleted_at'], 'safe'],
             [['latitude', 'longitude'], 'number'],
         ];
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function scenarios()
     {
@@ -43,8 +44,6 @@ class CompanyProjectSearch extends CompanyProject
     {
         $query = CompanyProject::find();
 
-        // add conditions that should always apply here
-
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
@@ -57,7 +56,6 @@ class CompanyProjectSearch extends CompanyProject
             return $dataProvider;
         }
 
-        // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
             'company_id' => $this->company_id,
@@ -67,8 +65,11 @@ class CompanyProjectSearch extends CompanyProject
             'clock_in' => $this->clock_in,
             'clock_out' => $this->clock_out,
             'created_at' => $this->created_at,
+            'created_by' => $this->created_by,
             'updated_at' => $this->updated_at,
+            'updated_by' => $this->updated_by,
             'deleted_at' => $this->deleted_at,
+            'deleted_by' => $this->deleted_by,
         ]);
 
         $query->andFilterWhere(['like', 'name', $this->name])

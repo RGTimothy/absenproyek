@@ -8,35 +8,54 @@ use yii\widgets\ActiveForm;
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
-<div class="company-clock-search">
+<div class="form-company-clock-search">
 
     <?php $form = ActiveForm::begin([
         'action' => ['index'],
         'method' => 'get',
-        'options' => [
-            'data-pjax' => 1
-        ],
     ]); ?>
 
-    <?= $form->field($model, 'id') ?>
+    <?= $form->field($model, 'id', ['template' => '{input}'])->textInput(['style' => 'display:none']); ?>
 
-    <?= $form->field($model, 'company_id') ?>
+    <?php /*$form->field($model, 'company_id')->widget(\kartik\widgets\Select2::classname(), [
+        'data' => \yii\helpers\ArrayHelper::map(\backend\models\Company::find()->orderBy('id')->asArray()->all(), 'id', 'name'),
+        'options' => ['placeholder' => Yii::t('app', 'Choose Company')],
+        'pluginOptions' => [
+            'allowClear' => true
+        ],
+    ]);*/ ?>
 
-    <?= $form->field($model, 'name') ?>
+    <?= $form->field($model, 'name')->textInput(['maxlength' => true, 'placeholder' => 'Name']) ?>
 
-    <?= $form->field($model, 'clock_in') ?>
+    <?= $form->field($model, 'clock_in')->widget(\kartik\datecontrol\DateControl::className(), [
+        'type' => \kartik\datecontrol\DateControl::FORMAT_TIME,
+        'saveFormat' => 'php:H:i:s',
+        'ajaxConversion' => true,
+        'options' => [
+            'pluginOptions' => [
+                'placeholder' => Yii::t('app', 'Choose Clock In'),
+                'autoclose' => true
+            ]
+        ]
+    ]); ?>
 
-    <?= $form->field($model, 'clock_out') ?>
+    <?= $form->field($model, 'clock_out')->widget(\kartik\datecontrol\DateControl::className(), [
+        'type' => \kartik\datecontrol\DateControl::FORMAT_TIME,
+        'saveFormat' => 'php:H:i:s',
+        'ajaxConversion' => true,
+        'options' => [
+            'pluginOptions' => [
+                'placeholder' => Yii::t('app', 'Choose Clock Out'),
+                'autoclose' => true
+            ]
+        ]
+    ]); ?>
 
-    <?php // echo $form->field($model, 'created_at') ?>
-
-    <?php // echo $form->field($model, 'updated_at') ?>
-
-    <?php // echo $form->field($model, 'deleted_at') ?>
+    <?php /* echo $form->field($model, 'allowance')->textInput(['placeholder' => 'Allowance']) */ ?>
 
     <div class="form-group">
         <?= Html::submitButton(Yii::t('app', 'Search'), ['class' => 'btn btn-primary']) ?>
-        <?= Html::resetButton(Yii::t('app', 'Reset'), ['class' => 'btn btn-outline-secondary']) ?>
+        <?= Html::resetButton(Yii::t('app', 'Reset'), ['class' => 'btn btn-default']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

@@ -2,28 +2,29 @@
 
 namespace backend\models;
 
+use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use backend\models\CompanyClock;
 
 /**
- * CompanyClockSearch represents the model behind the search form of `backend\models\CompanyClock`.
+ * backend\models\CompanyClockSearch represents the model behind the search form about `backend\models\CompanyClock`.
  */
-class CompanyClockSearch extends CompanyClock
+ class CompanyClockSearch extends CompanyClock
 {
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function rules()
     {
         return [
-            [['id', 'company_id'], 'integer'],
+            [['id', 'company_id', 'allowance', 'created_by', 'updated_by', 'deleted_by'], 'integer'],
             [['name', 'clock_in', 'clock_out', 'created_at', 'updated_at', 'deleted_at'], 'safe'],
         ];
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function scenarios()
     {
@@ -42,8 +43,6 @@ class CompanyClockSearch extends CompanyClock
     {
         $query = CompanyClock::find();
 
-        // add conditions that should always apply here
-
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
@@ -56,15 +55,18 @@ class CompanyClockSearch extends CompanyClock
             return $dataProvider;
         }
 
-        // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
             'company_id' => $this->company_id,
             'clock_in' => $this->clock_in,
             'clock_out' => $this->clock_out,
+            'allowance' => $this->allowance,
             'created_at' => $this->created_at,
+            'created_by' => $this->created_by,
             'updated_at' => $this->updated_at,
+            'updated_by' => $this->updated_by,
             'deleted_at' => $this->deleted_at,
+            'deleted_by' => $this->deleted_by,
         ]);
 
         $query->andFilterWhere(['like', 'name', $this->name]);

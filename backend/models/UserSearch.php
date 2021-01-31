@@ -2,28 +2,29 @@
 
 namespace backend\models;
 
+use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use backend\models\User;
 
 /**
- * UserSearch represents the model behind the search form of `backend\models\User`.
+ * backend\models\UserSearch represents the model behind the search form about `backend\models\User`.
  */
-class UserSearch extends User
+ class UserSearch extends User
 {
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function rules()
     {
         return [
-            [['id', 'company_id', 'status'], 'integer'],
-            [['username', 'auth_key', 'password_hash', 'password_reset_token', 'email', 'phone', 'created_at', 'updated_at', 'verification_token'], 'safe'],
+            [['id', 'company_id', 'company_role_id', 'status', 'created_by', 'updated_by', 'deleted_by'], 'integer'],
+            [['username', 'auth_key', 'password_hash', 'password_reset_token', 'email', 'phone', 'created_at', 'updated_at', 'deleted_at', 'verification_token'], 'safe'],
         ];
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function scenarios()
     {
@@ -42,8 +43,6 @@ class UserSearch extends User
     {
         $query = User::find();
 
-        // add conditions that should always apply here
-
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
@@ -56,13 +55,17 @@ class UserSearch extends User
             return $dataProvider;
         }
 
-        // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
             'company_id' => $this->company_id,
+            'company_role_id' => $this->company_role_id,
             'status' => $this->status,
             'created_at' => $this->created_at,
+            'created_by' => $this->created_by,
             'updated_at' => $this->updated_at,
+            'updated_by' => $this->updated_by,
+            'deleted_at' => $this->deleted_at,
+            'deleted_by' => $this->deleted_by,
         ]);
 
         $query->andFilterWhere(['like', 'username', $this->username])

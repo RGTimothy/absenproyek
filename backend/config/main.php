@@ -13,6 +13,19 @@ return [
     'controllerNamespace' => 'backend\controllers',
     'bootstrap' => ['log'],
     'modules' => [
+        'gridview' => [
+            'class' => '\kartik\grid\Module',
+            // see settings on http://demos.krajee.com/grid#module
+        ],
+        'datecontrol' => [
+            'class' => '\kartik\datecontrol\Module',
+            // see settings on http://demos.krajee.com/datecontrol#module
+        ],
+        // If you use tree table
+        'treemanager' =>  [
+            'class' => '\kartik\tree\Module',
+            // see settings on http://demos.krajee.com/tree-manager#module
+        ],
         'admin' => [
             'layout' => 'left-menu', // defaults to null, using the application's layout without the menu
                                      // other available values are 'right-menu' and 'top-menu'
@@ -107,15 +120,15 @@ return [
     'as access' => [
         'class' => 'mdm\admin\components\AccessControl',
         'allowActions' => [
-            // 'site/*',
-            // 'admin/*',
-            // 'gii/*',
-            // 'user/*',
-            // 'company/*',
-            // 'company-clock/*',
-            // 'company-information/*',
-            // 'company-project/*',
-            // 'company-project-attendance/*',
+            'site/*',
+            'admin/*',
+            'gii/*',
+            'user/*',
+            'company/*',
+            'company-clock/*',
+            'company-information/*',
+            'company-project/*',
+            'company-project-attendance/*',
             // 'some-controller/some-action',
             // The actions listed here will be allowed to everyone including guests.
             // So, 'admin/*' should not appear here in the production, of course.

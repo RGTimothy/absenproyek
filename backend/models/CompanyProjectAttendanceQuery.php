@@ -1,6 +1,7 @@
 <?php
 
 namespace backend\models;
+use Yii;
 
 /**
  * This is the ActiveQuery class for [[CompanyProjectAttendance]].
@@ -9,13 +10,26 @@ namespace backend\models;
  */
 class CompanyProjectAttendanceQuery extends \yii\db\ActiveQuery
 {
+    public function init()
+    {
+        $companyID = Yii::$app->user->identity->company_id;
+
+        if (!is_null($companyID)) {
+            $this->leftJoin('user', '`user`.`id` = `company_project_attendance`.`user_id`')
+                 ->andOnCondition(['user.company_id' => $companyID]);
+        }
+        
+        parent::init();
+    }
+
     /*public function active()
     {
-        return $this->andWhere('[[status]]=1');
+        $this->andWhere('[[status]]=1');
+        return $this;
     }*/
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      * @return CompanyProjectAttendance[]|array
      */
     public function all($db = null)
@@ -24,7 +38,7 @@ class CompanyProjectAttendanceQuery extends \yii\db\ActiveQuery
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      * @return CompanyProjectAttendance|array|null
      */
     public function one($db = null)

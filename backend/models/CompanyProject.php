@@ -3,87 +3,26 @@
 namespace backend\models;
 
 use Yii;
+use \backend\models\base\CompanyProject as BaseCompanyProject;
 
 /**
  * This is the model class for table "company_project".
- *
- * @property int $id
- * @property int|null $company_id
- * @property string|null $name
- * @property string|null $description
- * @property float|null $latitude
- * @property float|null $longitude
- * @property int|null $radius
- * @property string|null $clock_in
- * @property string|null $clock_out
- * @property string $created_at
- * @property string $updated_at
- * @property string|null $deleted_at
- *
- * @property Company $company
  */
-class CompanyProject extends \yii\db\ActiveRecord
+class CompanyProject extends BaseCompanyProject
 {
     /**
-     * {@inheritdoc}
-     */
-    public static function tableName()
-    {
-        return 'company_project';
-    }
-
-    /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function rules()
     {
-        return [
-            [['company_id', 'radius'], 'integer'],
+        return array_replace_recursive(parent::rules(),
+	    [
+            [['company_id', 'radius', 'created_by', 'updated_by', 'deleted_by'], 'integer'],
             [['description'], 'string'],
             [['latitude', 'longitude'], 'number'],
             [['clock_in', 'clock_out', 'created_at', 'updated_at', 'deleted_at'], 'safe'],
-            [['name'], 'string', 'max' => 200],
-            [['company_id'], 'exist', 'skipOnError' => true, 'targetClass' => Company::className(), 'targetAttribute' => ['company_id' => 'id']],
-        ];
+            [['name'], 'string', 'max' => 200]
+        ]);
     }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function attributeLabels()
-    {
-        return [
-            'id' => Yii::t('app', 'ID'),
-            'company_id' => Yii::t('app', 'Company ID'),
-            'name' => Yii::t('app', 'Name'),
-            'description' => Yii::t('app', 'Description'),
-            'latitude' => Yii::t('app', 'Latitude'),
-            'longitude' => Yii::t('app', 'Longitude'),
-            'radius' => Yii::t('app', 'Radius'),
-            'clock_in' => Yii::t('app', 'Clock In'),
-            'clock_out' => Yii::t('app', 'Clock Out'),
-            'created_at' => Yii::t('app', 'Created At'),
-            'updated_at' => Yii::t('app', 'Updated At'),
-            'deleted_at' => Yii::t('app', 'Deleted At'),
-        ];
-    }
-
-    /**
-     * Gets query for [[Company]].
-     *
-     * @return \yii\db\ActiveQuery|CompanyQuery
-     */
-    public function getCompany()
-    {
-        return $this->hasOne(Company::className(), ['id' => 'company_id']);
-    }
-
-    /**
-     * {@inheritdoc}
-     * @return CompanyProjectQuery the active query used by this AR class.
-     */
-    public static function find()
-    {
-        return new CompanyProjectQuery(get_called_class());
-    }
+	
 }

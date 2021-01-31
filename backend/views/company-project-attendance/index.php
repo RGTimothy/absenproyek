@@ -1,76 +1,132 @@
 <?php
 
-use yii\helpers\Html;
-use yii\grid\GridView;
-use yii\widgets\Pjax;
 /* @var $this yii\web\View */
 /* @var $searchModel backend\models\CompanyProjectAttendanceSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = Yii::t('app', 'Absensi');
+use yii\helpers\Html;
+use kartik\export\ExportMenu;
+use kartik\grid\GridView;
+
+// $this->title = Yii::t('app', 'Company Project Attendance');
 $this->params['breadcrumbs'][] = $this->title;
+$search = "$('.search-button').click(function(){
+	$('.search-form').toggle(1000);
+	return false;
+});";
+$this->registerJs($search);
 ?>
 <div class="company-project-attendance-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
+    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
         <?php //Html::a(Yii::t('app', 'Create Company Project Attendance'), ['create'], ['class' => 'btn btn-success']) ?>
+        <?php //Html::a(Yii::t('app', 'Advance Search'), '#', ['class' => 'btn btn-info search-button']) ?>
     </p>
-
-    <?php Pjax::begin(); ?>
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
-
+    <div class="search-form" style="display:none">
+        <?=  $this->render('_search', ['model' => $searchModel]); ?>
+    </div>
+    <?php 
+    $gridColumn = [
+        ['class' => 'yii\grid\SerialColumn'],
+        [
+            'class' => 'kartik\grid\ExpandRowColumn',
+            'width' => '50px',
+            'value' => function ($model, $key, $index, $column) {
+                return GridView::ROW_COLLAPSED;
+            },
+            'detail' => function ($model, $key, $index, $column) {
+                return Yii::$app->controller->renderPartial('_expand', ['model' => $model]);
+            },
+            'headerOptions' => ['class' => 'kartik-sheet-style'],
+            'expandOneOnly' => true
+        ],
+        ['attribute' => 'id', 'visible' => false],
+        [
+                'attribute' => 'user_id',
+                'label' => Yii::t('app', 'User'),
+                'value' => function($model){
+                    if ($model->user)
+                    {return $model->user->username;}
+                    else
+                    {return NULL;}
+                },
+                'filterType' => GridView::FILTER_SELECT2,
+                'filter' => \yii\helpers\ArrayHelper::map(\backend\models\User::find()->asArray()->all(), 'id', 'username'),
+                'filterWidgetOptions' => [
+                    'pluginOptions' => ['allowClear' => true],
+                ],
+                'filterInputOptions' => ['placeholder' => 'User', 'id' => 'grid-company-project-attendance-search-user_id']
+            ],
+        [
+                'attribute' => 'company_project_id',
+                'label' => Yii::t('app', 'Company Project'),
+                'value' => function($model){
+                    if ($model->companyProject)
+                    {return $model->companyProject->name;}
+                    else
+                    {return NULL;}
+                },
+                'filterType' => GridView::FILTER_SELECT2,
+                'filter' => \yii\helpers\ArrayHelper::map(\backend\models\CompanyProject::find()->asArray()->all(), 'id', 'name'),
+                'filterWidgetOptions' => [
+                    'pluginOptions' => ['allowClear' => true],
+                ],
+                'filterInputOptions' => ['placeholder' => 'Company Project', 'id' => 'grid-company-project-attendance-search-company_project_id']
+            ],
+        'latitude',
+        'longitude',
+        'status',
+        [
+            'attribute' => 'created_at',
+            'label' => 'Time',
+        ],
+        // 'remark:ntext',
+        // 'image',
+        /*[
+            'attribute'=>'image',
+            'format' => 'raw',
+            'value' => function ($model) {
+                return '<img src="data:image/jpeg;base64,' . base64_encode($model->image) . '" width="50px" height="50px">';
+            }
+        ],*/
+        // 'image_filename',
+        // 'image_filetype',
+        [
+            'class' => 'yii\grid\ActionColumn', 
+            'template' => '{view}',
+        ],
+    ]; 
+    ?>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
-        'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
-
-            // 'id',
-            // 'user_id',
-            [
-                'label' => 'Username',
-                'value' => function ($model) {
-                    return $model->user->username;
-                }
-            ],
-            [
-                'label' => 'Phone',
-                'value' => function ($model) {
-                    return $model->user->phone;
-                }
-            ],
-            // 'company_project_id',
-            [
-                'label' => 'Nama Proyek',
-                'value' => function ($model) {
-                    return $model->companyProject->name;
-                }
-            ],
-            'latitude',
-            'longitude',
-            'status',
-            //'image',
-            //'image_filename',
-            //'image_filetype',
-            //'created_at',
-            [
-                'label' => 'Waktu',
-                'value' => function ($model) {
-                    return $model->created_at;
-                }
-            ],
-            //'updated_at',
-            //'deleted_at',
-
-            [
-                'class' => 'yii\grid\ActionColumn', 
-                'template' => '{view}',
-            ],
+        'columns' => $gridColumn,
+        'pjax' => true,
+        'pjaxSettings' => ['options' => ['id' => 'kv-pjax-container-company-project-attendance']],
+        'panel' => [
+            'type' => GridView::TYPE_PRIMARY,
+            'heading' => '<span class="glyphicon glyphicon-book"></span>  ' . Html::encode($this->title),
+        ],
+        // your toolbar can include the additional full export menu
+        'toolbar' => [
+            '{export}',
+            ExportMenu::widget([
+                'dataProvider' => $dataProvider,
+                'columns' => $gridColumn,
+                'target' => ExportMenu::TARGET_BLANK,
+                'fontAwesome' => true,
+                'dropdownOptions' => [
+                    'label' => 'Full',
+                    'class' => 'btn btn-default',
+                    'itemsBefore' => [
+                        '<li class="dropdown-header">Export All Data</li>',
+                    ],
+                ],
+            ]) ,
         ],
     ]); ?>
-
-    <?php Pjax::end(); ?>
 
 </div>
