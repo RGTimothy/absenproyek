@@ -12,7 +12,7 @@ use kartik\grid\GridView;
 
     <div class="row">
         <div class="col-sm-9">
-            <h2><?= Html::encode($model->id) ?></h2>
+            <h2><?= Html::encode($model->code) ?></h2>
         </div>
     </div>
 
@@ -21,6 +21,10 @@ use kartik\grid\GridView;
     $gridColumn = [
         ['attribute' => 'id', 'visible' => false],
         'code',
+        [
+            'attribute' => 'company.name',
+            'label' => Yii::t('app', 'Company'),
+        ],
         'description:ntext',
     ];
     echo DetailView::widget([

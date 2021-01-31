@@ -18,7 +18,7 @@ use backend\models\CompanyRole;
     public function rules()
     {
         return [
-            [['id', 'created_by', 'updated_by', 'deleted_by'], 'integer'],
+            [['id', 'company_id', 'created_by', 'updated_by', 'deleted_by'], 'integer'],
             [['code', 'description', 'created_at', 'updated_at', 'deleted_at'], 'safe'],
         ];
     }
@@ -57,6 +57,7 @@ use backend\models\CompanyRole;
 
         $query->andFilterWhere([
             'id' => $this->id,
+            'company_id' => $this->company_id,
             'created_at' => $this->created_at,
             'created_by' => $this->created_by,
             'updated_at' => $this->updated_at,

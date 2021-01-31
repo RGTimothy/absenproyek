@@ -14,13 +14,13 @@ use yii\data\ArrayDataProvider;
                 'attribute' => 'company.name',
                 'label' => Yii::t('app', 'Company')
             ],
-        'auth_key',
-        'password_hash',
-        'password_reset_token',
+        // 'auth_key',
+        // 'password_hash',
+        // 'password_reset_token',
         'email:email',
         'phone',
-        'status',
-        'verification_token',
+        // 'status',
+        // 'verification_token',
         [
             'class' => 'yii\grid\ActionColumn',
             'controller' => 'user'

@@ -86,7 +86,7 @@ $this->registerJs($search);
         // 'verification_token',
         [
             'class' => 'yii\grid\ActionColumn', 
-            'template' => '{view}',
+            'template' => '{view} {update}',
         ],
     ]; 
     ?>

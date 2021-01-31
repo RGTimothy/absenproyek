@@ -7,15 +7,15 @@ use kartik\grid\GridView;
 /* @var $this yii\web\View */
 /* @var $model backend\models\CompanyRole */
 
-$this->title = $model->id;
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Company Role'), 'url' => ['index']];
+$this->title = $model->code;
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Grade Karyawan'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="company-role-view">
 
     <div class="row">
         <div class="col-sm-9">
-            <h2><?= Yii::t('app', 'Company Role').' '. Html::encode($this->title) ?></h2>
+            <h2><?= Yii::t('app', 'Grade Karyawan').': '. Html::encode($model->code) ?></h2>
         </div>
         <div class="col-sm-3" style="margin-top: 15px">
 <?=             
@@ -46,6 +46,10 @@ $this->params['breadcrumbs'][] = $this->title;
     $gridColumn = [
         ['attribute' => 'id', 'visible' => false],
         'code',
+        [
+            'attribute' => 'company.name',
+            'label' => Yii::t('app', 'Company'),
+        ],
         'description:ntext',
     ];
     echo DetailView::widget([
@@ -54,6 +58,22 @@ $this->params['breadcrumbs'][] = $this->title;
     ]);
 ?>
     </div>
+    <!-- <div class="row">
+        <h4>Company<?php //' '. Html::encode($this->title) ?></h4>
+    </div> -->
+    <?php 
+    /*$gridColumnCompany = [
+        ['attribute' => 'id', 'visible' => false],
+        'name',
+        'code',
+        'image_filename',
+        'description:ntext',
+        'status',
+    ];
+    echo DetailView::widget([
+        'model' => $model->company,
+        'attributes' => $gridColumnCompany    ]);*/
+    ?>
     
     <div class="row">
 <?php
@@ -66,13 +86,13 @@ if($providerUser->totalCount){
                 'attribute' => 'company.name',
                 'label' => Yii::t('app', 'Company')
             ],
-                        'auth_key',
-            'password_hash',
-            'password_reset_token',
+            // 'auth_key',
+            // 'password_hash',
+            // 'password_reset_token',
             'email:email',
             'phone',
-            'status',
-            'verification_token',
+            // 'status',
+            // 'verification_token',
     ];
     echo Gridview::widget([
         'dataProvider' => $providerUser,

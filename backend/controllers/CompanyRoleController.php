@@ -67,6 +67,7 @@ class CompanyRoleController extends Controller
     public function actionCreate()
     {
         $model = new CompanyRole();
+        $model->company_id = Yii::$app->user->identity->company_id;
 
         if ($model->loadAll(Yii::$app->request->post()) && $model->saveAll()) {
             return $this->redirect(['view', 'id' => $model->id]);
@@ -86,6 +87,7 @@ class CompanyRoleController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        $model->company_id = Yii::$app->user->identity->company_id;
 
         if ($model->loadAll(Yii::$app->request->post()) && $model->saveAll()) {
             return $this->redirect(['view', 'id' => $model->id]);
@@ -132,7 +134,7 @@ class CompanyRoleController extends Controller
             'orientation' => \kartik\mpdf\Pdf::ORIENT_PORTRAIT,
             'destination' => \kartik\mpdf\Pdf::DEST_BROWSER,
             'content' => $content,
-            'cssFile' => '@vendor/kartik-v/yii2-mpdf/src/assets/kv-mpdf-bootstrap.min.css',
+            'cssFile' => '@vendor/kartik-v/yii2-mpdf/assets/kv-mpdf-bootstrap.min.css',
             'cssInline' => '.kv-heading-1{font-size:18px}',
             'options' => ['title' => \Yii::$app->name],
             'methods' => [

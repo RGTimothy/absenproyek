@@ -23,10 +23,10 @@ use yii\data\ArrayDataProvider;
         // 'image',
         // 'image_filename',
         // 'image_filetype',
-        [
+        /*[
             'class' => 'yii\grid\ActionColumn',
             'controller' => 'company-project-attendance'
-        ],
+        ],*/
     ];
     
     echo GridView::widget([

@@ -17,9 +17,9 @@ class CompanyRole extends BaseCompanyRole
     {
         return array_replace_recursive(parent::rules(),
 	    [
+            [['company_id', 'created_by', 'updated_by', 'deleted_by'], 'integer'],
             [['description'], 'string'],
             [['created_at', 'updated_at', 'deleted_at'], 'safe'],
-            [['created_by', 'updated_by', 'deleted_by'], 'integer'],
             [['code'], 'string', 'max' => 100]
         ]);
     }

@@ -68,6 +68,8 @@ class UserController extends Controller
     {
         $model = new User();
 
+        $model->company_id = Yii::$app->user->identity->company_id;
+
         if ($model->loadAll(Yii::$app->request->post()) && $model->saveAll()) {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
@@ -87,6 +89,8 @@ class UserController extends Controller
     {
         $model = $this->findModel($id);
 
+        $model->company_id = Yii::$app->user->identity->company_id;
+
         if ($model->loadAll(Yii::$app->request->post()) && $model->saveAll()) {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
@@ -104,7 +108,8 @@ class UserController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->deleteWithRelated();
+        // $this->findModel($id)->deleteWithRelated();
+        $this->findModel($id);
 
         return $this->redirect(['index']);
     }

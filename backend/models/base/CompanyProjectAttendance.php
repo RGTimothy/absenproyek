@@ -174,6 +174,7 @@ class CompanyProjectAttendance extends \yii\db\ActiveRecord
     public static function find()
     {
         $query = new \backend\models\CompanyProjectAttendanceQuery(get_called_class());
-        return $query->where(['company_project_attendance.deleted_by' => 0]);
+        // return $query->where(['company_project_attendance.deleted_by' => 0]);
+        return $query;
     }
 }

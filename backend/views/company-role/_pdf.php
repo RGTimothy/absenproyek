@@ -24,6 +24,10 @@ $this->params['breadcrumbs'][] = $this->title;
     $gridColumn = [
         ['attribute' => 'id', 'visible' => false],
         'code',
+        [
+                'attribute' => 'company.name',
+                'label' => Yii::t('app', 'Company')
+            ],
         'description:ntext',
     ];
     echo DetailView::widget([

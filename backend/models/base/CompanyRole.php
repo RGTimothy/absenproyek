@@ -12,6 +12,7 @@ use mootensai\behaviors\UUIDBehavior;
  *
  * @property integer $id
  * @property string $code
+ * @property integer $company_id
  * @property string $description
  * @property string $created_at
  * @property integer $created_by
@@ -20,6 +21,7 @@ use mootensai\behaviors\UUIDBehavior;
  * @property string $deleted_at
  * @property integer $deleted_by
  *
+ * @property \backend\models\Company $company
  * @property \backend\models\User[] $users
  */
 class CompanyRole extends \yii\db\ActiveRecord
@@ -48,6 +50,7 @@ class CompanyRole extends \yii\db\ActiveRecord
     public function relationNames()
     {
         return [
+            'company',
             'users'
         ];
     }
@@ -58,9 +61,9 @@ class CompanyRole extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
+            [['company_id', 'created_by', 'updated_by', 'deleted_by'], 'integer'],
             [['description'], 'string'],
             [['created_at', 'updated_at', 'deleted_at'], 'safe'],
-            [['created_by', 'updated_by', 'deleted_by'], 'integer'],
             [['code'], 'string', 'max' => 100]
         ];
     }
@@ -81,10 +84,19 @@ class CompanyRole extends \yii\db\ActiveRecord
         return [
             'id' => Yii::t('app', 'ID'),
             'code' => Yii::t('app', 'Code'),
+            'company_id' => Yii::t('app', 'Company ID'),
             'description' => Yii::t('app', 'Description'),
         ];
     }
     
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getCompany()
+    {
+        return $this->hasOne(\backend\models\Company::className(), ['id' => 'company_id']);
+    }
+        
     /**
      * @return \yii\db\ActiveQuery
      */

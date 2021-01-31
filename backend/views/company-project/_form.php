@@ -17,6 +17,20 @@ use yii\widgets\ActiveForm;
 ]);*/
 ?>
 
+
+<!-- <div id="googleMap" style="width:100%;height:400px;"></div>
+<script type="text/javascript">
+    function myMap() {
+        var mapProp= {
+          center:new google.maps.LatLng(-6.1753924,106.8271528),
+          zoom:5,
+      };
+      var map = new google.maps.Map(document.getElementById("googleMap"),mapProp);
+  }
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCe_kJI9IfjxJsNFQCSTudg1Kkr9eWKFKc&callback=myMap&libraries=&v=weekly" defer></script>
+</script> -->
+
 <div class="company-project-form">
 
     <?php $form = ActiveForm::begin(); ?>
