@@ -93,6 +93,10 @@ if($providerCompanyProjectAttendance->totalCount){
                         'latitude',
             'longitude',
             'status',
+            [
+                'attribute' => 'created_at',
+                'label' => 'Time',
+            ],
             // 'image',
             // 'image_filename',
             // 'image_filetype',
@@ -103,7 +107,7 @@ if($providerCompanyProjectAttendance->totalCount){
         'pjaxSettings' => ['options' => ['id' => 'kv-pjax-container-company-project-attendance']],
         'panel' => [
             'type' => GridView::TYPE_PRIMARY,
-            'heading' => '<span class="glyphicon glyphicon-book"></span> ' . Html::encode(Yii::t('app', 'Company Project Attendance')),
+            'heading' => '<span class="glyphicon glyphicon-book"></span> ' . Html::encode(Yii::t('app', 'Absensi')),
         ],
         'columns' => $gridColumnCompanyProjectAttendance
     ]);

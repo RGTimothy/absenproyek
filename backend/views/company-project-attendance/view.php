@@ -59,6 +59,10 @@ $time = $model->created_at;
         'latitude',
         'longitude',
         'status',
+        [
+            'attribute' => 'created_at',
+            'label' => 'Time',
+        ],
         // 'remark:ntext',
         // 'image',
         [

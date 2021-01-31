@@ -79,6 +79,10 @@ $this->registerJs($search);
         'latitude',
         'longitude',
         'status',
+        [
+            'attribute' => 'created_at',
+            'label' => 'Time',
+        ],
         // 'remark:ntext',
         // 'image',
         /*[

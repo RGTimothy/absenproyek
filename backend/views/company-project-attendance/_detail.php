@@ -40,6 +40,10 @@ use kartik\grid\GridView;
         'longitude',
         'status',
         [
+            'attribute' => 'created_at',
+            'label' => 'Time',
+        ],
+        [
             'attribute'=>'image',
             'format' => 'raw',
             'value' => '<img src="data:image/jpeg;base64,' . base64_encode($model->image) . '">',

@@ -64,6 +64,8 @@ class CompanyInformationController extends Controller
     {
         $model = new CompanyInformation();
 
+        $model->company_id = Yii::$app->user->identity->company_id;
+
         if ($model->loadAll(Yii::$app->request->post()) && $model->saveAll()) {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
