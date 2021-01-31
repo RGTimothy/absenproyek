@@ -3,25 +3,27 @@ use kartik\grid\GridView;
 use yii\data\ArrayDataProvider;
 
     $dataProvider = new ArrayDataProvider([
-        'allModels' => $model->companyProjectAttendances,
+        'allModels' => $model->users,
         'key' => 'id'
     ]);
     $gridColumns = [
         ['class' => 'yii\grid\SerialColumn'],
         ['attribute' => 'id', 'visible' => false],
+        'username',
         [
-                'attribute' => 'companyProject.name',
-                'label' => Yii::t('app', 'Company Project')
+                'attribute' => 'company.name',
+                'label' => Yii::t('app', 'Company')
             ],
-        'latitude',
-        'longitude',
+        'auth_key',
+        'password_hash',
+        'password_reset_token',
+        'email:email',
+        'phone',
         'status',
-        // 'image',
-        // 'image_filename',
-        // 'image_filetype',
+        'verification_token',
         [
             'class' => 'yii\grid\ActionColumn',
-            'controller' => 'company-project-attendance'
+            'controller' => 'user'
         ],
     ];
     

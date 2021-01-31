@@ -25,14 +25,17 @@ use kartik\grid\GridView;
             'attribute' => 'company.name',
             'label' => Yii::t('app', 'Company'),
         ],
-        'company_role',
-        'auth_key',
-        'password_hash',
-        'password_reset_token',
+        [
+            'attribute' => 'companyRole.code',
+            'label' => Yii::t('app', 'Company Role'),
+        ],
+        // 'auth_key',
+        // 'password_hash',
+        // 'password_reset_token',
         'email:email',
         'phone',
-        'status',
-        'verification_token',
+        // 'status',
+        // 'verification_token',
     ];
     echo DetailView::widget([
         'model' => $model,

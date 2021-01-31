@@ -5,12 +5,12 @@ namespace backend\models;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use backend\models\User;
+use backend\models\CompanyRole;
 
 /**
- * backend\models\UserSearch represents the model behind the search form about `backend\models\User`.
+ * backend\models\CompanyRoleSearch represents the model behind the search form about `backend\models\CompanyRole`.
  */
- class UserSearch extends User
+ class CompanyRoleSearch extends CompanyRole
 {
     /**
      * @inheritdoc
@@ -18,8 +18,8 @@ use backend\models\User;
     public function rules()
     {
         return [
-            [['id', 'company_id', 'company_role_id', 'status', 'created_by', 'updated_by', 'deleted_by'], 'integer'],
-            [['username', 'auth_key', 'password_hash', 'password_reset_token', 'email', 'phone', 'created_at', 'updated_at', 'deleted_at', 'verification_token'], 'safe'],
+            [['id', 'created_by', 'updated_by', 'deleted_by'], 'integer'],
+            [['code', 'description', 'created_at', 'updated_at', 'deleted_at'], 'safe'],
         ];
     }
 
@@ -41,7 +41,7 @@ use backend\models\User;
      */
     public function search($params)
     {
-        $query = User::find();
+        $query = CompanyRole::find();
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -57,9 +57,6 @@ use backend\models\User;
 
         $query->andFilterWhere([
             'id' => $this->id,
-            'company_id' => $this->company_id,
-            'company_role_id' => $this->company_role_id,
-            'status' => $this->status,
             'created_at' => $this->created_at,
             'created_by' => $this->created_by,
             'updated_at' => $this->updated_at,
@@ -68,13 +65,8 @@ use backend\models\User;
             'deleted_by' => $this->deleted_by,
         ]);
 
-        $query->andFilterWhere(['like', 'username', $this->username])
-            ->andFilterWhere(['like', 'auth_key', $this->auth_key])
-            ->andFilterWhere(['like', 'password_hash', $this->password_hash])
-            ->andFilterWhere(['like', 'password_reset_token', $this->password_reset_token])
-            ->andFilterWhere(['like', 'email', $this->email])
-            ->andFilterWhere(['like', 'phone', $this->phone])
-            ->andFilterWhere(['like', 'verification_token', $this->verification_token]);
+        $query->andFilterWhere(['like', 'code', $this->code])
+            ->andFilterWhere(['like', 'description', $this->description]);
 
         return $dataProvider;
     }

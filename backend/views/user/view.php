@@ -8,14 +8,14 @@ use kartik\grid\GridView;
 /* @var $model backend\models\User */
 
 $this->title = $model->username;
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'User'), 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Karyawan'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="user-view">
 
     <div class="row">
         <div class="col-sm-9">
-            <h2><?= Yii::t('app', 'User').' '. Html::encode($this->title) ?></h2>
+            <h2><?= Yii::t('app', 'Karyawan').': '. Html::encode($this->title) ?></h2>
         </div>
         <div class="col-sm-3" style="margin-top: 15px">
 <?=             
@@ -29,14 +29,14 @@ $this->params['breadcrumbs'][] = $this->title;
                 ]
             )?>
             
-            <?= Html::a(Yii::t('app', 'Update'), ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-            <?= Html::a(Yii::t('app', 'Delete'), ['delete', 'id' => $model->id], [
+            <?php //Html::a(Yii::t('app', 'Update'), ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
+            <?php /*Html::a(Yii::t('app', 'Delete'), ['delete', 'id' => $model->id], [
                 'class' => 'btn btn-danger',
                 'data' => [
                     'confirm' => Yii::t('app', 'Are you sure you want to delete this item?'),
                     'method' => 'post',
                 ],
-            ])
+            ])*/
             ?>
         </div>
     </div>
@@ -50,14 +50,17 @@ $this->params['breadcrumbs'][] = $this->title;
             'attribute' => 'company.name',
             'label' => Yii::t('app', 'Company'),
         ],
-        'company_role',
-        'auth_key',
-        'password_hash',
-        'password_reset_token',
+        [
+            'attribute' => 'companyRole.code',
+            'label' => Yii::t('app', 'Company Role'),
+        ],
+        // 'auth_key',
+        // 'password_hash',
+        // 'password_reset_token',
         'email:email',
         'phone',
-        'status',
-        'verification_token',
+        // 'status',
+        // 'verification_token',
     ];
     echo DetailView::widget([
         'model' => $model,
@@ -79,9 +82,9 @@ if($providerCompanyProjectAttendance->totalCount){
             'latitude',
             'longitude',
             'status',
-            'image',
-            'image_filename',
-            'image_filetype',
+            // 'image',
+            // 'image_filename',
+            // 'image_filetype',
     ];
     echo Gridview::widget([
         'dataProvider' => $providerCompanyProjectAttendance,
@@ -89,7 +92,7 @@ if($providerCompanyProjectAttendance->totalCount){
         'pjaxSettings' => ['options' => ['id' => 'kv-pjax-container-company-project-attendance']],
         'panel' => [
             'type' => GridView::TYPE_PRIMARY,
-            'heading' => '<span class="glyphicon glyphicon-book"></span> ' . Html::encode(Yii::t('app', 'Company Project Attendance')),
+            'heading' => '<span class="glyphicon glyphicon-book"></span> ' . Html::encode(Yii::t('app', 'Absensi')),
         ],
         'columns' => $gridColumnCompanyProjectAttendance
     ]);
@@ -97,11 +100,11 @@ if($providerCompanyProjectAttendance->totalCount){
 ?>
 
     </div>
-    <div class="row">
-        <h4>Company<?= ' '. Html::encode($this->title) ?></h4>
-    </div>
+    <!-- <div class="row">
+        <h4>Company<?php  //' '. Html::encode($this->title) ?></h4>
+    </div> -->
     <?php 
-    $gridColumnCompany = [
+    /*$gridColumnCompany = [
         ['attribute' => 'id', 'visible' => false],
         'name',
         'code',
@@ -111,6 +114,19 @@ if($providerCompanyProjectAttendance->totalCount){
     ];
     echo DetailView::widget([
         'model' => $model->company,
-        'attributes' => $gridColumnCompany    ]);
+        'attributes' => $gridColumnCompany    ]);*/
+    ?>
+    <!-- <div class="row">
+        <h4>CompanyRole<?php //' '. Html::encode($this->title) ?></h4>
+    </div> -->
+    <?php 
+    /*$gridColumnCompanyRole = [
+        ['attribute' => 'id', 'visible' => false],
+        'code',
+        'description',
+    ];
+    echo DetailView::widget([
+        'model' => $model->companyRole,
+        'attributes' => $gridColumnCompanyRole    ]);*/
     ?>
 </div>

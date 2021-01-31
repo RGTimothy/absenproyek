@@ -8,7 +8,7 @@ use yii\helpers\Html;
 use kartik\export\ExportMenu;
 use kartik\grid\GridView;
 
-$this->title = Yii::t('app', 'User');
+// $this->title = Yii::t('app', 'User');
 $this->params['breadcrumbs'][] = $this->title;
 $search = "$('.search-button').click(function(){
 	$('.search-form').toggle(1000);
@@ -22,7 +22,7 @@ $this->registerJs($search);
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-        <?= Html::a(Yii::t('app', 'Create User'), ['create'], ['class' => 'btn btn-success']) ?>
+        <?php //Html::a(Yii::t('app', 'Tambah Karyawan'), ['create'], ['class' => 'btn btn-success']) ?>
         <?= Html::a(Yii::t('app', 'Advance Search'), '#', ['class' => 'btn btn-info search-button']) ?>
     </p>
     <div class="search-form" style="display:none">
@@ -45,7 +45,7 @@ $this->registerJs($search);
         ],
         ['attribute' => 'id', 'visible' => false],
         'username',
-        [
+        /*[
                 'attribute' => 'company_id',
                 'label' => Yii::t('app', 'Company'),
                 'value' => function($model){
@@ -60,15 +60,30 @@ $this->registerJs($search);
                     'pluginOptions' => ['allowClear' => true],
                 ],
                 'filterInputOptions' => ['placeholder' => 'Company', 'id' => 'grid-user-search-company_id']
+            ],*/
+        [
+                'attribute' => 'company_role_id',
+                'label' => Yii::t('app', 'Company Role'),
+                'value' => function($model){
+                    if ($model->companyRole)
+                    {return $model->companyRole->code;}
+                    else
+                    {return NULL;}
+                },
+                'filterType' => GridView::FILTER_SELECT2,
+                'filter' => \yii\helpers\ArrayHelper::map(\backend\models\CompanyRole::find()->asArray()->all(), 'id', 'code'),
+                'filterWidgetOptions' => [
+                    'pluginOptions' => ['allowClear' => true],
+                ],
+                'filterInputOptions' => ['placeholder' => 'Company role', 'id' => 'grid-user-search-company_role_id']
             ],
-        'company_role',
-        'auth_key',
-        'password_hash',
-        'password_reset_token',
+        // 'auth_key',
+        // 'password_hash',
+        // 'password_reset_token',
         'email:email',
         'phone',
-        'status',
-        'verification_token',
+        // 'status',
+        // 'verification_token',
         [
             'class' => 'yii\grid\ActionColumn',
         ],

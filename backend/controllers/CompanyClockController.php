@@ -65,7 +65,7 @@ class CompanyClockController extends Controller
         $this->view->title = 'Tambah Jam Kerja';
         $model = new CompanyClock();
 
-        $model->company_id = Yii::$app->user->company->id;
+        $model->company_id = Yii::$app->user->identity->company_id;
 
         if ($model->loadAll(Yii::$app->request->post()) && $model->saveAll()) {
             return $this->redirect(['view', 'id' => $model->id]);

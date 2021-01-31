@@ -35,7 +35,13 @@ use yii\widgets\ActiveForm;
         ],
     ]); ?>
 
-    <?= $form->field($model, 'company_role')->textInput(['maxlength' => true, 'placeholder' => 'Company Role']) ?>
+    <?= $form->field($model, 'company_role_id')->widget(\kartik\widgets\Select2::classname(), [
+        'data' => \yii\helpers\ArrayHelper::map(\backend\models\CompanyRole::find()->orderBy('id')->asArray()->all(), 'id', 'id'),
+        'options' => ['placeholder' => Yii::t('app', 'Choose Company role')],
+        'pluginOptions' => [
+            'allowClear' => true
+        ],
+    ]); ?>
 
     <?= $form->field($model, 'auth_key')->textInput(['maxlength' => true, 'placeholder' => 'Auth Key']) ?>
 

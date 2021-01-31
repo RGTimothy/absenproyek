@@ -28,7 +28,10 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'company.name',
                 'label' => Yii::t('app', 'Company')
             ],
-        'company_role',
+        [
+                'attribute' => 'companyRole.id',
+                'label' => Yii::t('app', 'Company Role')
+            ],
         'auth_key',
         'password_hash',
         'password_reset_token',
