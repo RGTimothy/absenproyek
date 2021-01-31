@@ -2,29 +2,30 @@
 
 namespace backend\models;
 
+use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use backend\models\CompanyProjectAttendance;
 
 /**
- * CompanyProjectAttendanceSearch represents the model behind the search form of `backend\models\CompanyProjectAttendance`.
+ * backend\models\CompanyProjectAttendanceSearch represents the model behind the search form about `backend\models\CompanyProjectAttendance`.
  */
-class CompanyProjectAttendanceSearch extends CompanyProjectAttendance
+ class CompanyProjectAttendanceSearch extends CompanyProjectAttendance
 {
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function rules()
     {
         return [
-            [['id', 'user_id', 'company_project_id'], 'integer'],
+            [['id', 'user_id', 'company_project_id', 'created_by', 'updated_by', 'deleted_by'], 'integer'],
             [['latitude', 'longitude'], 'number'],
-            [['status', 'image', 'image_filename', 'image_filetype', 'created_at', 'updated_at', 'deleted_at'], 'safe'],
+            [['status', 'remark', 'image', 'image_filename', 'image_filetype', 'created_at', 'updated_at', 'deleted_at'], 'safe'],
         ];
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function scenarios()
     {
@@ -43,8 +44,6 @@ class CompanyProjectAttendanceSearch extends CompanyProjectAttendance
     {
         $query = CompanyProjectAttendance::find();
 
-        // add conditions that should always apply here
-
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
@@ -57,7 +56,6 @@ class CompanyProjectAttendanceSearch extends CompanyProjectAttendance
             return $dataProvider;
         }
 
-        // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
             'user_id' => $this->user_id,
@@ -65,11 +63,15 @@ class CompanyProjectAttendanceSearch extends CompanyProjectAttendance
             'latitude' => $this->latitude,
             'longitude' => $this->longitude,
             'created_at' => $this->created_at,
+            'created_by' => $this->created_by,
             'updated_at' => $this->updated_at,
+            'updated_by' => $this->updated_by,
             'deleted_at' => $this->deleted_at,
+            'deleted_by' => $this->deleted_by,
         ]);
 
         $query->andFilterWhere(['like', 'status', $this->status])
+            ->andFilterWhere(['like', 'remark', $this->remark])
             ->andFilterWhere(['like', 'image', $this->image])
             ->andFilterWhere(['like', 'image_filename', $this->image_filename])
             ->andFilterWhere(['like', 'image_filetype', $this->image_filetype]);

@@ -11,11 +11,12 @@ class CompanyProjectAttendanceQuery extends \yii\db\ActiveQuery
 {
     /*public function active()
     {
-        return $this->andWhere('[[status]]=1');
+        $this->andWhere('[[status]]=1');
+        return $this;
     }*/
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      * @return CompanyProjectAttendance[]|array
      */
     public function all($db = null)
@@ -24,7 +25,7 @@ class CompanyProjectAttendanceQuery extends \yii\db\ActiveQuery
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      * @return CompanyProjectAttendance|array|null
      */
     public function one($db = null)
