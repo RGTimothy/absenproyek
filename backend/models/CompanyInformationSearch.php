@@ -2,28 +2,29 @@
 
 namespace backend\models;
 
+use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use backend\models\CompanyInformation;
 
 /**
- * CompanyInformationSearch represents the model behind the search form of `backend\models\CompanyInformation`.
+ * backend\models\CompanyInformationSearch represents the model behind the search form about `backend\models\CompanyInformation`.
  */
-class CompanyInformationSearch extends CompanyInformation
+ class CompanyInformationSearch extends CompanyInformation
 {
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function rules()
     {
         return [
-            [['id', 'company_id'], 'integer'],
+            [['id', 'company_id', 'created_by', 'updated_by', 'deleted_by'], 'integer'],
             [['title', 'description', 'start_time', 'end_time', 'created_at', 'updated_at', 'deleted_at'], 'safe'],
         ];
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function scenarios()
     {
@@ -42,8 +43,6 @@ class CompanyInformationSearch extends CompanyInformation
     {
         $query = CompanyInformation::find();
 
-        // add conditions that should always apply here
-
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
@@ -56,15 +55,17 @@ class CompanyInformationSearch extends CompanyInformation
             return $dataProvider;
         }
 
-        // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
             'company_id' => $this->company_id,
             'start_time' => $this->start_time,
             'end_time' => $this->end_time,
             'created_at' => $this->created_at,
+            'created_by' => $this->created_by,
             'updated_at' => $this->updated_at,
+            'updated_by' => $this->updated_by,
             'deleted_at' => $this->deleted_at,
+            'deleted_by' => $this->deleted_by,
         ]);
 
         $query->andFilterWhere(['like', 'title', $this->title])
