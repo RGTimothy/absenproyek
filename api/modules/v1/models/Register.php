@@ -68,6 +68,8 @@ class Register extends ActiveRecord
             ['code', 'string', 'max' => 100],
             ['code', 'required'],
             ['code', 'filter', 'filter' => [$this, 'getCompanyIdByCode']],
+
+            ['company_role_id', 'integer'],
         ];
     }
 
@@ -101,7 +103,7 @@ class Register extends ActiveRecord
         $user->phone = $this->phone;
         $user->status = $user::STATUS_ACTIVE;
         $user->company_id = intval($this->code);
-        $user->company_role = $this->company_role;
+        $user->company_role_id = $this->company_role_id;
         $user->setPassword($this->password);
         $user->generateAuthKey();
         $user->generateEmailVerificationToken();

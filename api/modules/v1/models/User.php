@@ -7,6 +7,7 @@ use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 use yii\web\IdentityInterface;
 use api\modules\v1\models\Company;
+use api\modules\v1\models\CompanyRole;
 
 /**
  * User model
@@ -145,6 +146,11 @@ class User extends ActiveRecord implements IdentityInterface
     public function getCompanyProjects() {
         return $this->hasMany(CompanyProject::className(), ['company_id' => 'id'])
                     ->viaTable('company', ['id' => 'company_id']);
+    }
+
+    public function getCompanyRole()
+    {
+        return $this->hasOne(CompanyRole::className(), ['id' => 'company_role_id']);
     }
 
     public function getCompanyProjectAttendances() {

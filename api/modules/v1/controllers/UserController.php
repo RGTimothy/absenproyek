@@ -9,6 +9,7 @@ use api\modules\v1\models\Register;
 use api\modules\v1\models\User;
 use api\modules\v1\models\Login;
 use api\modules\v1\models\Company;
+use api\modules\v1\models\CompanyRole;
 
 class UserController extends ActiveController
 {
@@ -37,7 +38,9 @@ class UserController extends ActiveController
         $model->email = $params['email'];
         $model->code = $params['code'];
         $model->password = $params['password'];
-        $model->company_role = User::COMPANY_ROLE_WORKER;
+        $companyRole = CompanyRole::find()->where(['is_default' => true])->one();
+
+        $model->company_role_id = $companyRole->id;
 
         if ($model->signup()) {
             // $response['isSuccess'] = 201;
