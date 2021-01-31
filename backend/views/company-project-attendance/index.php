@@ -95,7 +95,8 @@ $this->registerJs($search);
         // 'image_filename',
         // 'image_filetype',
         [
-            'class' => 'yii\grid\ActionColumn',
+            'class' => 'yii\grid\ActionColumn', 
+            'template' => '{view}',
         ],
     ]; 
     ?>

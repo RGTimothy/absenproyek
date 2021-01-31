@@ -23,7 +23,7 @@ $this->registerJs($search);
 
     <p>
         <?php //Html::a(Yii::t('app', 'Tambah Karyawan'), ['create'], ['class' => 'btn btn-success']) ?>
-        <?= Html::a(Yii::t('app', 'Advance Search'), '#', ['class' => 'btn btn-info search-button']) ?>
+        <?php //Html::a(Yii::t('app', 'Advance Search'), '#', ['class' => 'btn btn-info search-button']) ?>
     </p>
     <div class="search-form" style="display:none">
         <?=  $this->render('_search', ['model' => $searchModel]); ?>
@@ -85,7 +85,8 @@ $this->registerJs($search);
         // 'status',
         // 'verification_token',
         [
-            'class' => 'yii\grid\ActionColumn',
+            'class' => 'yii\grid\ActionColumn', 
+            'template' => '{view}',
         ],
     ]; 
     ?>

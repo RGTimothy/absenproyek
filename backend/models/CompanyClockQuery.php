@@ -1,6 +1,7 @@
 <?php
 
 namespace backend\models;
+use Yii;
 
 /**
  * This is the ActiveQuery class for [[CompanyClock]].
@@ -9,6 +10,17 @@ namespace backend\models;
  */
 class CompanyClockQuery extends \yii\db\ActiveQuery
 {
+    public function init()
+    {
+        $companyID = Yii::$app->user->identity->company_id;
+
+        if (!is_null($companyID)) {
+            $this->andOnCondition(['company_id' => $companyID]);
+        }
+        
+        parent::init();
+    }
+
     /*public function active()
     {
         $this->andWhere('[[status]]=1');

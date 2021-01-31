@@ -30,7 +30,7 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'description')->textarea(['rows' => 6]) ?>
 
     <?php
-    $forms = [
+    /*$forms = [
         [
             'label' => '<i class="glyphicon glyphicon-book"></i> ' . Html::encode(Yii::t('app', 'User')),
             'content' => $this->render('_formUser', [
@@ -47,7 +47,7 @@ use yii\widgets\ActiveForm;
             'sideways' => true,
             'enableCache' => false,
         ],
-    ]);
+    ]);*/
     ?>
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? Yii::t('app', 'Create') : Yii::t('app', 'Update'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>

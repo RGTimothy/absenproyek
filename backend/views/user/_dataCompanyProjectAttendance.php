@@ -16,6 +16,10 @@ use yii\data\ArrayDataProvider;
         'latitude',
         'longitude',
         'status',
+        [
+            'attribute' => 'created_at',
+            'label' => 'Time',
+        ],
         // 'image',
         // 'image_filename',
         // 'image_filetype',

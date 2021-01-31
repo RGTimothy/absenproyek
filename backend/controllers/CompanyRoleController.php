@@ -32,6 +32,7 @@ class CompanyRoleController extends Controller
      */
     public function actionIndex()
     {
+        $this->view->title = 'Grade Karyawan';
         $searchModel = new CompanyRoleSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 

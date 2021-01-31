@@ -8,7 +8,7 @@ use yii\helpers\Html;
 use kartik\export\ExportMenu;
 use kartik\grid\GridView;
 
-$this->title = Yii::t('app', 'Company Role');
+// $this->title = Yii::t('app', 'Company Role');
 $this->params['breadcrumbs'][] = $this->title;
 $search = "$('.search-button').click(function(){
 	$('.search-form').toggle(1000);
@@ -22,8 +22,8 @@ $this->registerJs($search);
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-        <?= Html::a(Yii::t('app', 'Create Company Role'), ['create'], ['class' => 'btn btn-success']) ?>
-        <?= Html::a(Yii::t('app', 'Advance Search'), '#', ['class' => 'btn btn-info search-button']) ?>
+        <?= Html::a(Yii::t('app', 'Tambah Grade Karyawan'), ['create'], ['class' => 'btn btn-success']) ?>
+        <?php //Html::a(Yii::t('app', 'Advance Search'), '#', ['class' => 'btn btn-info search-button']) ?>
     </p>
     <div class="search-form" style="display:none">
         <?=  $this->render('_search', ['model' => $searchModel]); ?>
