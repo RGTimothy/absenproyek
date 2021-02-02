@@ -114,6 +114,7 @@ $this->registerJs($search);
         'toolbar' => [
             '{export}',
             ExportMenu::widget([
+                'filename' => Yii::$app->name . '_' . $this->title . '_' . time(),
                 'dataProvider' => $dataProvider,
                 'columns' => $gridColumn,
                 'target' => ExportMenu::TARGET_BLANK,
