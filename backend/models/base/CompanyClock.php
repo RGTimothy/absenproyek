@@ -15,7 +15,9 @@ use mootensai\behaviors\UUIDBehavior;
  * @property string $name
  * @property string $clock_in
  * @property string $clock_out
+ * @property integer $break_hour
  * @property integer $allowance
+ * @property integer $is_default
  * @property string $created_at
  * @property integer $created_by
  * @property string $updated_at
@@ -61,9 +63,10 @@ class CompanyClock extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['company_id', 'allowance', 'created_by', 'updated_by', 'deleted_by'], 'integer'],
+            [['company_id', 'break_hour', 'allowance', 'created_by', 'updated_by', 'deleted_by'], 'integer'],
             [['clock_in', 'clock_out', 'created_at', 'updated_at', 'deleted_at'], 'safe'],
-            [['name'], 'string', 'max' => 100]
+            [['name'], 'string', 'max' => 100],
+            [['is_default'], 'string', 'max' => 1]
         ];
     }
 
@@ -86,7 +89,9 @@ class CompanyClock extends \yii\db\ActiveRecord
             'name' => Yii::t('app', 'Name'),
             'clock_in' => Yii::t('app', 'Clock In'),
             'clock_out' => Yii::t('app', 'Clock Out'),
+            'break_hour' => Yii::t('app', 'Break Hour'),
             'allowance' => Yii::t('app', 'Allowance'),
+            'is_default' => Yii::t('app', 'Is Default'),
         ];
     }
     

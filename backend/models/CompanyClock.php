@@ -17,9 +17,10 @@ class CompanyClock extends BaseCompanyClock
     {
         return array_replace_recursive(parent::rules(),
 	    [
-            [['company_id', 'allowance', 'created_by', 'updated_by', 'deleted_by'], 'integer'],
+            [['company_id', 'break_hour', 'allowance', 'created_by', 'updated_by', 'deleted_by'], 'integer'],
             [['clock_in', 'clock_out', 'created_at', 'updated_at', 'deleted_at'], 'safe'],
-            [['name'], 'string', 'max' => 100]
+            [['name'], 'string', 'max' => 100],
+            [['is_default'], 'string', 'max' => 1]
         ]);
     }
 	
