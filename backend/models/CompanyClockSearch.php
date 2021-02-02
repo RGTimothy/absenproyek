@@ -18,8 +18,8 @@ use backend\models\CompanyClock;
     public function rules()
     {
         return [
-            [['id', 'company_id', 'allowance', 'created_by', 'updated_by', 'deleted_by'], 'integer'],
-            [['name', 'clock_in', 'clock_out', 'created_at', 'updated_at', 'deleted_at'], 'safe'],
+            [['id', 'company_id', 'break_hour', 'allowance', 'created_by', 'updated_by', 'deleted_by'], 'integer'],
+            [['name', 'clock_in', 'clock_out', 'is_default', 'created_at', 'updated_at', 'deleted_at'], 'safe'],
         ];
     }
 
@@ -60,6 +60,7 @@ use backend\models\CompanyClock;
             'company_id' => $this->company_id,
             'clock_in' => $this->clock_in,
             'clock_out' => $this->clock_out,
+            'break_hour' => $this->break_hour,
             'allowance' => $this->allowance,
             'created_at' => $this->created_at,
             'created_by' => $this->created_by,
@@ -69,7 +70,8 @@ use backend\models\CompanyClock;
             'deleted_by' => $this->deleted_by,
         ]);
 
-        $query->andFilterWhere(['like', 'name', $this->name]);
+        $query->andFilterWhere(['like', 'name', $this->name])
+            ->andFilterWhere(['like', 'is_default', $this->is_default]);
 
         return $dataProvider;
     }

@@ -30,7 +30,9 @@ $this->params['breadcrumbs'][] = $this->title;
         'name',
         'clock_in',
         'clock_out',
+        'break_hour',
         'allowance',
+        'is_default',
     ];
     echo DetailView::widget([
         'model' => $model,

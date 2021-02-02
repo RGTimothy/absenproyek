@@ -52,7 +52,9 @@ $this->params['breadcrumbs'][] = $this->title;
         'name',
         'clock_in',
         'clock_out',
+        'break_hour',
         'allowance',
+        'is_default',
     ];
     echo DetailView::widget([
         'model' => $model,
@@ -60,20 +62,21 @@ $this->params['breadcrumbs'][] = $this->title;
     ]);
 ?>
     </div>
-    <!-- <div class="row">
-        <h4>Company<?php //' '. Html::encode($this->title) ?></h4>
-    </div> -->
+    <div class="row">
+        <h4>Company<?= ' '. Html::encode($this->title) ?></h4>
+    </div>
     <?php 
-    /*$gridColumnCompany = [
+    $gridColumnCompany = [
         ['attribute' => 'id', 'visible' => false],
         'name',
         'code',
         'image_filename',
         'description',
+        'hour_rounding',
         'status',
     ];
     echo DetailView::widget([
         'model' => $model->company,
-        'attributes' => $gridColumnCompany    ]);*/
+        'attributes' => $gridColumnCompany    ]);
     ?>
 </div>
