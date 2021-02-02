@@ -43,7 +43,7 @@ class CompanyProjectAttendanceController extends ActiveController
 
 		//get attendance based on current date
 		$attendances = CompanyProjectAttendance::findByUserId($userID)
-						->where(['DATE(created_at)' => $currentDate])
+						->andWhere(['DATE(created_at)' => $currentDate])
 						->all();
 
 		$todayAttendanceHistory = array();
