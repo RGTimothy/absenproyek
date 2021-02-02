@@ -2,28 +2,29 @@
 
 namespace backend\models;
 
+use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use backend\models\Company;
 
 /**
- * CompanySearch represents the model behind the search form of `app\models\Company`.
+ * backend\models\CompanySearch represents the model behind the search form about `backend\models\Company`.
  */
-class CompanySearch extends Company
+ class CompanySearch extends Company
 {
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function rules()
     {
         return [
-            [['id'], 'integer'],
+            [['id', 'hour_rounding'], 'integer'],
             [['name', 'code', 'image_filename', 'description', 'status', 'created_at', 'updated_at', 'deleted_at'], 'safe'],
         ];
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function scenarios()
     {
@@ -42,8 +43,6 @@ class CompanySearch extends Company
     {
         $query = Company::find();
 
-        // add conditions that should always apply here
-
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);
@@ -56,9 +55,9 @@ class CompanySearch extends Company
             return $dataProvider;
         }
 
-        // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
+            'hour_rounding' => $this->hour_rounding,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
             'deleted_at' => $this->deleted_at,
