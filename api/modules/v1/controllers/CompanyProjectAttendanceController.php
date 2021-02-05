@@ -44,14 +44,15 @@ class CompanyProjectAttendanceController extends ActiveController
 		//get attendance based on current date
 		$attendances = CompanyProjectAttendance::findByUserId($userID)
 						->andWhere(['DATE(created_at)' => $currentDate])
+						->orderBy(['id' => SORT_ASC])
 						->all();
 
 		$todayAttendanceHistory = array();
 		$clockInStatus = false;
 		$clockOutStatus = false;
+		$lastState = null;
 		foreach ($attendances as $item) {
 			if ($item->status == self::CLOCK_IN) {
-				$clockInStatus = true;
 				array_push($todayAttendanceHistory, [
 					'companyProjectAttendanceID' => $item->id,
 					'companyProjectAttendanceUserID' => $item->user_id,
@@ -62,10 +63,10 @@ class CompanyProjectAttendanceController extends ActiveController
 					'companyProjectAttendanceStatus' => $item->status,
 					'companyProjectAttendanceTime' => $item->created_at,
 				]);
+				$lastState = self::CLOCK_IN;
 			}
 
 			if ($item->status == self::CLOCK_OUT) {
-				$clockOutStatus = true;
 				array_push($todayAttendanceHistory, [
 					'companyProjectAttendanceID' => $item->id,
 					'companyProjectAttendanceUserID' => $item->user_id,
@@ -76,12 +77,25 @@ class CompanyProjectAttendanceController extends ActiveController
 					'companyProjectAttendanceStatus' => $item->status,
 					'companyProjectAttendanceTime' => $item->created_at,
 				]);
+				$lastState = self::CLOCK_OUT;
+			}
+		}
+
+		//set clock in & clock out status based on current state
+		if (!is_null($lastState)) {
+			if ($lastState == self::CLOCK_OUT) {
+				$clockInStatus = false;
+				$clockOutStatus = false;
+			} else {
+				$clockInStatus = true;
+				$clockOutStatus = false;
 			}
 		}
 
 		$response['hasErrors'] = false;
 		$response['clockInStatus'] = $clockInStatus;
 		$response['clockOutStatus'] = $clockOutStatus;
+		$response['lastState'] = $lastState;
 		$response['data'] = $todayAttendanceHistory;
 		return $response;
 	}
@@ -98,7 +112,10 @@ class CompanyProjectAttendanceController extends ActiveController
 		//get current attendance status
 		$attendance = self::actionStatus();
 
-		if ($attendance['hasErrors'] == false && ($attendance['clockInStatus'] == false && $attendance['clockOutStatus'] == false)) {
+		if ($attendance['lastState'] == self::CLOCK_IN) {
+			$response['hasErrors'] = true;
+			$response['message'] = 'Fail. You have been clocked in before.';
+		} else {
 			//do clock in
 			$model = new CompanyProjectAttendance();
 			$model->user_id = $userID;
@@ -135,8 +152,11 @@ class CompanyProjectAttendanceController extends ActiveController
 				$currentDate = $now->format('Y-m-d');
 
 				$companyProjectAttendance = CompanyProjectAttendance::findByUserId($userID)
-											->where(['status' => self::CLOCK_IN])
-											->andWhere(['DATE(created_at)' => $currentDate])
+											->andWhere([
+												'DATE(created_at)' => $currentDate,
+												'status' => self::CLOCK_IN
+											])
+											->orderBy(['id' => SORT_DESC])
 											->one();
 
 				if (count($companyProjectAttendance > 0)) {
@@ -165,15 +185,6 @@ class CompanyProjectAttendanceController extends ActiveController
 
 	            $response['message'] = $errorList[0]['errorMessage'];
 			}
-		} else {
-			$response['hasErrors'] = true;
-			if ($attendance['clockInStatus'] == true) {
-				$response['message'] = 'Fail. You have been clocked in before.';
-			} else if ($attendance['clockOutStatus'] == true) {
-				$response['message'] = 'Fail. You have been clocked out for today.';
-			} else {
-				$response['message'] = 'Fail. Unknown error, please try again.';
-			}
 		}
 
 		return $response;
@@ -191,8 +202,14 @@ class CompanyProjectAttendanceController extends ActiveController
 		//get current attendance status
 		$attendance = self::actionStatus();
 
-		if ($attendance['hasErrors'] == false && ($attendance['clockOutStatus'] == false && $attendance['clockInStatus'] == true)) {
-			//do clock in
+		if ($attendance['lastState'] == self::CLOCK_OUT) {
+			$response['hasErrors'] = true;
+			$response['message'] = 'Fail. You have been clocked out before.';
+		} else if (is_null($attendance['lastState'])) {
+			$response['hasErrors'] = true;
+			$response['message'] = 'Fail. You have to clock in first before doing clock out.';
+		} else {
+			//do clock out
 			$model = new CompanyProjectAttendance();
 			$model->user_id = $userID;
 			$model->company_project_id = $companyProjectID;
@@ -228,8 +245,11 @@ class CompanyProjectAttendanceController extends ActiveController
 				$currentDate = $now->format('Y-m-d');
 
 				$companyProjectAttendance = CompanyProjectAttendance::findByUserId($userID)
-											->where(['status' => self::CLOCK_OUT])
-											->andWhere(['DATE(created_at)' => $currentDate])
+											->andWhere([
+												'DATE(created_at)' => $currentDate,
+												'status' => self::CLOCK_OUT
+											])
+											->orderBy(['id' => SORT_DESC])
 											->one();
 
 				if (count($companyProjectAttendance > 0)) {
@@ -257,15 +277,6 @@ class CompanyProjectAttendanceController extends ActiveController
 	            }
 
 	            $response['message'] = $errorList[0]['errorMessage'];
-			}
-		} else {
-			$response['hasErrors'] = true;
-			if ($attendance['clockOutStatus'] == true) {
-				$response['message'] = 'Fail. You have been clocked out before.';
-			} else if ($attendance['clockInStatus'] == false) {
-				$response['message'] = 'Fail. You have to clock in first before doing clock out.';
-			} else {
-				$response['message'] = 'Fail. Unknown error, please try again.';
 			}
 		}
 
