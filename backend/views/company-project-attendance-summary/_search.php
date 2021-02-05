@@ -26,7 +26,7 @@ use yii\widgets\ActiveForm;
     ]); ?>
 
     <?= $form->field($model, 'company_role_id')->widget(\kartik\widgets\Select2::classname(), [
-        'data' => \yii\helpers\ArrayHelper::map(\backend\models\CompanyRole::find()->orderBy('id')->asArray()->all(), 'id', 'id'),
+        'data' => \yii\helpers\ArrayHelper::map(\backend\models\CompanyRole::find()->orderBy('id')->asArray()->all(), 'id', 'code'),
         'options' => ['placeholder' => Yii::t('app', 'Choose Company role')],
         'pluginOptions' => [
             'allowClear' => true

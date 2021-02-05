@@ -87,14 +87,15 @@ class CompanyProjectAttendanceSummary extends \yii\db\ActiveRecord
     {
         return [
             'id' => Yii::t('app', 'ID'),
-            'user_id' => Yii::t('app', 'User ID'),
-            'company_role_id' => Yii::t('app', 'Company Role ID'),
-            'projects' => Yii::t('app', 'Projects'),
-            'work_duration' => Yii::t('app', 'Work Duration'),
-            'overtime_duration_1' => Yii::t('app', 'Overtime Duration 1'),
-            'overtime_duration_2' => Yii::t('app', 'Overtime Duration 2'),
-            'overtime_duration_3' => Yii::t('app', 'Overtime Duration 3'),
-            'total_allowance' => Yii::t('app', 'Total Allowance'),
+            'user_id' => Yii::t('app', 'Karyawan'),
+            'company_role_id' => Yii::t('app', 'Grade'),
+            'projects' => Yii::t('app', 'Proyek'),
+            'work_duration' => Yii::t('app', 'Durasi Kerja'),
+            'overtime_duration_1' => Yii::t('app', 'Durasi Lembur 1'),
+            'overtime_duration_2' => Yii::t('app', 'Durasi Lembur 2'),
+            'overtime_duration_3' => Yii::t('app', 'Durasi Lembur 3'),
+            'total_allowance' => Yii::t('app', 'Uang Makan'),
+            'created_at' => Yii::t('app', 'Tanggal'),
         ];
     }
     

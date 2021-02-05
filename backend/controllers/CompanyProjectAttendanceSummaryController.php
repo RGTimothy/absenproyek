@@ -32,6 +32,7 @@ class CompanyProjectAttendanceSummaryController extends Controller
      */
     public function actionIndex()
     {
+        $this->view->title = 'Absensi';
         $searchModel = new CompanyProjectAttendanceSummarySearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 

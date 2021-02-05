@@ -8,7 +8,7 @@ use yii\helpers\Html;
 use kartik\export\ExportMenu;
 use kartik\grid\GridView;
 
-$this->title = Yii::t('app', 'Company Project Attendance Summary');
+// $this->title = Yii::t('app', 'Company Project Attendance Summary');
 $this->params['breadcrumbs'][] = $this->title;
 $search = "$('.search-button').click(function(){
 	$('.search-form').toggle(1000);
@@ -22,8 +22,8 @@ $this->registerJs($search);
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-        <?= Html::a(Yii::t('app', 'Create Company Project Attendance Summary'), ['create'], ['class' => 'btn btn-success']) ?>
-        <?= Html::a(Yii::t('app', 'Advance Search'), '#', ['class' => 'btn btn-info search-button']) ?>
+        <?php //Html::a(Yii::t('app', 'Create Company Project Attendance Summary'), ['create'], ['class' => 'btn btn-success']) ?>
+        <?php //Html::a(Yii::t('app', 'Advance Search'), '#', ['class' => 'btn btn-info search-button']) ?>
     </p>
     <div class="search-form" style="display:none">
         <?=  $this->render('_search', ['model' => $searchModel]); ?>
@@ -46,7 +46,7 @@ $this->registerJs($search);
         ['attribute' => 'id', 'visible' => false],
         [
                 'attribute' => 'user_id',
-                'label' => Yii::t('app', 'User'),
+                'label' => Yii::t('app', 'Karyawan'),
                 'value' => function($model){
                     if ($model->user)
                     {return $model->user->username;}
@@ -58,30 +58,36 @@ $this->registerJs($search);
                 'filterWidgetOptions' => [
                     'pluginOptions' => ['allowClear' => true],
                 ],
-                'filterInputOptions' => ['placeholder' => 'User', 'id' => 'grid-company-project-attendance-summary-search-user_id']
+                'filterInputOptions' => ['placeholder' => 'Karyawan', 'id' => 'grid-company-project-attendance-summary-search-user_id']
             ],
         [
                 'attribute' => 'company_role_id',
-                'label' => Yii::t('app', 'Company Role'),
+                'label' => Yii::t('app', 'Grade'),
                 'value' => function($model){
                     if ($model->companyRole)
-                    {return $model->companyRole->id;}
+                    {return $model->companyRole->code;}
                     else
                     {return NULL;}
                 },
                 'filterType' => GridView::FILTER_SELECT2,
-                'filter' => \yii\helpers\ArrayHelper::map(\backend\models\CompanyRole::find()->asArray()->all(), 'id', 'id'),
+                'filter' => \yii\helpers\ArrayHelper::map(\backend\models\CompanyRole::find()->asArray()->all(), 'id', 'code'),
                 'filterWidgetOptions' => [
                     'pluginOptions' => ['allowClear' => true],
                 ],
-                'filterInputOptions' => ['placeholder' => 'Company role', 'id' => 'grid-company-project-attendance-summary-search-company_role_id']
+                'filterInputOptions' => ['placeholder' => 'Grade', 'id' => 'grid-company-project-attendance-summary-search-company_role_id']
             ],
         'projects:ntext',
         'work_duration',
-        'overtime_duration_1:datetime',
-        'overtime_duration_2:datetime',
-        'overtime_duration_3:datetime',
+        'overtime_duration_1',
+        'overtime_duration_2',
+        'overtime_duration_3',
         'total_allowance',
+        [
+            'attribute' => 'created_at',
+            'value' => function ($model) {
+                return date('Y-m-d', strtotime($model->created_at));
+            }
+        ],
         [
             'class' => 'yii\grid\ActionColumn',
         ],

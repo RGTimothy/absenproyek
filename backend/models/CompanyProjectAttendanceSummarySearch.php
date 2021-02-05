@@ -64,7 +64,7 @@ use backend\models\CompanyProjectAttendanceSummary;
             'overtime_duration_2' => $this->overtime_duration_2,
             'overtime_duration_3' => $this->overtime_duration_3,
             'total_allowance' => $this->total_allowance,
-            'created_at' => $this->created_at,
+            // 'created_at' => $this->created_at,
             'created_by' => $this->created_by,
             'updated_at' => $this->updated_at,
             'updated_by' => $this->updated_by,
@@ -73,6 +73,7 @@ use backend\models\CompanyProjectAttendanceSummary;
         ]);
 
         $query->andFilterWhere(['like', 'projects', $this->projects]);
+        $query->andFilterWhere(['like', 'created_at', $this->created_at]);
 
         return $dataProvider;
     }
