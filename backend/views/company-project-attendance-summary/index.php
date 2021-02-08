@@ -88,9 +88,9 @@ $this->registerJs($search);
                 return date('Y-m-d', strtotime($model->created_at));
             }
         ],
-        [
+        /*[
             'class' => 'yii\grid\ActionColumn',
-        ],
+        ],*/
     ]; 
     ?>
     <?= GridView::widget([

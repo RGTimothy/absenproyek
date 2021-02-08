@@ -45,9 +45,9 @@ $this->registerJs($search);
         ],
         ['attribute' => 'id', 'visible' => false],
         'code',
-        [
+        /*[
                 'attribute' => 'company_id',
-                'label' => Yii::t('app', 'Company'),
+                'label' => Yii::t('app', 'Perusahaan'),
                 'value' => function($model){
                     if ($model->company)
                     {return $model->company->name;}
@@ -59,8 +59,8 @@ $this->registerJs($search);
                 'filterWidgetOptions' => [
                     'pluginOptions' => ['allowClear' => true],
                 ],
-                'filterInputOptions' => ['placeholder' => 'Company', 'id' => 'grid-company-role-search-company_id']
-            ],
+                'filterInputOptions' => ['placeholder' => 'Perusahaan', 'id' => 'grid-company-role-search-company_id']
+            ],*/
         'description:ntext',
         [
             'class' => 'yii\grid\ActionColumn',

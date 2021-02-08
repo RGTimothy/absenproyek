@@ -48,7 +48,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'code',
         [
             'attribute' => 'company.name',
-            'label' => Yii::t('app', 'Company'),
+            'label' => Yii::t('app', 'Perusahaan'),
         ],
         'description:ntext',
     ];
@@ -84,7 +84,7 @@ if($providerUser->totalCount){
             'username',
             [
                 'attribute' => 'company.name',
-                'label' => Yii::t('app', 'Company')
+                'label' => Yii::t('app', 'Perusahaan')
             ],
             // 'auth_key',
             // 'password_hash',

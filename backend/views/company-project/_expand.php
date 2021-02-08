@@ -9,13 +9,13 @@ $items = [
             'model' => $model,
         ]),
     ],
-            [
+    /*[
         'label' => '<i class="glyphicon glyphicon-book"></i> '. Html::encode(Yii::t('app', 'Absensi')),
         'content' => $this->render('_dataCompanyProjectAttendance', [
             'model' => $model,
             'row' => $model->companyProjectAttendances,
         ]),
-    ],
+    ],*/
     ];
 echo TabsX::widget([
     'items' => $items,

@@ -17,7 +17,7 @@ class CompanyRoleQuery extends \yii\db\ActiveQuery
 
         if (!is_null($companyID)) {
             $this->andOnCondition(['company_id' => $companyID]);
-            $this->andOnCondition('id <> ' . $companyRoleID);
+            // $this->andOnCondition('id <> ' . $companyRoleID);
         }
         
         parent::init();

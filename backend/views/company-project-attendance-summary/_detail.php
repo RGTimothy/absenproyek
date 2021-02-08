@@ -12,7 +12,7 @@ use kartik\grid\GridView;
 
     <div class="row">
         <div class="col-sm-9">
-            <h2><?= Html::encode($model->id) ?></h2>
+            <h2><?= Html::encode($model->user->username . ': ' . date('Y-m-d', strtotime($model->created_at))) ?></h2>
         </div>
     </div>
 
@@ -22,11 +22,11 @@ use kartik\grid\GridView;
         ['attribute' => 'id', 'visible' => false],
         [
             'attribute' => 'user.username',
-            'label' => Yii::t('app', 'User'),
+            'label' => Yii::t('app', 'Karyawan'),
         ],
         [
-            'attribute' => 'companyRole.id',
-            'label' => Yii::t('app', 'Company Role'),
+            'attribute' => 'companyRole.code',
+            'label' => Yii::t('app', 'Grade'),
         ],
         'projects:ntext',
         'work_duration',
