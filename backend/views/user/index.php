@@ -63,7 +63,7 @@ $this->registerJs($search);
             ],*/
         [
                 'attribute' => 'company_role_id',
-                'label' => Yii::t('app', 'Company Role'),
+                'label' => Yii::t('app', 'Grade'),
                 'value' => function($model){
                     if ($model->companyRole)
                     {return $model->companyRole->code;}
@@ -75,7 +75,7 @@ $this->registerJs($search);
                 'filterWidgetOptions' => [
                     'pluginOptions' => ['allowClear' => true],
                 ],
-                'filterInputOptions' => ['placeholder' => 'Company role', 'id' => 'grid-user-search-company_role_id']
+                'filterInputOptions' => ['placeholder' => 'Grade', 'id' => 'grid-user-search-company_role_id']
             ],
         // 'auth_key',
         // 'password_hash',

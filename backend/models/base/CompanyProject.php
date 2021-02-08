@@ -89,14 +89,14 @@ class CompanyProject extends \yii\db\ActiveRecord
     {
         return [
             'id' => Yii::t('app', 'ID'),
-            'company_id' => Yii::t('app', 'Company ID'),
-            'name' => Yii::t('app', 'Name'),
-            'description' => Yii::t('app', 'Description'),
+            'company_id' => Yii::t('app', 'Perusahaan'),
+            'name' => Yii::t('app', 'Nama'),
+            'description' => Yii::t('app', 'Deskripsi'),
             'latitude' => Yii::t('app', 'Latitude'),
             'longitude' => Yii::t('app', 'Longitude'),
             'radius' => Yii::t('app', 'Radius'),
-            'clock_in' => Yii::t('app', 'Clock In'),
-            'clock_out' => Yii::t('app', 'Clock Out'),
+            'clock_in' => Yii::t('app', 'Jam Masuk'),
+            'clock_out' => Yii::t('app', 'Jam Keluar'),
         ];
     }
     

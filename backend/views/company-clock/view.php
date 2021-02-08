@@ -30,13 +30,16 @@ $this->params['breadcrumbs'][] = $this->title;
             )?>
             
             <?= Html::a(Yii::t('app', 'Update'), ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-            <?= Html::a(Yii::t('app', 'Delete'), ['delete', 'id' => $model->id], [
-                'class' => 'btn btn-danger',
-                'data' => [
-                    'confirm' => Yii::t('app', 'Are you sure you want to delete this item?'),
-                    'method' => 'post',
-                ],
-            ])
+            <?php
+            if (!$model->is_default) {
+                echo Html::a(Yii::t('app', 'Delete'), ['delete', 'id' => $model->id], [
+                    'class' => 'btn btn-danger',
+                    'data' => [
+                        'confirm' => Yii::t('app', 'Are you sure you want to delete this item?'),
+                        'method' => 'post',
+                    ],
+                ]);
+            }
             ?>
         </div>
     </div>
@@ -47,12 +50,20 @@ $this->params['breadcrumbs'][] = $this->title;
         ['attribute' => 'id', 'visible' => false],
         [
             'attribute' => 'company.name',
-            'label' => Yii::t('app', 'Company'),
+            'label' => Yii::t('app', 'Perusahaan'),
         ],
         'name',
         'clock_in',
         'clock_out',
+        'break_hour',
         'allowance',
+        // 'is_default',
+        [
+            'attribute' => 'is_default',
+            'value' => function ($model) {
+                return $model->is_default ? 'Ya' : 'Tidak';
+            }
+        ]
     ];
     echo DetailView::widget([
         'model' => $model,
@@ -70,6 +81,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'code',
         'image_filename',
         'description',
+        'hour_rounding',
         'status',
     ];
     echo DetailView::widget([

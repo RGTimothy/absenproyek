@@ -23,7 +23,7 @@ use kartik\grid\GridView;
         'code',
         [
             'attribute' => 'company.name',
-            'label' => Yii::t('app', 'Company'),
+            'label' => Yii::t('app', 'Perusahaan'),
         ],
         'description:ntext',
     ];

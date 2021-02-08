@@ -92,15 +92,16 @@ class CompanyProjectAttendance extends \yii\db\ActiveRecord
     {
         return [
             'id' => Yii::t('app', 'ID'),
-            'user_id' => Yii::t('app', 'User ID'),
-            'company_project_id' => Yii::t('app', 'Company Project ID'),
+            'user_id' => Yii::t('app', 'Karyawan'),
+            'company_project_id' => Yii::t('app', 'Proyek'),
             'latitude' => Yii::t('app', 'Latitude'),
             'longitude' => Yii::t('app', 'Longitude'),
             'status' => Yii::t('app', 'Status'),
-            'remark' => Yii::t('app', 'Remark'),
-            'image' => Yii::t('app', 'Image'),
+            'remark' => Yii::t('app', 'Catatan'),
+            'image' => Yii::t('app', 'Foto'),
             'image_filename' => Yii::t('app', 'Image Filename'),
             'image_filetype' => Yii::t('app', 'Image Filetype'),
+            'created_at' => Yii::t('app', 'Waktu'),
         ];
     }
     

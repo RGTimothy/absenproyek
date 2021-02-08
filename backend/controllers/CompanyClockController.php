@@ -87,6 +87,11 @@ class CompanyClockController extends Controller
         $model = $this->findModel($id);
         $model->company_id = Yii::$app->user->identity->company_id;
 
+        // $newData = Yii::$app->request->post();
+        // if ($model->is_default && $newData['is_default'] == 0) {
+        //     throw new \Exception(Yii::t('app', 'Jam kerja utama tidak boleh dihilangkan!'));
+        // }
+
         if ($model->loadAll(Yii::$app->request->post()) && $model->saveAll()) {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {

@@ -12,7 +12,7 @@ use yii\data\ArrayDataProvider;
         'username',
         [
                 'attribute' => 'company.name',
-                'label' => Yii::t('app', 'Company')
+                'label' => Yii::t('app', 'Perusahaan')
             ],
         // 'auth_key',
         // 'password_hash',
@@ -21,10 +21,10 @@ use yii\data\ArrayDataProvider;
         'phone',
         // 'status',
         // 'verification_token',
-        [
+        /*[
             'class' => 'yii\grid\ActionColumn',
             'controller' => 'user'
-        ],
+        ],*/
     ];
     
     echo GridView::widget([

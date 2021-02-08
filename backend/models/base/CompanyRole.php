@@ -83,9 +83,9 @@ class CompanyRole extends \yii\db\ActiveRecord
     {
         return [
             'id' => Yii::t('app', 'ID'),
-            'code' => Yii::t('app', 'Code'),
-            'company_id' => Yii::t('app', 'Company ID'),
-            'description' => Yii::t('app', 'Description'),
+            'code' => Yii::t('app', 'Kode'),
+            'company_id' => Yii::t('app', 'Perusahaan'),
+            'description' => Yii::t('app', 'Deskripsi'),
         ];
     }
     

@@ -25,7 +25,7 @@ use yii\widgets\ActiveForm;
         ],
     ]);*/ ?>
 
-    <?= $form->field($model, 'name')->textInput(['maxlength' => true, 'placeholder' => 'Name']) ?>
+    <?= $form->field($model, 'name')->textInput(['maxlength' => true, 'placeholder' => 'Nama']) ?>
 
     <?= $form->field($model, 'clock_in')->widget(\kartik\datecontrol\DateControl::className(), [
         'type' => \kartik\datecontrol\DateControl::FORMAT_TIME,
@@ -51,7 +51,11 @@ use yii\widgets\ActiveForm;
         ]
     ]); ?>
 
-    <?= $form->field($model, 'allowance')->textInput(['placeholder' => 'Allowance']) ?>
+    <?= $form->field($model, 'break_hour')->textInput(['placeholder' => 'Durasi Istirahat (Jam)']) ?>
+
+    <?= $form->field($model, 'allowance')->textInput(['placeholder' => 'Uang Makan']) ?>
+
+    <?= $form->field($model, 'is_default')->checkbox() ?>
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? Yii::t('app', 'Create') : Yii::t('app', 'Update'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>

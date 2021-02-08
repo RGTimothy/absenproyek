@@ -47,7 +47,7 @@ $this->params['breadcrumbs'][] = $this->title;
         ['attribute' => 'id', 'visible' => false],
         [
             'attribute' => 'company.name',
-            'label' => Yii::t('app', 'Company'),
+            'label' => Yii::t('app', 'Perusahaan'),
         ],
         'name',
         'description:ntext',
@@ -88,14 +88,14 @@ if($providerCompanyProjectAttendance->totalCount){
             ['attribute' => 'id', 'visible' => false],
             [
                 'attribute' => 'user.username',
-                'label' => Yii::t('app', 'User')
+                'label' => Yii::t('app', 'Karyawan')
             ],
                         'latitude',
             'longitude',
             'status',
             [
                 'attribute' => 'created_at',
-                'label' => 'Time',
+                'label' => 'Waktu',
             ],
             // 'image',
             // 'image_filename',
