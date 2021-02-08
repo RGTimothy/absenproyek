@@ -23,11 +23,11 @@ use kartik\grid\GridView;
         'username',
         [
             'attribute' => 'company.name',
-            'label' => Yii::t('app', 'Company'),
+            'label' => Yii::t('app', 'Perusahaan'),
         ],
         [
             'attribute' => 'companyRole.code',
-            'label' => Yii::t('app', 'Company Role'),
+            'label' => Yii::t('app', 'Grade'),
         ],
         // 'auth_key',
         // 'password_hash',
