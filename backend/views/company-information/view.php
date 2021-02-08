@@ -47,7 +47,7 @@ $this->params['breadcrumbs'][] = $this->title;
         ['attribute' => 'id', 'visible' => false],
         [
             'attribute' => 'company.name',
-            'label' => Yii::t('app', 'Company'),
+            'label' => Yii::t('app', 'Perusahaan'),
         ],
         'title',
         'description:ntext',

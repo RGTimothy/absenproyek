@@ -83,11 +83,11 @@ class CompanyInformation extends \yii\db\ActiveRecord
     {
         return [
             'id' => Yii::t('app', 'ID'),
-            'company_id' => Yii::t('app', 'Company ID'),
-            'title' => Yii::t('app', 'Title'),
-            'description' => Yii::t('app', 'Description'),
-            'start_time' => Yii::t('app', 'Start Time'),
-            'end_time' => Yii::t('app', 'End Time'),
+            'company_id' => Yii::t('app', 'Perusahaan'),
+            'title' => Yii::t('app', 'Judul'),
+            'description' => Yii::t('app', 'Deskripsi'),
+            'start_time' => Yii::t('app', 'Waktu Mulai'),
+            'end_time' => Yii::t('app', 'Waktu Berhenti'),
         ];
     }
     
