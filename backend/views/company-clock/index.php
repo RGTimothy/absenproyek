@@ -46,7 +46,7 @@ $this->registerJs($search);
         ['attribute' => 'id', 'visible' => false],
         [
                 'attribute' => 'company_id',
-                'label' => Yii::t('app', 'Company'),
+                // 'label' => Yii::t('app', 'Company'),
                 'value' => function($model){
                     if ($model->company)
                     {return $model->company->name;}
@@ -58,14 +58,24 @@ $this->registerJs($search);
                 'filterWidgetOptions' => [
                     'pluginOptions' => ['allowClear' => true],
                 ],
-                'filterInputOptions' => ['placeholder' => 'Company', 'id' => 'grid-company-clock-search-company_id']
+                'filterInputOptions' => ['placeholder' => 'Perusahaan', 'id' => 'grid-company-clock-search-company_id']
             ],
         'name',
         'clock_in',
         'clock_out',
         'break_hour',
         'allowance',
-        'is_default',
+        // 'is_default',
+        [
+            'attribute' => 'is_default',
+            'value' => function ($model) {
+                if ($model->is_default) {
+                    return 'Ya';
+                } else {
+                    return 'Tidak';
+                }
+            }
+        ],
         [
             'class' => 'yii\grid\ActionColumn',
         ],

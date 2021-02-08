@@ -46,7 +46,7 @@ $this->registerJs($search);
         ['attribute' => 'id', 'visible' => false],
         [
                 'attribute' => 'user_id',
-                'label' => Yii::t('app', 'User'),
+                // 'label' => Yii::t('app', 'User'),
                 'value' => function($model){
                     if ($model->user)
                     {return $model->user->username;}
@@ -58,11 +58,11 @@ $this->registerJs($search);
                 'filterWidgetOptions' => [
                     'pluginOptions' => ['allowClear' => true],
                 ],
-                'filterInputOptions' => ['placeholder' => 'User', 'id' => 'grid-company-project-attendance-search-user_id']
+                'filterInputOptions' => ['placeholder' => 'Karyawan', 'id' => 'grid-company-project-attendance-search-user_id']
             ],
         [
                 'attribute' => 'company_project_id',
-                'label' => Yii::t('app', 'Company Project'),
+                // 'label' => Yii::t('app', 'Company Project'),
                 'value' => function($model){
                     if ($model->companyProject)
                     {return $model->companyProject->name;}
@@ -74,7 +74,7 @@ $this->registerJs($search);
                 'filterWidgetOptions' => [
                     'pluginOptions' => ['allowClear' => true],
                 ],
-                'filterInputOptions' => ['placeholder' => 'Company Project', 'id' => 'grid-company-project-attendance-search-company_project_id']
+                'filterInputOptions' => ['placeholder' => 'Proyek', 'id' => 'grid-company-project-attendance-search-company_project_id']
             ],
         'latitude',
         'longitude',

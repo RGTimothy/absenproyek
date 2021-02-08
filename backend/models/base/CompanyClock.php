@@ -85,13 +85,13 @@ class CompanyClock extends \yii\db\ActiveRecord
     {
         return [
             'id' => Yii::t('app', 'ID'),
-            'company_id' => Yii::t('app', 'Company ID'),
-            'name' => Yii::t('app', 'Name'),
-            'clock_in' => Yii::t('app', 'Clock In'),
-            'clock_out' => Yii::t('app', 'Clock Out'),
-            'break_hour' => Yii::t('app', 'Break Hour'),
-            'allowance' => Yii::t('app', 'Allowance'),
-            'is_default' => Yii::t('app', 'Is Default'),
+            'company_id' => Yii::t('app', 'Perusahaan'),
+            'name' => Yii::t('app', 'Nama'),
+            'clock_in' => Yii::t('app', 'Jam Masuk'),
+            'clock_out' => Yii::t('app', 'Jam Keluar'),
+            'break_hour' => Yii::t('app', 'Durasi Istirahat'),
+            'allowance' => Yii::t('app', 'Uang Makan'),
+            'is_default' => Yii::t('app', 'Utama'),
         ];
     }
     
