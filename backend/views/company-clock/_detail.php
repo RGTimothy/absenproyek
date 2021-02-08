@@ -22,14 +22,20 @@ use kartik\grid\GridView;
         ['attribute' => 'id', 'visible' => false],
         [
             'attribute' => 'company.name',
-            'label' => Yii::t('app', 'Company'),
+            'label' => Yii::t('app', 'Perusahaan'),
         ],
         'name',
         'clock_in',
         'clock_out',
         'break_hour',
         'allowance',
-        'is_default',
+        // 'is_default',
+        [
+            'attribute' => 'is_default',
+            'value' => function ($model) {
+                return $model->is_default ? 'Ya' : 'Tidak';
+            }
+        ],
     ];
     echo DetailView::widget([
         'model' => $model,

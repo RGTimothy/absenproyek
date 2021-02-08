@@ -44,7 +44,7 @@ $this->registerJs($search);
             'expandOneOnly' => true
         ],
         ['attribute' => 'id', 'visible' => false],
-        [
+        /*[
                 'attribute' => 'company_id',
                 // 'label' => Yii::t('app', 'Company'),
                 'value' => function($model){
@@ -59,7 +59,7 @@ $this->registerJs($search);
                     'pluginOptions' => ['allowClear' => true],
                 ],
                 'filterInputOptions' => ['placeholder' => 'Perusahaan', 'id' => 'grid-company-clock-search-company_id']
-            ],
+            ],*/
         'name',
         'clock_in',
         'clock_out',
@@ -77,7 +77,16 @@ $this->registerJs($search);
             }
         ],
         [
-            'class' => 'yii\grid\ActionColumn',
+            'class' => 'yii\grid\ActionColumn', 
+            // 'format' => 'raw',
+            'template' => '{view} {update}',
+            // 'template' => function ($model) {
+            //     if ($model->is_default) {
+            //         return '{view}';
+            //     } else {
+            //         return '{view} {update} {delete}';
+            //     }
+            // }
         ],
     ]; 
     ?>

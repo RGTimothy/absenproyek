@@ -17,15 +17,15 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'id', ['template' => '{input}'])->textInput(['style' => 'display:none']); ?>
 
-    <?= $form->field($model, 'company_id')->widget(\kartik\widgets\Select2::classname(), [
+    <?php /*$form->field($model, 'company_id')->widget(\kartik\widgets\Select2::classname(), [
         'data' => \yii\helpers\ArrayHelper::map(\backend\models\Company::find()->orderBy('id')->asArray()->all(), 'id', 'name'),
         'options' => ['placeholder' => Yii::t('app', 'Choose Company')],
         'pluginOptions' => [
             'allowClear' => true
         ],
-    ]); ?>
+    ]);*/ ?>
 
-    <?= $form->field($model, 'name')->textInput(['maxlength' => true, 'placeholder' => 'Name']) ?>
+    <?= $form->field($model, 'name')->textInput(['maxlength' => true, 'placeholder' => 'Nama']) ?>
 
     <?= $form->field($model, 'clock_in')->widget(\kartik\datecontrol\DateControl::className(), [
         'type' => \kartik\datecontrol\DateControl::FORMAT_TIME,
@@ -51,9 +51,9 @@ use yii\widgets\ActiveForm;
         ]
     ]); ?>
 
-    <?= $form->field($model, 'break_hour')->textInput(['placeholder' => 'Break Hour']) ?>
+    <?= $form->field($model, 'break_hour')->textInput(['placeholder' => 'Durasi Istirahat (Jam)']) ?>
 
-    <?= $form->field($model, 'allowance')->textInput(['placeholder' => 'Allowance']) ?>
+    <?= $form->field($model, 'allowance')->textInput(['placeholder' => 'Uang Makan']) ?>
 
     <?= $form->field($model, 'is_default')->checkbox() ?>
 
