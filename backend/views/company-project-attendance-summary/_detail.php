@@ -30,10 +30,16 @@ use kartik\grid\GridView;
         ],
         'projects:ntext',
         'work_duration',
-        'overtime_duration_1:datetime',
-        'overtime_duration_2:datetime',
-        'overtime_duration_3:datetime',
-        'total_allowance',
+        'overtime_duration_1',
+        'overtime_duration_2',
+        'overtime_duration_3',
+        [
+            'attribute' => 'total_allowance',
+            'value' => function ($model) {
+                return $model->total_allowance > 0 ? 'Ya' : 'Tidak';
+            }
+        ],
+        // 'total_allowance',
     ];
     echo DetailView::widget([
         'model' => $model,

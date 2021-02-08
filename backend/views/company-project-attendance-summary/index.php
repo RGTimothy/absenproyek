@@ -81,7 +81,14 @@ $this->registerJs($search);
         'overtime_duration_1',
         'overtime_duration_2',
         'overtime_duration_3',
-        'total_allowance',
+        [
+            'attribute' => 'total_allowance',
+            'value' => function ($model) {
+                return $model->total_allowance > 0 ? 'Ya' : 'Tidak';
+            }
+        ],
+        //premium clients can see column below:
+        // 'total_allowance',
         [
             'attribute' => 'created_at',
             'value' => function ($model) {
