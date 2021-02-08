@@ -47,7 +47,7 @@ use yii\widgets\ActiveForm;
         ],
     ]);*/ ?>
 
-    <?= $form->field($model, 'name')->textInput(['maxlength' => true, 'placeholder' => 'Name']) ?>
+    <?= $form->field($model, 'name')->textInput(['maxlength' => true, 'placeholder' => 'Nama']) ?>
 
     <?= $form->field($model, 'description')->textarea(['rows' => 6]) ?>
 
@@ -57,7 +57,7 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'radius')->textInput(['placeholder' => 'Radius']) ?>
 
-    <?= $form->field($model, 'clock_in')->widget(\kartik\datecontrol\DateControl::className(), [
+    <?php /*$form->field($model, 'clock_in')->widget(\kartik\datecontrol\DateControl::className(), [
         'type' => \kartik\datecontrol\DateControl::FORMAT_TIME,
         'saveFormat' => 'php:H:i:s',
         'ajaxConversion' => true,
@@ -67,9 +67,9 @@ use yii\widgets\ActiveForm;
                 'autoclose' => true
             ]
         ]
-    ]); ?>
+    ]);*/ ?>
 
-    <?= $form->field($model, 'clock_out')->widget(\kartik\datecontrol\DateControl::className(), [
+    <?php /*$form->field($model, 'clock_out')->widget(\kartik\datecontrol\DateControl::className(), [
         'type' => \kartik\datecontrol\DateControl::FORMAT_TIME,
         'saveFormat' => 'php:H:i:s',
         'ajaxConversion' => true,
@@ -79,7 +79,7 @@ use yii\widgets\ActiveForm;
                 'autoclose' => true
             ]
         ]
-    ]); ?>
+    ]);*/ ?>
 
     <?php
     /*$forms = [

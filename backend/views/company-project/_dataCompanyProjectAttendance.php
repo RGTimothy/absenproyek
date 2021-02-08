@@ -11,14 +11,14 @@ use yii\data\ArrayDataProvider;
         ['attribute' => 'id', 'visible' => false],
         [
                 'attribute' => 'user.username',
-                'label' => Yii::t('app', 'User')
+                'label' => Yii::t('app', 'Karyawan')
             ],
         'latitude',
         'longitude',
         'status',
         [
             'attribute' => 'created_at',
-            'label' => 'Time',
+            'label' => 'Waktu',
         ],
         // 'image',
         // 'image_filename',
