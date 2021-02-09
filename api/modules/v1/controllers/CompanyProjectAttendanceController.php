@@ -12,6 +12,8 @@ use api\modules\v1\models\CompanyClock;
 
 class CompanyProjectAttendanceController extends ActiveController
 {
+	const IMAGE_FOLDER = 'attendance_images';
+
 	const CLOCK_IN = 'CLOCK_IN',
 		  CLOCK_OUT = 'CLOCK_OUT';
 
@@ -135,10 +137,19 @@ class CompanyProjectAttendanceController extends ActiveController
             //save large image raw without resizing
             $decodedImage = base64_decode($encodedImage);
 
+            //generate image filename
+            $filename = 'attendance' . '_' . $userID . '_' . time();
+
             $model->image = $decodedImage;
+            $model->image_filename = $filename;
+            $model->image_filetype = $fileExtension;
 			$model->status = self::CLOCK_IN;
 
 			if ($model->save()) {
+				//upload image file
+				$uploadPath = Yii::getAlias('@uploads') . '/' . self::IMAGE_FOLDER;
+				file_put_contents($uploadPath . '/' . $filename . '.' . $fileExtension, $decodedImage);
+
 				$response['hasErrors'] = $model->hasErrors();
 				$response['message'] = 'Clock in success!';
 				$response['data'] = [];
