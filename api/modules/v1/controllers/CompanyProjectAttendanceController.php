@@ -147,7 +147,10 @@ class CompanyProjectAttendanceController extends ActiveController
 
 			if ($model->save()) {
 				//upload image file
-				$uploadPath = Yii::getAlias('@uploads') . '/' . self::IMAGE_FOLDER;
+				$uploadPath = Yii::getAlias('@backend') . '/web/uploads/' . self::IMAGE_FOLDER;
+				if (!file_exists($uploadPath)) {
+				    mkdir($uploadPath, 0755, true);
+				}
 				file_put_contents($uploadPath . '/' . $filename . '.' . $fileExtension, $decodedImage);
 
 				$response['hasErrors'] = $model->hasErrors();
@@ -241,10 +244,22 @@ class CompanyProjectAttendanceController extends ActiveController
             //save large image raw without resizing
             $decodedImage = base64_decode($encodedImage);
 
+            //generate image filename
+            $filename = 'attendance' . '_' . $userID . '_' . time();
+
             $model->image = $decodedImage;
+            $model->image_filename = $filename;
+            $model->image_filetype = $fileExtension;
 			$model->status = self::CLOCK_OUT;
 
 			if ($model->save()) {
+				//upload image file
+				$uploadPath = Yii::getAlias('@backend') . '/web/uploads/' . self::IMAGE_FOLDER;
+				if (!file_exists($uploadPath)) {
+				    mkdir($uploadPath, 0755, true);
+				}
+				file_put_contents($uploadPath . '/' . $filename . '.' . $fileExtension, $decodedImage);
+
 				$response['hasErrors'] = $model->hasErrors();
 				$response['message'] = 'Clock out success!';
 				$response['data'] = [];
