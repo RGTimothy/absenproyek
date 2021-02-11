@@ -21,4 +21,9 @@ class CompanyProject extends ActiveRecord
     public function getCompanyProjectAttendances() {
         return $this->hasMany(CompanyProjectAttendance::className(), ['id' => 'company_project_id']);
     }
+
+    public static function findByCompanyId($companyID)
+    {
+        return static::find()->where(['company_id' => $companyID]);
+    }
 }

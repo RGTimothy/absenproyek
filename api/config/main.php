@@ -102,6 +102,17 @@ return [
                         // '{id}' => '<id:\\w+>',
                     ]
                 ],
+                [
+                    'class' => 'yii\rest\UrlRule',
+                    'pluralize' => false,
+                    'controller' => 'v1/company-project',
+                    'extraPatterns' => [
+                        'GET list' => 'list',
+                    ],
+                    'tokens' => [
+                        // '{id}' => '<id:\\w+>',
+                    ]
+                ],
             ],        
         ]
     ],
