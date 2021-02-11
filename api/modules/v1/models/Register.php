@@ -40,11 +40,10 @@ class Register extends ActiveRecord
     public function rules()
     {
         return [
-            // ['username', 'trim'],
+            ['username', 'trim'],
             ['username', 'required'],
             ['username', 'unique', 'targetClass' => '\api\modules\v1\models\User', 'message' => 'This username has already been taken.'],
-            ['username', 'string', 'min' => 5, 'max' => 30],
-            ['username', 'filter', 'filter' => [$this, 'checkUsername']],
+            ['username', 'string', 'min' => 2, 'max' => 255],
 
             ['phone', 'required'],
             ['phone', 'unique'],
@@ -80,15 +79,6 @@ class Register extends ActiveRecord
             $this->addError($attribute, 'Your company code is not found. Please contact us to use this app for your company.');
         } else {
             return $company->id;
-        }
-    }
-
-    public function checkUsername($value) {
-        //returns true / false (preg_replace returns the string with replaced matched regex)
-        if (preg_match('/\s+/', $value)) {
-           $this->addError($attribute, 'Username tidak boleh ada spasi.');
-        } else {
-            return $value;
         }
     }
 

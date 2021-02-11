@@ -11,7 +11,7 @@ use api\modules\v1\models\User;
  */
 class Login extends ActiveRecord
 {
-    public $username;
+    public $phone;
     public $password;
     public $rememberMe = true;
 
@@ -24,7 +24,7 @@ class Login extends ActiveRecord
     {
         return [
             // phone and password are both required
-            [['username', 'password'], 'required'],
+            [['phone', 'password'], 'required'],
             // rememberMe must be a boolean value
             ['rememberMe', 'boolean'],
             // password is validated by validatePassword()
@@ -44,7 +44,7 @@ class Login extends ActiveRecord
         if (!$this->hasErrors()) {
             $user = $this->getUser();
             if (!$user || !$user->validatePassword($this->password)) {
-                $this->addError($attribute, 'Incorrect username or password.');
+                $this->addError($attribute, 'Incorrect phone number or password.');
             }
         }
     }
@@ -71,7 +71,7 @@ class Login extends ActiveRecord
     protected function getUser()
     {
         if ($this->_user === null) {
-            $this->_user = User::findByUsername($this->username);
+            $this->_user = User::findByPhone($this->phone);
         }
 
         return $this->_user;
