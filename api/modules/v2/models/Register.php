@@ -1,11 +1,11 @@
 <?php
 
-namespace api\modules\v1\models;
+namespace api\modules\v2\models;
 
 use Yii;
 // use yii\base\Model;
 use yii\db\ActiveRecord;
-use api\modules\v1\models\User;
+use api\modules\v2\models\User;
 
 /**
  * This is the model class for table "user".
