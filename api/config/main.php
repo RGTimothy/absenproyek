@@ -15,6 +15,10 @@ return [
         'v1' => [
             'basePath' => '@app/modules/v1',
             'class' => 'api\modules\v1\Module'
+        ],
+        'v2' => [
+            'basePath' => '@app/modules/v2',
+            'class' => 'api\modules\v2\Module'
         ]
     ],
     'components' => [
@@ -97,6 +101,67 @@ return [
                         'GET status' => 'status',
                         'POST clock-in' => 'clock-in',
                         'POST clock-out' => 'clock-out',
+                    ],
+                    'tokens' => [
+                        // '{id}' => '<id:\\w+>',
+                    ]
+                ],
+                [
+                    'class' => 'yii\rest\UrlRule',
+                    'pluralize' => false,
+                    'controller' => 'v1/company-project',
+                    'extraPatterns' => [
+                        'GET list' => 'list',
+                    ],
+                    'tokens' => [
+                        // '{id}' => '<id:\\w+>',
+                    ]
+                ],
+
+                //api version 2.0
+                [
+                    'class' => 'yii\rest\UrlRule',
+                    'pluralize' => false,
+                    'controller' => 'v2/user',
+                    'extraPatterns' => [
+                        'GET ping' => 'ping',
+                        'POST register' => 'register',
+                        'POST login' => 'login',
+                    ],
+                    'tokens' => [
+                        // '{id}' => '<id:\\w+>',
+                    ]
+                ],
+                [
+                    'class' => 'yii\rest\UrlRule',
+                    'pluralize' => false,
+                    'controller' => 'v2/company-information',
+                    'extraPatterns' => [
+                        'GET list' => 'list',
+                    ],
+                    'tokens' => [
+                        // '{id}' => '<id:\\w+>',
+                    ]
+                ],
+                [
+                    'class' => 'yii\rest\UrlRule',
+                    'pluralize' => false,
+                    'controller' => 'v2/company-project-attendance',
+                    'extraPatterns' => [
+                        'GET status' => 'status',
+                        'POST clock-in' => 'clock-in',
+                        'POST clock-out' => 'clock-out',
+                    ],
+                    'tokens' => [
+                        // '{id}' => '<id:\\w+>',
+                    ]
+                ],
+                [
+                    'class' => 'yii\rest\UrlRule',
+                    'pluralize' => false,
+                    'controller' => 'v2/company-project',
+                    'extraPatterns' => [
+                        'GET list' => 'list',
                     ],
                     'tokens' => [
                         // '{id}' => '<id:\\w+>',
