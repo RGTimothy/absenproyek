@@ -76,9 +76,19 @@ class UserController extends ActiveController
             // $response['isSuccess'] = 200;
             $userID = Yii::$app->user->id;
             $response['hasErrors'] = $model->hasErrors();
-            $response['access_token'] = Yii::$app->user->identity->getAuthKey();
 
+            //generate new access_token and return it
+            $modelUser = new User();
+            $modelUser->generateAuthKey();
+            $newAccessToken = $modelUser->auth_key;
+
+            //update current user's access token
             $dataUser = User::findIdentity($userID);
+            $dataUser->auth_key = $newAccessToken;
+            $dataUser->save();
+
+            // $response['access_token'] = Yii::$app->user->identity->getAuthKey();
+            $response['access_token'] = $dataUser->auth_key;
             
             $companyProjects = array();
             foreach ($dataUser->companyProjects as $item) {
