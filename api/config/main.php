@@ -29,6 +29,7 @@ return [
                 if (!$response->isSuccessful) {
                     $errorMessage = '';
                     if (isset($response->data['message'])) {
+                        Yii::$app->response->statusCode = 200;
                         $errorMessage = $response->data['message'];
                         $response->data = [
                             'hasErrors' => true,
@@ -162,6 +163,7 @@ return [
                     'controller' => 'v2/company-project',
                     'extraPatterns' => [
                         'GET list' => 'list',
+                        'POST list' => 'list',
                     ],
                     'tokens' => [
                         // '{id}' => '<id:\\w+>',
