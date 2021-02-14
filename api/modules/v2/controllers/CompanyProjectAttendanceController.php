@@ -177,7 +177,7 @@ class CompanyProjectAttendanceController extends ActiveController
 											->orderBy(['id' => SORT_DESC])
 											->one();
 
-				if (count($companyProjectAttendance > 0)) {
+				if (!is_null($companyProjectAttendance)) {
 					$response['data'] = [
 						'companyProjectAttendanceID' => $companyProjectAttendance->id,
 						'companyProjectAttendanceUserID' => $companyProjectAttendance->user_id,
@@ -284,7 +284,7 @@ class CompanyProjectAttendanceController extends ActiveController
 											->orderBy(['id' => SORT_DESC])
 											->one();
 
-				if (count($companyProjectAttendance > 0)) {
+				if (!is_null($companyProjectAttendance)) {
 					$response['data'] = [
 						'companyProjectAttendanceID' => $companyProjectAttendance->id,
 						'companyProjectAttendanceUserID' => $companyProjectAttendance->user_id,
