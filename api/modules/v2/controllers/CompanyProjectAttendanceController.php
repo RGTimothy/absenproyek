@@ -55,6 +55,7 @@ class CompanyProjectAttendanceController extends ActiveController
 		$clockInStatus = false;
 		$clockOutStatus = false;
 		$lastState = null;
+		$lastProjectID = null;
 		foreach ($attendances as $item) {
 			if ($item->status == self::CLOCK_IN) {
 				array_push($todayAttendanceHistory, [
@@ -68,6 +69,7 @@ class CompanyProjectAttendanceController extends ActiveController
 					'companyProjectAttendanceTime' => $item->created_at,
 				]);
 				$lastState = self::CLOCK_IN;
+				$lastProjectID = $item->company_project_id;
 			}
 
 			if ($item->status == self::CLOCK_OUT) {
@@ -82,6 +84,7 @@ class CompanyProjectAttendanceController extends ActiveController
 					'companyProjectAttendanceTime' => $item->created_at,
 				]);
 				$lastState = self::CLOCK_OUT;
+				$lastProjectID = $item->company_project_id;
 			}
 		}
 
@@ -100,6 +103,7 @@ class CompanyProjectAttendanceController extends ActiveController
 		$response['clockInStatus'] = $clockInStatus;
 		$response['clockOutStatus'] = $clockOutStatus;
 		$response['lastState'] = $lastState;
+		$response['lastProjectID'] = $lastProjectID;
 		$response['data'] = $todayAttendanceHistory;
 
 		// return self::calculateWorkingHours($todayAttendanceHistory);
@@ -222,6 +226,8 @@ class CompanyProjectAttendanceController extends ActiveController
 		//get current attendance status
 		$attendance = self::actionStatus();
 
+		
+
 		if ($attendance['lastState'] == self::CLOCK_OUT) {
 			$response['hasErrors'] = true;
 			$response['message'] = 'Fail. You have been clocked out before.';
@@ -229,88 +235,95 @@ class CompanyProjectAttendanceController extends ActiveController
 			$response['hasErrors'] = true;
 			$response['message'] = 'Fail. You have to clock in first before doing clock out.';
 		} else {
-			//do clock out
-			$model = new CompanyProjectAttendance();
-			$model->user_id = $userID;
-			$model->company_project_id = $companyProjectID;
-			$model->latitude = $latitude;
-			$model->longitude = $longitude;
+			if (!is_null($attendance['lastProjectID'])) {
+				if ($attendance['lastProjectID'] != $companyProjectID) {
+					$response['hasErrors'] = true;
+					$response['message'] = 'Gagal absen. Anda harus clock out di proyek yang lain terlebih dahulu.';
+				} else {
+					//do clock out
+					$model = new CompanyProjectAttendance();
+					$model->user_id = $userID;
+					$model->company_project_id = $companyProjectID;
+					$model->latitude = $latitude;
+					$model->longitude = $longitude;
 
-			$explodeImageString = explode(',', $image, 2); // limit to 2 parts, i.e: find the first comma
-            $explodeFirstline = explode(';', $explodeImageString[0], 2)[0];
-            $fileExtension = explode('/', $explodeFirstline, 2)[1];
-            $encodedImage = $explodeImageString[1]; // pick up the 2nd part
+					$explodeImageString = explode(',', $image, 2); // limit to 2 parts, i.e: find the first comma
+		            $explodeFirstline = explode(';', $explodeImageString[0], 2)[0];
+		            $fileExtension = explode('/', $explodeFirstline, 2)[1];
+		            $encodedImage = $explodeImageString[1]; // pick up the 2nd part
 
-            //save large image raw without resizing
-            $decodedImage = base64_decode($encodedImage);
+		            //save large image raw without resizing
+		            $decodedImage = base64_decode($encodedImage);
 
-            //generate image filename
-            $filename = 'attendance' . '_' . $userID . '_' . time();
+		            //generate image filename
+		            $filename = 'attendance' . '_' . $userID . '_' . time();
 
-            $model->image = $decodedImage;
-            $model->image_filename = $filename;
-            $model->image_filetype = $fileExtension;
-			$model->status = self::CLOCK_OUT;
+		            $model->image = $decodedImage;
+		            $model->image_filename = $filename;
+		            $model->image_filetype = $fileExtension;
+					$model->status = self::CLOCK_OUT;
 
-			if ($model->save()) {
-				//upload image file
-				$uploadPath = Yii::getAlias('@backend') . '/web/uploads/' . self::IMAGE_FOLDER;
-				if (!file_exists($uploadPath)) {
-				    mkdir($uploadPath, 0755, true);
+					if ($model->save()) {
+						//upload image file
+						$uploadPath = Yii::getAlias('@backend') . '/web/uploads/' . self::IMAGE_FOLDER;
+						if (!file_exists($uploadPath)) {
+						    mkdir($uploadPath, 0755, true);
+						}
+						file_put_contents($uploadPath . '/' . $filename . '.' . $fileExtension, $decodedImage);
+
+						$response['hasErrors'] = $model->hasErrors();
+						$response['message'] = 'Clock out success!';
+						$response['data'] = [];
+
+						$headers = Yii::$app->request->headers;
+
+						//set user's timezone
+						$timezone =  $headers->get('timezone');
+						if (is_null($timezone)) {
+							$timezone = 'Asia/Jakarta';
+						}
+
+						//get current date
+						$now = new \DateTime("now", new \DateTimeZone($timezone) );
+						$currentDate = $now->format('Y-m-d');
+
+						$companyProjectAttendance = CompanyProjectAttendance::findByUserId($userID)
+													->andWhere([
+														'DATE(created_at)' => $currentDate,
+														'status' => self::CLOCK_OUT
+													])
+													->orderBy(['id' => SORT_DESC])
+													->one();
+
+						if (!is_null($companyProjectAttendance)) {
+							$response['data'] = [
+								'companyProjectAttendanceID' => $companyProjectAttendance->id,
+								'companyProjectAttendanceUserID' => $companyProjectAttendance->user_id,
+								'companyProjectAttendanceProjectID' => $companyProjectAttendance->company_project_id,
+								'companyProjectAttendanceProjectName' => $companyProjectAttendance->companyProject->name,
+								'companyProjectAttendanceLatitude' => $companyProjectAttendance->latitude,
+								'companyProjectAttendanceLongitude' => $companyProjectAttendance->longitude,
+								'companyProjectAttendanceStatus' => $companyProjectAttendance->status,
+								'companyProjectAttendanceTime' => $companyProjectAttendance->created_at,
+							];
+
+							$updateCompanyProjectAttendanceSummary = self::updateCompanyProjectAttendanceSummary($attendance['data'], $timezone);
+						}
+					} else {
+						$errors = $model->getErrors();
+			            $response['hasErrors'] = $model->hasErrors();
+
+			            $errorList = array();
+			            foreach ($errors as $key => $value) {
+			                array_push($errorList, [
+			                    'errorField' => $key,
+			                    'errorMessage' => $value[0]
+			                ]);
+			            }
+
+			            $response['message'] = $errorList[0]['errorMessage'];
+					}
 				}
-				file_put_contents($uploadPath . '/' . $filename . '.' . $fileExtension, $decodedImage);
-
-				$response['hasErrors'] = $model->hasErrors();
-				$response['message'] = 'Clock out success!';
-				$response['data'] = [];
-
-				$headers = Yii::$app->request->headers;
-
-				//set user's timezone
-				$timezone =  $headers->get('timezone');
-				if (is_null($timezone)) {
-					$timezone = 'Asia/Jakarta';
-				}
-
-				//get current date
-				$now = new \DateTime("now", new \DateTimeZone($timezone) );
-				$currentDate = $now->format('Y-m-d');
-
-				$companyProjectAttendance = CompanyProjectAttendance::findByUserId($userID)
-											->andWhere([
-												'DATE(created_at)' => $currentDate,
-												'status' => self::CLOCK_OUT
-											])
-											->orderBy(['id' => SORT_DESC])
-											->one();
-
-				if (!is_null($companyProjectAttendance)) {
-					$response['data'] = [
-						'companyProjectAttendanceID' => $companyProjectAttendance->id,
-						'companyProjectAttendanceUserID' => $companyProjectAttendance->user_id,
-						'companyProjectAttendanceProjectID' => $companyProjectAttendance->company_project_id,
-						'companyProjectAttendanceProjectName' => $companyProjectAttendance->companyProject->name,
-						'companyProjectAttendanceLatitude' => $companyProjectAttendance->latitude,
-						'companyProjectAttendanceLongitude' => $companyProjectAttendance->longitude,
-						'companyProjectAttendanceStatus' => $companyProjectAttendance->status,
-						'companyProjectAttendanceTime' => $companyProjectAttendance->created_at,
-					];
-
-					$updateCompanyProjectAttendanceSummary = self::updateCompanyProjectAttendanceSummary($attendance['data'], $timezone);
-				}
-			} else {
-				$errors = $model->getErrors();
-	            $response['hasErrors'] = $model->hasErrors();
-
-	            $errorList = array();
-	            foreach ($errors as $key => $value) {
-	                array_push($errorList, [
-	                    'errorField' => $key,
-	                    'errorMessage' => $value[0]
-	                ]);
-	            }
-
-	            $response['message'] = $errorList[0]['errorMessage'];
 			}
 		}
 
