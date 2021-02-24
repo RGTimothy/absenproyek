@@ -7,6 +7,7 @@
 use yii\helpers\Html;
 use kartik\export\ExportMenu;
 use kartik\grid\GridView;
+use kartik\daterange\DateRangePicker;
 
 // $this->title = Yii::t('app', 'Company Project Attendance Summary');
 $this->params['breadcrumbs'][] = $this->title;
@@ -93,7 +94,18 @@ $this->registerJs($search);
             'attribute' => 'created_at',
             'value' => function ($model) {
                 return date('Y-m-d', strtotime($model->created_at));
-            }
+            },
+            'filter' => DateRangePicker::widget([
+                'model' => $searchModel,
+                'attribute' => 'created_at',
+                'pjaxContainerId' => 'kv-pjax-container-company-project-attendance-summary',
+                'convertFormat' => true,
+                'pluginOptions' => [
+                    'locale' => [
+                        'format' => 'Y-m-d'
+                    ],
+                ],
+            ]),
         ],
         /*[
             'class' => 'yii\grid\ActionColumn',
