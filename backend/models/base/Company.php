@@ -122,9 +122,9 @@ class Company extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getCompanyLimitations()
+    public function getCompanyLimitation()
     {
-        return $this->hasMany(\backend\models\CompanyLimitation::className(), ['company_id' => 'id']);
+        return $this->hasOne(\backend\models\CompanyLimitation::className(), ['company_id' => 'id']);
     }
         
     /**

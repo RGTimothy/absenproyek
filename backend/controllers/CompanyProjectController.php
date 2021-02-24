@@ -70,8 +70,10 @@ class CompanyProjectController extends Controller
 
         $model->company_id = Yii::$app->user->identity->company_id;
 
-        if ($model->loadAll(Yii::$app->request->post()) && $model->saveAll()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if ($model->loadAll(Yii::$app->request->post()) && $model->validate()) {
+            if ($model->saveAll()) {
+                return $this->redirect(['view', 'id' => $model->id]);    
+            }
         } else {
             return $this->render('create', [
                 'model' => $model,
@@ -174,7 +176,7 @@ class CompanyProjectController extends Controller
     */
     public function actionAddCompanyProjectAttendance()
     {
-        if (Yii::$app->request->isAjax) {
+        /*if (Yii::$app->request->isAjax) {
             $row = Yii::$app->request->post('CompanyProjectAttendance');
             if (!empty($row)) {
                 $row = array_values($row);
@@ -184,6 +186,6 @@ class CompanyProjectController extends Controller
             return $this->renderAjax('_formCompanyProjectAttendance', ['row' => $row]);
         } else {
             throw new NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));
-        }
+        }*/
     }
 }

@@ -132,6 +132,14 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
     {
         return $this->hasOne(\backend\models\Company::className(), ['id' => 'company_id']);
     }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getCompanyLimitation()
+    {
+        return $this->hasOne(\backend\models\CompanyLimitation::className(), ['company_id' => 'id'])->via('company');
+    }
         
     /**
      * @return \yii\db\ActiveQuery
