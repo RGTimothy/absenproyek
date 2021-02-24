@@ -23,7 +23,7 @@ use mootensai\behaviors\UUIDBehavior;
  *
  * @property \backend\models\CompanyClock[] $companyClocks
  * @property \backend\models\CompanyInformation[] $companyInformations
- * @property \backend\models\CompanyLimitation[] $companyLimitations
+ * @property \backend\models\CompanyLimitation[] $companyLimitation
  * @property \backend\models\CompanyProject[] $companyProjects
  * @property \backend\models\CompanyRole[] $companyRoles
  * @property \backend\models\User[] $users
@@ -56,7 +56,7 @@ class Company extends \yii\db\ActiveRecord
         return [
             'companyClocks',
             'companyInformations',
-            'companyLimitations',
+            'companyLimitation',
             'companyProjects',
             'companyRoles',
             'users'
@@ -98,7 +98,7 @@ class Company extends \yii\db\ActiveRecord
             'code' => Yii::t('app', 'Code'),
             'image_filename' => Yii::t('app', 'Image Filename'),
             'description' => Yii::t('app', 'Description'),
-            'hour_rounding' => Yii::t('app', 'Hour Rounding'),
+            'hour_rounding' => Yii::t('app', 'Pembulatan Jam (Dalam Menit)'),
             'status' => Yii::t('app', 'Status'),
         ];
     }
