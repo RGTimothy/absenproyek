@@ -19,10 +19,31 @@ class CompanyProject extends BaseCompanyProject
 	    [
             [['company_id', 'radius', 'created_by', 'updated_by', 'deleted_by'], 'integer'],
             [['description'], 'string'],
-            [['latitude', 'longitude'], 'number'],
+            // [['latitude', 'longitude'], 'filter', 'filter' => [$this, 'validateCoordinate']],
+            [['latitude', 'longitude'], 'validateCoordinate', 'skipOnEmpty' => false, 'skipOnError' => false],
             [['clock_in', 'clock_out', 'created_at', 'updated_at', 'deleted_at'], 'safe'],
             [['name'], 'string', 'max' => 200]
         ]);
     }
+
+    public function customValidation($attribute, $params, $validator, $current) {
+        $validator->addError($this, $attribute, 'The {attribute} must be either "USA" or "Indonesia".');
+    }
 	
+    public function validateCoordinate($attribute, $params, $validator, $current) {
+        if ($current == null || $current == '') {
+            $companyLimitation = Yii::$app->user->identity->companyLimitation;
+            if (!is_null($companyLimitation)) {
+                $limitUnrestrictedProject = $companyLimitation->max_unrestricted_project;
+                $totalCurrentUnrestrictedProjects = CompanyProject::find()->where([
+                                                        'latitude' => null,
+                                                        'longitude' => null
+                                                    ])->count();
+
+                if ($totalCurrentUnrestrictedProjects >= $limitUnrestrictedProject) {
+                    $validator->addError($this, $attribute, '{attribute} harus diisi. Total proyek tanpa koordinat sudah mencapai limit.');
+                }
+            }    
+        }
+    }
 }

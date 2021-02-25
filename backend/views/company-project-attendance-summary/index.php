@@ -7,6 +7,8 @@
 use yii\helpers\Html;
 use kartik\export\ExportMenu;
 use kartik\grid\GridView;
+use kartik\daterange\DateRangePicker;
+use \backend\models\CompanyClock;
 
 // $this->title = Yii::t('app', 'Company Project Attendance Summary');
 $this->params['breadcrumbs'][] = $this->title;
@@ -29,6 +31,21 @@ $this->registerJs($search);
         <?=  $this->render('_search', ['model' => $searchModel]); ?>
     </div>
     <?php 
+    $companyClockTime = CompanyClock::find()->all();
+
+    $mainWorkingTimeDuration = 0;
+    $mainWorkingTimeStart = 0;
+    $mainWorkingTimeStop = 0;
+    $currentTime = time();
+    foreach ($companyClockTime as $item) {
+        if ($item->is_default) {
+            $mainWorkingTimeStart = strtotime($item->clock_in);
+            $mainWorkingTimeStop = strtotime($item->clock_out);
+            $mainWorkingTimeDuration = round(abs($mainWorkingTimeStop - $mainWorkingTimeStart) / 60); //in minute
+            $mainWorkingTimeDuration = round($mainWorkingTimeDuration / 60); //now in hour
+        }
+    }
+
     $gridColumn = [
         ['class' => 'yii\grid\SerialColumn'],
         [
@@ -77,7 +94,19 @@ $this->registerJs($search);
                 'filterInputOptions' => ['placeholder' => 'Grade', 'id' => 'grid-company-project-attendance-summary-search-company_role_id']
             ],
         'projects:ntext',
-        'work_duration',
+        // 'work_duration',
+        [
+            'attribute' => 'work_duration',
+            'value' => function ($model) use ($currentTime, $mainWorkingTimeDuration) {
+                if ($model->work_duration == 0) {
+                    if ($currentTime > $mainWorkingTimeStop) {
+                        return $mainWorkingTimeDuration;
+                    }
+                }
+
+                return $model->work_duration;
+            }
+        ],
         'overtime_duration_1',
         'overtime_duration_2',
         'overtime_duration_3',
@@ -93,7 +122,18 @@ $this->registerJs($search);
             'attribute' => 'created_at',
             'value' => function ($model) {
                 return date('Y-m-d', strtotime($model->created_at));
-            }
+            },
+            'filter' => DateRangePicker::widget([
+                'model' => $searchModel,
+                'attribute' => 'created_at',
+                'pjaxContainerId' => 'kv-pjax-container-company-project-attendance-summary',
+                'convertFormat' => true,
+                'pluginOptions' => [
+                    'locale' => [
+                        'format' => 'Y-m-d'
+                    ],
+                ],
+            ]),
         ],
         /*[
             'class' => 'yii\grid\ActionColumn',

@@ -48,15 +48,18 @@ class CompanyController extends Controller
      */
     public function actionView($id)
     {
-        $model = $this->findModel($id);
-        $providerCompanyClock = new \yii\data\ArrayDataProvider([
+        $companyID = Yii::$app->user->identity->company_id;
+
+        $model = $this->findModel($companyID);
+        
+        /*$providerCompanyClock = new \yii\data\ArrayDataProvider([
             'allModels' => $model->companyClocks,
         ]);
         $providerCompanyInformation = new \yii\data\ArrayDataProvider([
             'allModels' => $model->companyInformations,
         ]);
         $providerCompanyLimitation = new \yii\data\ArrayDataProvider([
-            'allModels' => $model->companyLimitations,
+            'allModels' => $model->companyLimitation,
         ]);
         $providerCompanyProject = new \yii\data\ArrayDataProvider([
             'allModels' => $model->companyProjects,
@@ -66,15 +69,15 @@ class CompanyController extends Controller
         ]);
         $providerUser = new \yii\data\ArrayDataProvider([
             'allModels' => $model->users,
-        ]);
+        ]);*/
         return $this->render('view', [
-            'model' => $this->findModel($id),
-            'providerCompanyClock' => $providerCompanyClock,
+            'model' => $this->findModel($companyID)
+            /*'providerCompanyClock' => $providerCompanyClock,
             'providerCompanyInformation' => $providerCompanyInformation,
             'providerCompanyLimitation' => $providerCompanyLimitation,
             'providerCompanyProject' => $providerCompanyProject,
             'providerCompanyRole' => $providerCompanyRole,
-            'providerUser' => $providerUser,
+            'providerUser' => $providerUser,*/
         ]);
     }
 
@@ -85,10 +88,11 @@ class CompanyController extends Controller
      */
     public function actionCreate()
     {
+        $companyID = Yii::$app->user->identity->company_id;
         $model = new Company();
 
         if ($model->loadAll(Yii::$app->request->post()) && $model->saveAll()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['view', 'id' => $companyID]);
         } else {
             return $this->render('create', [
                 'model' => $model,
@@ -104,10 +108,14 @@ class CompanyController extends Controller
      */
     public function actionUpdate($id)
     {
-        $model = $this->findModel($id);
+        $companyID = Yii::$app->user->identity->company_id;
+        $model = $this->findModel($companyID);
 
-        if ($model->loadAll(Yii::$app->request->post()) && $model->saveAll()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if ($model->loadAll(Yii::$app->request->post()) && $model->validate()) {
+            if ($model->save()) {
+                Yii::$app->session->setFlash('success', "Update berhasil disimpan.");
+                return $this->redirect(['update', 'id' => $companyID]);
+            }
         } else {
             return $this->render('update', [
                 'model' => $model,
@@ -123,7 +131,8 @@ class CompanyController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->deleteWithRelated();
+        // $this->findModel($id)->deleteWithRelated();
+        $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
     }
@@ -136,14 +145,15 @@ class CompanyController extends Controller
      */
     public function actionPdf($id) {
         $model = $this->findModel($id);
-        $providerCompanyClock = new \yii\data\ArrayDataProvider([
+        
+        /*$providerCompanyClock = new \yii\data\ArrayDataProvider([
             'allModels' => $model->companyClocks,
         ]);
         $providerCompanyInformation = new \yii\data\ArrayDataProvider([
             'allModels' => $model->companyInformations,
         ]);
         $providerCompanyLimitation = new \yii\data\ArrayDataProvider([
-            'allModels' => $model->companyLimitations,
+            'allModels' => $model->companyLimitation,
         ]);
         $providerCompanyProject = new \yii\data\ArrayDataProvider([
             'allModels' => $model->companyProjects,
@@ -153,16 +163,16 @@ class CompanyController extends Controller
         ]);
         $providerUser = new \yii\data\ArrayDataProvider([
             'allModels' => $model->users,
-        ]);
+        ]);*/
 
         $content = $this->renderAjax('_pdf', [
             'model' => $model,
-            'providerCompanyClock' => $providerCompanyClock,
+            /*'providerCompanyClock' => $providerCompanyClock,
             'providerCompanyInformation' => $providerCompanyInformation,
             'providerCompanyLimitation' => $providerCompanyLimitation,
             'providerCompanyProject' => $providerCompanyProject,
             'providerCompanyRole' => $providerCompanyRole,
-            'providerUser' => $providerUser,
+            'providerUser' => $providerUser,*/
         ]);
 
         $pdf = new \kartik\mpdf\Pdf([
@@ -200,6 +210,7 @@ class CompanyController extends Controller
         }
     }
     
+
     /**
     * Action to load a tabular form grid
     * for CompanyClock
@@ -210,17 +221,17 @@ class CompanyController extends Controller
     */
     public function actionAddCompanyClock()
     {
-        if (Yii::$app->request->isAjax) {
-            $row = Yii::$app->request->post('CompanyClock');
-            if (!empty($row)) {
-                $row = array_values($row);
-            }
-            if((Yii::$app->request->post('isNewRecord') && Yii::$app->request->post('_action') == 'load' && empty($row)) || Yii::$app->request->post('_action') == 'add')
-                $row[] = [];
-            return $this->renderAjax('_formCompanyClock', ['row' => $row]);
-        } else {
-            throw new NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));
-        }
+        // if (Yii::$app->request->isAjax) {
+        //     $row = Yii::$app->request->post('CompanyClock');
+        //     if (!empty($row)) {
+        //         $row = array_values($row);
+        //     }
+        //     if((Yii::$app->request->post('isNewRecord') && Yii::$app->request->post('_action') == 'load' && empty($row)) || Yii::$app->request->post('_action') == 'add')
+        //         $row[] = [];
+        //     return $this->renderAjax('_formCompanyClock', ['row' => $row]);
+        // } else {
+        //     throw new NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));
+        // }
     }
     
     /**
@@ -233,17 +244,17 @@ class CompanyController extends Controller
     */
     public function actionAddCompanyInformation()
     {
-        if (Yii::$app->request->isAjax) {
-            $row = Yii::$app->request->post('CompanyInformation');
-            if (!empty($row)) {
-                $row = array_values($row);
-            }
-            if((Yii::$app->request->post('isNewRecord') && Yii::$app->request->post('_action') == 'load' && empty($row)) || Yii::$app->request->post('_action') == 'add')
-                $row[] = [];
-            return $this->renderAjax('_formCompanyInformation', ['row' => $row]);
-        } else {
-            throw new NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));
-        }
+        // if (Yii::$app->request->isAjax) {
+        //     $row = Yii::$app->request->post('CompanyInformation');
+        //     if (!empty($row)) {
+        //         $row = array_values($row);
+        //     }
+        //     if((Yii::$app->request->post('isNewRecord') && Yii::$app->request->post('_action') == 'load' && empty($row)) || Yii::$app->request->post('_action') == 'add')
+        //         $row[] = [];
+        //     return $this->renderAjax('_formCompanyInformation', ['row' => $row]);
+        // } else {
+        //     throw new NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));
+        // }
     }
     
     /**
@@ -256,17 +267,17 @@ class CompanyController extends Controller
     */
     public function actionAddCompanyLimitation()
     {
-        if (Yii::$app->request->isAjax) {
-            $row = Yii::$app->request->post('CompanyLimitation');
-            if (!empty($row)) {
-                $row = array_values($row);
-            }
-            if((Yii::$app->request->post('isNewRecord') && Yii::$app->request->post('_action') == 'load' && empty($row)) || Yii::$app->request->post('_action') == 'add')
-                $row[] = [];
-            return $this->renderAjax('_formCompanyLimitation', ['row' => $row]);
-        } else {
-            throw new NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));
-        }
+        // if (Yii::$app->request->isAjax) {
+        //     $row = Yii::$app->request->post('CompanyLimitation');
+        //     if (!empty($row)) {
+        //         $row = array_values($row);
+        //     }
+        //     if((Yii::$app->request->post('isNewRecord') && Yii::$app->request->post('_action') == 'load' && empty($row)) || Yii::$app->request->post('_action') == 'add')
+        //         $row[] = [];
+        //     return $this->renderAjax('_formCompanyLimitation', ['row' => $row]);
+        // } else {
+        //     throw new NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));
+        // }
     }
     
     /**
@@ -279,17 +290,17 @@ class CompanyController extends Controller
     */
     public function actionAddCompanyProject()
     {
-        if (Yii::$app->request->isAjax) {
-            $row = Yii::$app->request->post('CompanyProject');
-            if (!empty($row)) {
-                $row = array_values($row);
-            }
-            if((Yii::$app->request->post('isNewRecord') && Yii::$app->request->post('_action') == 'load' && empty($row)) || Yii::$app->request->post('_action') == 'add')
-                $row[] = [];
-            return $this->renderAjax('_formCompanyProject', ['row' => $row]);
-        } else {
-            throw new NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));
-        }
+        // if (Yii::$app->request->isAjax) {
+        //     $row = Yii::$app->request->post('CompanyProject');
+        //     if (!empty($row)) {
+        //         $row = array_values($row);
+        //     }
+        //     if((Yii::$app->request->post('isNewRecord') && Yii::$app->request->post('_action') == 'load' && empty($row)) || Yii::$app->request->post('_action') == 'add')
+        //         $row[] = [];
+        //     return $this->renderAjax('_formCompanyProject', ['row' => $row]);
+        // } else {
+        //     throw new NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));
+        // }
     }
     
     /**
@@ -302,17 +313,17 @@ class CompanyController extends Controller
     */
     public function actionAddCompanyRole()
     {
-        if (Yii::$app->request->isAjax) {
-            $row = Yii::$app->request->post('CompanyRole');
-            if (!empty($row)) {
-                $row = array_values($row);
-            }
-            if((Yii::$app->request->post('isNewRecord') && Yii::$app->request->post('_action') == 'load' && empty($row)) || Yii::$app->request->post('_action') == 'add')
-                $row[] = [];
-            return $this->renderAjax('_formCompanyRole', ['row' => $row]);
-        } else {
-            throw new NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));
-        }
+        // if (Yii::$app->request->isAjax) {
+        //     $row = Yii::$app->request->post('CompanyRole');
+        //     if (!empty($row)) {
+        //         $row = array_values($row);
+        //     }
+        //     if((Yii::$app->request->post('isNewRecord') && Yii::$app->request->post('_action') == 'load' && empty($row)) || Yii::$app->request->post('_action') == 'add')
+        //         $row[] = [];
+        //     return $this->renderAjax('_formCompanyRole', ['row' => $row]);
+        // } else {
+        //     throw new NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));
+        // }
     }
     
     /**
@@ -325,16 +336,16 @@ class CompanyController extends Controller
     */
     public function actionAddUser()
     {
-        if (Yii::$app->request->isAjax) {
-            $row = Yii::$app->request->post('User');
-            if (!empty($row)) {
-                $row = array_values($row);
-            }
-            if((Yii::$app->request->post('isNewRecord') && Yii::$app->request->post('_action') == 'load' && empty($row)) || Yii::$app->request->post('_action') == 'add')
-                $row[] = [];
-            return $this->renderAjax('_formUser', ['row' => $row]);
-        } else {
-            throw new NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));
-        }
+        // if (Yii::$app->request->isAjax) {
+        //     $row = Yii::$app->request->post('User');
+        //     if (!empty($row)) {
+        //         $row = array_values($row);
+        //     }
+        //     if((Yii::$app->request->post('isNewRecord') && Yii::$app->request->post('_action') == 'load' && empty($row)) || Yii::$app->request->post('_action') == 'add')
+        //         $row[] = [];
+        //     return $this->renderAjax('_formUser', ['row' => $row]);
+        // } else {
+        //     throw new NotFoundHttpException(Yii::t('app', 'The requested page does not exist.'));
+        // }
     }
 }

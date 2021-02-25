@@ -43,7 +43,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <div class="row">
 <?php 
-    $gridColumn = [
+    /*$gridColumn = [
         ['attribute' => 'id', 'visible' => false],
         'name',
         'code',
@@ -222,7 +222,7 @@ if($providerUser->totalCount){
         ],
         'columns' => $gridColumnUser
     ]);
-}
+}*/
 ?>
 
     </div>

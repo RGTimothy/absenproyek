@@ -7,7 +7,7 @@ use yii\widgets\ActiveForm;
 /* @var $model backend\models\Company */
 /* @var $form yii\widgets\ActiveForm */
 
-\mootensai\components\JsBlock::widget(['viewFile' => '_script', 'pos'=> \yii\web\View::POS_END, 
+/*\mootensai\components\JsBlock::widget(['viewFile' => '_script', 'pos'=> \yii\web\View::POS_END, 
     'viewParams' => [
         'class' => 'CompanyClock', 
         'relID' => 'company-clock', 
@@ -27,7 +27,7 @@ use yii\widgets\ActiveForm;
     'viewParams' => [
         'class' => 'CompanyLimitation', 
         'relID' => 'company-limitation', 
-        'value' => \yii\helpers\Json::encode($model->companyLimitations),
+        'value' => \yii\helpers\Json::encode($model->companyLimitation),
         'isNewRecord' => ($model->isNewRecord) ? 1 : 0
     ]
 ]);
@@ -54,7 +54,7 @@ use yii\widgets\ActiveForm;
         'value' => \yii\helpers\Json::encode($model->users),
         'isNewRecord' => ($model->isNewRecord) ? 1 : 0
     ]
-]);
+]);*/
 ?>
 
 <div class="company-form">
@@ -63,22 +63,23 @@ use yii\widgets\ActiveForm;
 
     <?= $form->errorSummary($model); ?>
 
-    <?= $form->field($model, 'id', ['template' => '{input}'])->textInput(['style' => 'display:none']); ?>
+    <? //$form->field($model, 'id', ['template' => '{input}'])->textInput(['style' => 'display:none']); ?>
 
-    <?= $form->field($model, 'name')->textInput(['maxlength' => true, 'placeholder' => 'Name']) ?>
+    <? //$form->field($model, 'name')->textInput(['maxlength' => true, 'placeholder' => 'Name']) ?>
 
-    <?= $form->field($model, 'code')->textInput(['maxlength' => true, 'placeholder' => 'Code']) ?>
+    <? //$form->field($model, 'code')->textInput(['maxlength' => true, 'placeholder' => 'Code']) ?>
 
-    <?= $form->field($model, 'image_filename')->textInput(['maxlength' => true, 'placeholder' => 'Image Filename']) ?>
+    <? //$form->field($model, 'image_filename')->textInput(['maxlength' => true, 'placeholder' => 'Image Filename']) ?>
 
-    <?= $form->field($model, 'description')->textarea(['rows' => 6]) ?>
+    <? //$form->field($model, 'description')->textarea(['rows' => 6]) ?>
 
     <?= $form->field($model, 'hour_rounding')->textInput(['placeholder' => 'Hour Rounding']) ?>
 
-    <?= $form->field($model, 'status')->textInput(['maxlength' => true, 'placeholder' => 'Status']) ?>
+    <? //$form->field($model, 'status')->textInput(['maxlength' => true, 'placeholder' => 'Status']) ?>
 
     <?php
-    $forms = [
+
+    /*$forms = [
         [
             'label' => '<i class="glyphicon glyphicon-book"></i> ' . Html::encode(Yii::t('app', 'CompanyClock')),
             'content' => $this->render('_formCompanyClock', [
@@ -94,7 +95,7 @@ use yii\widgets\ActiveForm;
         [
             'label' => '<i class="glyphicon glyphicon-book"></i> ' . Html::encode(Yii::t('app', 'CompanyLimitation')),
             'content' => $this->render('_formCompanyLimitation', [
-                'row' => \yii\helpers\ArrayHelper::toArray($model->companyLimitations),
+                'row' => \yii\helpers\ArrayHelper::toArray($model->companyLimitation),
             ]),
         ],
         [
@@ -125,7 +126,7 @@ use yii\widgets\ActiveForm;
             'sideways' => true,
             'enableCache' => false,
         ],
-    ]);
+    ]);*/
     ?>
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? Yii::t('app', 'Create') : Yii::t('app', 'Update'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>

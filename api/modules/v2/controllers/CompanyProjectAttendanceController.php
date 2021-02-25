@@ -31,7 +31,7 @@ class CompanyProjectAttendanceController extends ActiveController
         return $behaviors;
     }
 
-	public function actionStatus() {
+	public function actionStatus($companyProjectID = null) {
 		$userID = Yii::$app->user->id;
 		$headers = Yii::$app->request->headers;
 
@@ -52,10 +52,24 @@ class CompanyProjectAttendanceController extends ActiveController
 						->all();
 
 		$todayAttendanceHistory = array();
+		$currentProjectAttendance = array();
 		$clockInStatus = false;
 		$clockOutStatus = false;
 		$lastState = null;
+		$lastProjectID = null;
 		foreach ($attendances as $item) {
+			if ($item->company_project_id == $companyProjectID) {
+				array_push($currentProjectAttendance, [
+					'companyProjectAttendanceID' => $item->id,
+					'companyProjectAttendanceUserID' => $item->user_id,
+					'companyProjectAttendanceProjectID' => $item->company_project_id,
+					'companyProjectAttendanceProjectName' => $item->companyProject->name,
+					'companyProjectAttendanceLatitude' => $item->latitude,
+					'companyProjectAttendanceLongitude' => $item->longitude,
+					'companyProjectAttendanceStatus' => $item->status,
+					'companyProjectAttendanceTime' => $item->created_at,
+				]);
+			}
 			if ($item->status == self::CLOCK_IN) {
 				array_push($todayAttendanceHistory, [
 					'companyProjectAttendanceID' => $item->id,
@@ -68,6 +82,7 @@ class CompanyProjectAttendanceController extends ActiveController
 					'companyProjectAttendanceTime' => $item->created_at,
 				]);
 				$lastState = self::CLOCK_IN;
+				$lastProjectID = $item->company_project_id;
 			}
 
 			if ($item->status == self::CLOCK_OUT) {
@@ -82,6 +97,7 @@ class CompanyProjectAttendanceController extends ActiveController
 					'companyProjectAttendanceTime' => $item->created_at,
 				]);
 				$lastState = self::CLOCK_OUT;
+				$lastProjectID = $item->company_project_id;
 			}
 		}
 
@@ -100,9 +116,12 @@ class CompanyProjectAttendanceController extends ActiveController
 		$response['clockInStatus'] = $clockInStatus;
 		$response['clockOutStatus'] = $clockOutStatus;
 		$response['lastState'] = $lastState;
+		$response['lastProjectID'] = $lastProjectID;
 		$response['data'] = $todayAttendanceHistory;
+		$response['currentProjectAttendance'] = $currentProjectAttendance;
 
-		// return self::calculateWorkingHours($todayAttendanceHistory);
+		// return self::calculateWorkingHours($currentProjectAttendance);
+		// return self::updateCompanyProjectAttendanceSummary($currentProjectAttendance, $timezone, 1);
 		return $response;
 	}
 
@@ -116,7 +135,7 @@ class CompanyProjectAttendanceController extends ActiveController
 		$image = $params['image'];
 
 		//get current attendance status
-		$attendance = self::actionStatus();
+		$attendance = self::actionStatus($companyProjectID);
 
 		if ($attendance['lastState'] == self::CLOCK_IN) {
 			$response['hasErrors'] = true;
@@ -189,7 +208,10 @@ class CompanyProjectAttendanceController extends ActiveController
 						'companyProjectAttendanceTime' => $companyProjectAttendance->created_at,
 					];
 
-					$updateCompanyProjectAttendanceSummary = self::updateCompanyProjectAttendanceSummary($attendance['data'], $timezone);
+					//push current attendance to attendance array list
+					array_push($attendance['currentProjectAttendance'], $response['data']);
+
+					$updateCompanyProjectAttendanceSummary = self::updateCompanyProjectAttendanceSummary($attendance['currentProjectAttendance'], $timezone, $companyProjectID);
 				}
 			} else {
 				$errors = $model->getErrors();
@@ -220,7 +242,7 @@ class CompanyProjectAttendanceController extends ActiveController
 		$image = $params['image'];
 
 		//get current attendance status
-		$attendance = self::actionStatus();
+		$attendance = self::actionStatus($companyProjectID);
 
 		if ($attendance['lastState'] == self::CLOCK_OUT) {
 			$response['hasErrors'] = true;
@@ -229,95 +251,105 @@ class CompanyProjectAttendanceController extends ActiveController
 			$response['hasErrors'] = true;
 			$response['message'] = 'Fail. You have to clock in first before doing clock out.';
 		} else {
-			//do clock out
-			$model = new CompanyProjectAttendance();
-			$model->user_id = $userID;
-			$model->company_project_id = $companyProjectID;
-			$model->latitude = $latitude;
-			$model->longitude = $longitude;
+			if (!is_null($attendance['lastProjectID'])) {
+				if ($attendance['lastProjectID'] != $companyProjectID) {
+					$response['hasErrors'] = true;
+					$response['message'] = 'Gagal absen. Anda harus clock out di proyek yang lain terlebih dahulu.';
+				} else {
+					//do clock out
+					$model = new CompanyProjectAttendance();
+					$model->user_id = $userID;
+					$model->company_project_id = $companyProjectID;
+					$model->latitude = $latitude;
+					$model->longitude = $longitude;
 
-			$explodeImageString = explode(',', $image, 2); // limit to 2 parts, i.e: find the first comma
-            $explodeFirstline = explode(';', $explodeImageString[0], 2)[0];
-            $fileExtension = explode('/', $explodeFirstline, 2)[1];
-            $encodedImage = $explodeImageString[1]; // pick up the 2nd part
+					$explodeImageString = explode(',', $image, 2); // limit to 2 parts, i.e: find the first comma
+		            $explodeFirstline = explode(';', $explodeImageString[0], 2)[0];
+		            $fileExtension = explode('/', $explodeFirstline, 2)[1];
+		            $encodedImage = $explodeImageString[1]; // pick up the 2nd part
 
-            //save large image raw without resizing
-            $decodedImage = base64_decode($encodedImage);
+		            //save large image raw without resizing
+		            $decodedImage = base64_decode($encodedImage);
 
-            //generate image filename
-            $filename = 'attendance' . '_' . $userID . '_' . time();
+		            //generate image filename
+		            $filename = 'attendance' . '_' . $userID . '_' . time();
 
-            $model->image = $decodedImage;
-            $model->image_filename = $filename;
-            $model->image_filetype = $fileExtension;
-			$model->status = self::CLOCK_OUT;
+		            $model->image = $decodedImage;
+		            $model->image_filename = $filename;
+		            $model->image_filetype = $fileExtension;
+					$model->status = self::CLOCK_OUT;
 
-			if ($model->save()) {
-				//upload image file
-				$uploadPath = Yii::getAlias('@backend') . '/web/uploads/' . self::IMAGE_FOLDER;
-				if (!file_exists($uploadPath)) {
-				    mkdir($uploadPath, 0755, true);
+					if ($model->save()) {
+						//upload image file
+						$uploadPath = Yii::getAlias('@backend') . '/web/uploads/' . self::IMAGE_FOLDER;
+						if (!file_exists($uploadPath)) {
+						    mkdir($uploadPath, 0755, true);
+						}
+						file_put_contents($uploadPath . '/' . $filename . '.' . $fileExtension, $decodedImage);
+
+						$response['hasErrors'] = $model->hasErrors();
+						$response['message'] = 'Clock out success!';
+						$response['data'] = [];
+
+						$headers = Yii::$app->request->headers;
+
+						//set user's timezone
+						$timezone =  $headers->get('timezone');
+						if (is_null($timezone)) {
+							$timezone = 'Asia/Jakarta';
+						}
+
+						//get current date
+						$now = new \DateTime("now", new \DateTimeZone($timezone) );
+						$currentDate = $now->format('Y-m-d');
+
+						$companyProjectAttendance = CompanyProjectAttendance::findByUserId($userID)
+													->andWhere([
+														'DATE(created_at)' => $currentDate,
+														'status' => self::CLOCK_OUT
+													])
+													->orderBy(['id' => SORT_DESC])
+													->one();
+
+						if (!is_null($companyProjectAttendance)) {
+							$response['data'] = [
+								'companyProjectAttendanceID' => $companyProjectAttendance->id,
+								'companyProjectAttendanceUserID' => $companyProjectAttendance->user_id,
+								'companyProjectAttendanceProjectID' => $companyProjectAttendance->company_project_id,
+								'companyProjectAttendanceProjectName' => $companyProjectAttendance->companyProject->name,
+								'companyProjectAttendanceLatitude' => $companyProjectAttendance->latitude,
+								'companyProjectAttendanceLongitude' => $companyProjectAttendance->longitude,
+								'companyProjectAttendanceStatus' => $companyProjectAttendance->status,
+								'companyProjectAttendanceTime' => $companyProjectAttendance->created_at,
+							];
+
+							//push current attendance to attendance array list
+							array_push($attendance['currentProjectAttendance'], $response['data']);
+
+							$updateCompanyProjectAttendanceSummary = self::updateCompanyProjectAttendanceSummary($attendance['currentProjectAttendance'], $timezone, $companyProjectID);
+						}
+					} else {
+						$errors = $model->getErrors();
+			            $response['hasErrors'] = $model->hasErrors();
+
+			            $errorList = array();
+			            foreach ($errors as $key => $value) {
+			                array_push($errorList, [
+			                    'errorField' => $key,
+			                    'errorMessage' => $value[0]
+			                ]);
+			            }
+
+			            $response['message'] = $errorList[0]['errorMessage'];
+					}
 				}
-				file_put_contents($uploadPath . '/' . $filename . '.' . $fileExtension, $decodedImage);
-
-				$response['hasErrors'] = $model->hasErrors();
-				$response['message'] = 'Clock out success!';
-				$response['data'] = [];
-
-				$headers = Yii::$app->request->headers;
-
-				//set user's timezone
-				$timezone =  $headers->get('timezone');
-				if (is_null($timezone)) {
-					$timezone = 'Asia/Jakarta';
-				}
-
-				//get current date
-				$now = new \DateTime("now", new \DateTimeZone($timezone) );
-				$currentDate = $now->format('Y-m-d');
-
-				$companyProjectAttendance = CompanyProjectAttendance::findByUserId($userID)
-											->andWhere([
-												'DATE(created_at)' => $currentDate,
-												'status' => self::CLOCK_OUT
-											])
-											->orderBy(['id' => SORT_DESC])
-											->one();
-
-				if (!is_null($companyProjectAttendance)) {
-					$response['data'] = [
-						'companyProjectAttendanceID' => $companyProjectAttendance->id,
-						'companyProjectAttendanceUserID' => $companyProjectAttendance->user_id,
-						'companyProjectAttendanceProjectID' => $companyProjectAttendance->company_project_id,
-						'companyProjectAttendanceProjectName' => $companyProjectAttendance->companyProject->name,
-						'companyProjectAttendanceLatitude' => $companyProjectAttendance->latitude,
-						'companyProjectAttendanceLongitude' => $companyProjectAttendance->longitude,
-						'companyProjectAttendanceStatus' => $companyProjectAttendance->status,
-						'companyProjectAttendanceTime' => $companyProjectAttendance->created_at,
-					];
-
-					$updateCompanyProjectAttendanceSummary = self::updateCompanyProjectAttendanceSummary($attendance['data'], $timezone);
-				}
-			} else {
-				$errors = $model->getErrors();
-	            $response['hasErrors'] = $model->hasErrors();
-
-	            $errorList = array();
-	            foreach ($errors as $key => $value) {
-	                array_push($errorList, [
-	                    'errorField' => $key,
-	                    'errorMessage' => $value[0]
-	                ]);
-	            }
-
-	            $response['message'] = $errorList[0]['errorMessage'];
 			}
 		}
 
 		return $response;
 	}
 
-	public function updateCompanyProjectAttendanceSummary($dataAttendance = [], $timezone = 'Asia/Jakarta') {
+	public function updateCompanyProjectAttendanceSummary($dataAttendance = [], $timezone = 'Asia/Jakarta', $companyProjectID = null) {
 		$userID = Yii::$app->user->id;
 
 		//get current date
@@ -330,8 +362,13 @@ class CompanyProjectAttendanceController extends ActiveController
 								->andWhere([
 									'user_id' => $userID,
 									'DATE(created_at)' => $currentDate
-								])
-								->one();
+								]);
+
+		if (!is_null($companyProjectID)) {
+			$model = $model->andWhere(['company_project_id' => $companyProjectID]);
+		}
+		
+		$model = $model->one();
 
 		if (is_null($model)) {
 			$model = new CompanyProjectAttendanceSummary();	
@@ -339,6 +376,7 @@ class CompanyProjectAttendanceController extends ActiveController
 
 		$model->user_id = $calculation['userID'];
 		$model->company_role_id = $calculation['companyRoleID'];
+		$model->company_project_id = $companyProjectID;
 		$model->projects = $calculation['projectNames'];
 		$model->work_duration = $calculation['totalWorkingTime'];
 		$model->overtime_duration_1 = $calculation['totalOvertime1'];
@@ -399,6 +437,7 @@ class CompanyProjectAttendanceController extends ActiveController
 		$allowance3 = 0;
 		//loop company clocks to check user's attendance history
 		$workingTimeCounter = 0;
+		// $log = array();
 		foreach ($companyClocks as $item) {
 			$companyClockIn = strtotime($item['clock_in']);
 			$companyClockOut = strtotime($item['clock_out']);
@@ -438,9 +477,6 @@ class CompanyProjectAttendanceController extends ActiveController
 				//if user's attendance is within main working time
 				if ($workingTimeCounter == 0) {
 					$totalMainWorkingTime += $totalWorkingMinutes;
-
-					//total working time minus break hour
-					$totalMainWorkingTime -= ($item['break_hour'] * 60);
 				} else { //if user's attendance is within overtime
 					// return date('Y-m-d H:i:s', $stop). '|' . date('Y-m-d H:i:s', $start);
 					${'totalOvertime' . $workingTimeCounter} += $totalWorkingMinutes;
@@ -448,7 +484,18 @@ class CompanyProjectAttendanceController extends ActiveController
 					//total allowance if any
 					${'allowance' . $workingTimeCounter} = $item['allowance'];
 				}
+
+				/*array_push($log, [
+					'workingTimeCounter' => $workingTimeCounter,
+					'clock' => $item->name,
+					'totalMainWorkingTime' => $totalMainWorkingTime,
+					'breakHour' => $item['break_hour']
+				]);*/
 			}
+
+			//total working time minus break hour
+			$breakHour = ($item['break_hour'] * 60);
+			$totalMainWorkingTime -= $breakHour;
 
 			$workingTimeCounter++;
 		}
@@ -479,11 +526,11 @@ class CompanyProjectAttendanceController extends ActiveController
 			'userID' => $userID,
 			'companyRoleID' => $companyRoleID,
 			'projectNames' => $concatenatedProjectNames,
-			'totalWorkingTime' => $totalMainWorkingTime,
-			'totalOvertime1' => $totalOvertime1,
-			'totalOvertime2' => $totalOvertime2,
-			'totalOvertime3' => $totalOvertime3,
-			'totalAllowance' => $totalAllowance
+			'totalWorkingTime' => ($totalMainWorkingTime < 0) ? 0 : $totalMainWorkingTime,
+			'totalOvertime1' => ($totalOvertime1 < 0) ? 0 : $totalOvertime1,
+			'totalOvertime2' => ($totalOvertime2 < 0) ? 0 : $totalOvertime2,
+			'totalOvertime3' => ($totalOvertime3 < 0) ? 0 : $totalOvertime3,
+			'totalAllowance' => ($totalAllowance < 0) ? 0 : $totalAllowance
 		];
 
 		return $response;

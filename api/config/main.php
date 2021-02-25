@@ -58,7 +58,7 @@ return [
         ],
         'user' => [
             'enableSession' => false,
-            'identityClass' => 'api\modules\v1\models\User',
+            'identityClass' => 'api\modules\v2\models\User',
             'enableAutoLogin' => false,
         ],
         'log' => [

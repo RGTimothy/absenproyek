@@ -8,7 +8,7 @@ use kartik\grid\GridView;
 /* @var $model backend\models\CompanyProjectAttendance */
 
 $this->title = $model->id;
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Absensi'), 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Riwayat Absensi'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 
 $username = $model->user->username;
@@ -18,7 +18,7 @@ $time = $model->created_at;
 
     <div class="row">
         <div class="col-sm-9">
-            <h2><?= Yii::t('app', 'Absensi').': '. Html::encode($username) . ' (' . $time . ')' ?></h2>
+            <h2><?= Yii::t('app', 'Riwayat Absensi').': '. Html::encode($username) . ' (' . $time . ')' ?></h2>
         </div>
         <div class="col-sm-3" style="margin-top: 15px">
 <?=             
