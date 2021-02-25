@@ -111,7 +111,7 @@ class CompanyController extends Controller
         $companyID = Yii::$app->user->identity->company_id;
         $model = $this->findModel($companyID);
 
-        if ($model->loadAll(Yii::$app->request->post())) {
+        if ($model->loadAll(Yii::$app->request->post()) && $model->validate()) {
             if ($model->save()) {
                 Yii::$app->session->setFlash('success', "Update berhasil disimpan.");
                 return $this->redirect(['update', 'id' => $companyID]);

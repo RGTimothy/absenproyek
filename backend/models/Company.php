@@ -18,13 +18,22 @@ class Company extends BaseCompany
         return array_replace_recursive(parent::rules(),
 	    [
             [['description'], 'string'],
-            [['hour_rounding'], 'integer'],
+            [['hour_rounding'], 'validateHourRounding'],
             [['created_at', 'updated_at', 'deleted_at'], 'safe'],
             [['name', 'image_filename'], 'string', 'max' => 255],
             [['code'], 'string', 'max' => 100],
             [['status'], 'string', 'max' => 20],
             [['code'], 'unique']
         ]);
+    }
+
+    public function validateHourRounding($attribute, $params, $validator, $current) {
+        if (intval($current) <= 0) {
+            $validator->addError($this, $attribute, '{attribute} harus diisi angka.');
+        }
+        if ($current > 60) {
+            $validator->addError($this, $attribute, '{attribute} harus lebih kecil dari 60 menit.');
+        }
     }
 	
 }
