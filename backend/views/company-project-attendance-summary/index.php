@@ -43,6 +43,9 @@ $this->registerJs($search);
             $mainWorkingTimeStop = strtotime($item->clock_out);
             $mainWorkingTimeDuration = round(abs($mainWorkingTimeStop - $mainWorkingTimeStart) / 60); //in minute
             $mainWorkingTimeDuration = round($mainWorkingTimeDuration / 60); //now in hour
+            if (!is_null($item->break_hour)) {
+                $mainWorkingTimeDuration -= $item->break_hour;
+            }
         }
     }
 
