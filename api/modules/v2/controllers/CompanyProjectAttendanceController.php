@@ -12,6 +12,7 @@ use api\modules\v2\models\CompanyClock;
 
 class CompanyProjectAttendanceController extends ActiveController
 {
+	const TIME_ONE_DAY = 86400;
 	const IMAGE_FOLDER = 'attendance_images';
 
 	const CLOCK_IN = 'CLOCK_IN',
@@ -34,6 +35,7 @@ class CompanyProjectAttendanceController extends ActiveController
 	public function actionStatus($companyProjectID = null) {
 		$userID = Yii::$app->user->id;
 		$headers = Yii::$app->request->headers;
+		$companyID = Yii::$app->user->identity->company_id;
 
 		//set user's timezone
 		$timezone =  $headers->get('timezone');
@@ -41,13 +43,29 @@ class CompanyProjectAttendanceController extends ActiveController
 			$timezone = 'Asia/Jakarta';
 		}
 
-		//get current date
-		$now = new \DateTime("now", new \DateTimeZone($timezone) );
-		$currentDate = $now->format('Y-m-d');
+		date_default_timezone_set($timezone);
 
-		//get attendance based on current date
+		//get range of all company clocks in 1 cycle
+		$mainWorkingTime = CompanyClock::find()->andWhere([
+							'company_id' => $companyID,
+							'is_default' => CompanyClock::DEFAULT_WORKING_TIME
+						])
+						->select(['UNIX_TIMESTAMP(DATE_SUB(clock_in, INTERVAL 1 HOUR)) AS clock_in'])
+						->one();
+
+		$cycleStartTime = isset($mainWorkingTime->clock_in) ? intval($mainWorkingTime->clock_in) : 0;
+
+		$unixTimestampOneDay = self::TIME_ONE_DAY;
 		$attendances = CompanyProjectAttendance::findByUserId($userID)
-						->andWhere(['DATE(created_at)' => $currentDate])
+						// ->andWhere(['DATE(created_at)' => $currentDate])
+						->andWhere(
+							'
+								CASE WHEN UNIX_TIMESTAMP(CURRENT_TIME()) >= '.$cycleStartTime.'
+									THEN UNIX_TIMESTAMP(created_at) >= '.$cycleStartTime.' AND UNIX_TIMESTAMP(created_at) < UNIX_TIMESTAMP(created_at) + '.$unixTimestampOneDay.'
+								ELSE UNIX_TIMESTAMP(created_at) < '.$cycleStartTime.' AND UNIX_TIMESTAMP(created_at) > UNIX_TIMESTAMP(created_at) - '.$unixTimestampOneDay.'
+								END
+							'
+						)
 						->orderBy(['id' => SORT_ASC])
 						->all();
 
@@ -58,44 +76,30 @@ class CompanyProjectAttendanceController extends ActiveController
 		$lastState = null;
 		$lastProjectID = null;
 		foreach ($attendances as $item) {
+			$arrItem = [
+				'companyProjectAttendanceID' => $item->id,
+				'companyProjectAttendanceUserID' => $item->user_id,
+				'companyProjectAttendanceProjectID' => $item->company_project_id,
+				'companyProjectAttendanceProjectName' => $item->companyProject->name,
+				'companyProjectAttendanceLatitude' => $item->latitude,
+				'companyProjectAttendanceLongitude' => $item->longitude,
+				'companyProjectAttendanceStatus' => $item->status,
+				'companyProjectAttendanceTime' => $item->created_at,
+				'companyProjectAttendanceUnixTime' => strtotime($item->created_at)
+			];
+
 			if ($item->company_project_id == $companyProjectID) {
-				array_push($currentProjectAttendance, [
-					'companyProjectAttendanceID' => $item->id,
-					'companyProjectAttendanceUserID' => $item->user_id,
-					'companyProjectAttendanceProjectID' => $item->company_project_id,
-					'companyProjectAttendanceProjectName' => $item->companyProject->name,
-					'companyProjectAttendanceLatitude' => $item->latitude,
-					'companyProjectAttendanceLongitude' => $item->longitude,
-					'companyProjectAttendanceStatus' => $item->status,
-					'companyProjectAttendanceTime' => $item->created_at,
-				]);
+				array_push($currentProjectAttendance, $arrItem);
 			}
+
 			if ($item->status == self::CLOCK_IN) {
-				array_push($todayAttendanceHistory, [
-					'companyProjectAttendanceID' => $item->id,
-					'companyProjectAttendanceUserID' => $item->user_id,
-					'companyProjectAttendanceProjectID' => $item->company_project_id,
-					'companyProjectAttendanceProjectName' => $item->companyProject->name,
-					'companyProjectAttendanceLatitude' => $item->latitude,
-					'companyProjectAttendanceLongitude' => $item->longitude,
-					'companyProjectAttendanceStatus' => $item->status,
-					'companyProjectAttendanceTime' => $item->created_at,
-				]);
+				array_push($todayAttendanceHistory, $arrItem);
 				$lastState = self::CLOCK_IN;
 				$lastProjectID = $item->company_project_id;
 			}
 
 			if ($item->status == self::CLOCK_OUT) {
-				array_push($todayAttendanceHistory, [
-					'companyProjectAttendanceID' => $item->id,
-					'companyProjectAttendanceUserID' => $item->user_id,
-					'companyProjectAttendanceProjectID' => $item->company_project_id,
-					'companyProjectAttendanceProjectName' => $item->companyProject->name,
-					'companyProjectAttendanceLatitude' => $item->latitude,
-					'companyProjectAttendanceLongitude' => $item->longitude,
-					'companyProjectAttendanceStatus' => $item->status,
-					'companyProjectAttendanceTime' => $item->created_at,
-				]);
+				array_push($todayAttendanceHistory, $arrItem);
 				$lastState = self::CLOCK_OUT;
 				$lastProjectID = $item->company_project_id;
 			}
@@ -119,6 +123,7 @@ class CompanyProjectAttendanceController extends ActiveController
 		$response['lastProjectID'] = $lastProjectID;
 		$response['data'] = $todayAttendanceHistory;
 		$response['currentProjectAttendance'] = $currentProjectAttendance;
+		$response['cycleStartTime'] = $cycleStartTime;
 
 		// return self::calculateWorkingHours($currentProjectAttendance);
 		// return self::updateCompanyProjectAttendanceSummary($currentProjectAttendance, $timezone, 1);
@@ -211,7 +216,7 @@ class CompanyProjectAttendanceController extends ActiveController
 					//push current attendance to attendance array list
 					array_push($attendance['currentProjectAttendance'], $response['data']);
 
-					$updateCompanyProjectAttendanceSummary = self::updateCompanyProjectAttendanceSummary($attendance['currentProjectAttendance'], $timezone, $companyProjectID);
+					$updateCompanyProjectAttendanceSummary = self::updateCompanyProjectAttendanceSummary($attendance['currentProjectAttendance'], $timezone, $companyProjectID, $attendance['cycleStartTime']);
 				}
 			} else {
 				$errors = $model->getErrors();
@@ -326,7 +331,7 @@ class CompanyProjectAttendanceController extends ActiveController
 							//push current attendance to attendance array list
 							array_push($attendance['currentProjectAttendance'], $response['data']);
 
-							$updateCompanyProjectAttendanceSummary = self::updateCompanyProjectAttendanceSummary($attendance['currentProjectAttendance'], $timezone, $companyProjectID);
+							$updateCompanyProjectAttendanceSummary = self::updateCompanyProjectAttendanceSummary($attendance['currentProjectAttendance'], $timezone, $companyProjectID, $attendance['cycleStartTime']);
 						}
 					} else {
 						$errors = $model->getErrors();
@@ -349,14 +354,14 @@ class CompanyProjectAttendanceController extends ActiveController
 		return $response;
 	}
 
-	public function updateCompanyProjectAttendanceSummary($dataAttendance = [], $timezone = 'Asia/Jakarta', $companyProjectID = null) {
+	public function updateCompanyProjectAttendanceSummary($dataAttendance = [], $timezone = 'Asia/Jakarta', $companyProjectID = null, $cycleStartTime = 0) {
 		$userID = Yii::$app->user->id;
 
 		//get current date
 		$now = new \DateTime("now", new \DateTimeZone($timezone) );
 		$currentDate = $now->format('Y-m-d');
 
-		$calculation = self::calculateWorkingHours($dataAttendance, $timezone);
+		$calculation = self::calculateWorkingHours($dataAttendance, $timezone, $cycleStartTime);
 
 		$model = CompanyProjectAttendanceSummary::find()
 								->andWhere([
@@ -391,10 +396,12 @@ class CompanyProjectAttendanceController extends ActiveController
 		}
 	}
 
-	public function calculateWorkingHours($dataAttendance = [], $timezone = 'Asia/Jakarta') {
+	public function calculateWorkingHours($dataAttendance = [], $timezone = 'Asia/Jakarta', $cycleStartTime = 0) {
 		if (is_null($timezone)) {
 			$timezone = 'Asia/Jakarta';
 		}
+
+		date_default_timezone_set($timezone);
 
 		$userID = Yii::$app->user->id;
 		$companyRoleID = Yii::$app->user->identity->company_role_id;
@@ -435,12 +442,20 @@ class CompanyProjectAttendanceController extends ActiveController
 		$allowance1 = 0;
 		$allowance2 = 0;
 		$allowance3 = 0;
-		//loop company clocks to check user's attendance history
 		$workingTimeCounter = 0;
-		// $log = array();
+		$currentTime = time();
+		//loop company clocks to check user's attendance history
+		$log = array();
 		foreach ($companyClocks as $item) {
 			$companyClockIn = strtotime($item['clock_in']);
 			$companyClockOut = strtotime($item['clock_out']);
+
+			// dd(date('Y-m-d H:i:s', $currentTime));
+			
+			if ($companyClockOut < $companyClockIn) { //if clock out time is in different day (overtime)
+				// $companyClockIn -= self::TIME_ONE_DAY;
+				$companyClockOut += self::TIME_ONE_DAY;
+			}
 
 			foreach ($pairedAttendanceHistory as $attendance) {
 				$totalWorkingMinutes = 0;
@@ -486,7 +501,14 @@ class CompanyProjectAttendanceController extends ActiveController
 				}
 
 				/*array_push($log, [
+					'totalWorkingMinutes' => $totalWorkingMinutes,
 					'workingTimeCounter' => $workingTimeCounter,
+					'companyCI' => date('Y-m-d H:i:s', $companyClockIn),
+					'companyCO' => date('Y-m-d H:i:s', $companyClockOut),
+					'ci' => date('Y-m-d H:i:s', $attendance['clockIn']),
+					'co' => date('Y-m-d H:i:s', $attendance['clockOut']),
+					'start' => date('Y-m-d H:i:s', $start),
+					'stop' => date('Y-m-d H:i:s', $stop),
 					'clock' => $item->name,
 					'totalMainWorkingTime' => $totalMainWorkingTime,
 					'breakHour' => $item['break_hour']
@@ -499,7 +521,7 @@ class CompanyProjectAttendanceController extends ActiveController
 
 			$workingTimeCounter++;
 		}
-
+// dd($log);
 		$concatenatedProjectNames = '';
 		$counter = 0;
 		foreach ($projectNames as $project) {
