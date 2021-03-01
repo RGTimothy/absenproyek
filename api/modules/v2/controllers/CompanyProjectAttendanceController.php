@@ -66,7 +66,7 @@ class CompanyProjectAttendanceController extends ActiveController
 								END
 							'
 						)
-						->orderBy(['id' => SORT_ASC])
+						->orderBy(['created_at' => SORT_ASC])
 						->all();
 
 		$todayAttendanceHistory = array();
@@ -310,7 +310,7 @@ class CompanyProjectAttendanceController extends ActiveController
 
 						$companyProjectAttendance = CompanyProjectAttendance::findByUserId($userID)
 													->andWhere([
-														'DATE(created_at)' => $currentDate,
+														// 'DATE(created_at)' => $currentDate,
 														'status' => self::CLOCK_OUT
 													])
 													->orderBy(['id' => SORT_DESC])
@@ -360,14 +360,26 @@ class CompanyProjectAttendanceController extends ActiveController
 		//get current date
 		$now = new \DateTime("now", new \DateTimeZone($timezone) );
 		$currentDate = $now->format('Y-m-d');
+		$yesterday = $now->modify('-1 day');
+		$yesterdayDate = $yesterday->format('Y-m-d');
 
 		$calculation = self::calculateWorkingHours($dataAttendance, $timezone, $cycleStartTime);
 
 		$model = CompanyProjectAttendanceSummary::find()
-								->andWhere([
+								->andWhere(
+									'
+									user_id = ' . $userID . ' AND 
+									(CASE
+										WHEN UNIX_TIMESTAMP(CURRENT_TIME()) >= '.$cycleStartTime.'
+											THEN DATE(created_at) = "'.$currentDate.'"
+										ELSE DATE(created_at) = "'.$yesterdayDate.'"
+									END)
+									'
+								)
+								/*->andWhere([
 									'user_id' => $userID,
 									'DATE(created_at)' => $currentDate
-								]);
+								])*/;
 
 		if (!is_null($companyProjectID)) {
 			$model = $model->andWhere(['company_project_id' => $companyProjectID]);
@@ -411,7 +423,8 @@ class CompanyProjectAttendanceController extends ActiveController
 						 		'company_id' => $companyID
 						 	])
 						 	->orderBy([
-						 		'clock_in' => SORT_ASC
+						 		'is_default' => SORT_DESC,
+						 		'id' => SORT_ASC
 						 	])
 						 	->all();
 
@@ -445,15 +458,18 @@ class CompanyProjectAttendanceController extends ActiveController
 		$workingTimeCounter = 0;
 		$currentTime = time();
 		//loop company clocks to check user's attendance history
-		$log = array();
+		// $log = array();
 		foreach ($companyClocks as $item) {
 			$companyClockIn = strtotime($item['clock_in']);
 			$companyClockOut = strtotime($item['clock_out']);
 
 			// dd(date('Y-m-d H:i:s', $currentTime));
-			
-			if ($companyClockOut < $companyClockIn) { //if clock out time is in different day (overtime)
-				// $companyClockIn -= self::TIME_ONE_DAY;
+
+			if ($companyClockIn < $cycleStartTime) {//if company's clock in time is in different day (overtime)
+				$companyClockIn += self::TIME_ONE_DAY;
+			}
+
+			if ($companyClockOut <= $cycleStartTime) {//if company's clock out time is in different day (overtime)
 				$companyClockOut += self::TIME_ONE_DAY;
 			}
 
@@ -500,6 +516,8 @@ class CompanyProjectAttendanceController extends ActiveController
 					${'allowance' . $workingTimeCounter} = $item['allowance'];
 				}
 
+				$workingTimeCounter++;
+
 				/*array_push($log, [
 					'totalWorkingMinutes' => $totalWorkingMinutes,
 					'workingTimeCounter' => $workingTimeCounter,
@@ -518,8 +536,6 @@ class CompanyProjectAttendanceController extends ActiveController
 			//total working time minus break hour
 			$breakHour = ($item['break_hour'] * 60);
 			$totalMainWorkingTime -= $breakHour;
-
-			$workingTimeCounter++;
 		}
 // dd($log);
 		$concatenatedProjectNames = '';
