@@ -6,6 +6,8 @@ use yii\db\ActiveRecord;
 
 class CompanyClock extends ActiveRecord
 {
+    const DEFAULT_WORKING_TIME = 1,
+          OVERTIME = 0;
     /**
      * {@inheritdoc}
      */
