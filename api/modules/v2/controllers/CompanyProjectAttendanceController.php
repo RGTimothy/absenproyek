@@ -375,11 +375,7 @@ class CompanyProjectAttendanceController extends ActiveController
 										ELSE DATE(created_at) = "'.$yesterdayDate.'"
 									END)
 									'
-								)
-								/*->andWhere([
-									'user_id' => $userID,
-									'DATE(created_at)' => $currentDate
-								])*/;
+								);
 
 		if (!is_null($companyProjectID)) {
 			$model = $model->andWhere(['company_project_id' => $companyProjectID]);
@@ -462,6 +458,7 @@ class CompanyProjectAttendanceController extends ActiveController
 		foreach ($companyClocks as $item) {
 			$companyClockIn = strtotime($item['clock_in']);
 			$companyClockOut = strtotime($item['clock_out']);
+			$breakHour = 0;
 
 			// dd(date('Y-m-d H:i:s', $currentTime));
 
@@ -484,6 +481,7 @@ class CompanyProjectAttendanceController extends ActiveController
 				} else {
 					//if user comes after company's clock out, then exclude from calculation
 					if ($attendance['clockIn'] > $companyClockOut) {
+						$workingTimeCounter++;
 						continue;
 					} else {//if user comes late, then start using user's clock in
 						$start = $attendance['clockIn'];
@@ -494,6 +492,7 @@ class CompanyProjectAttendanceController extends ActiveController
 				if ($attendance['clockOut'] <= $companyClockOut) {
 					//if user's clock out time is earlier than company's clock in time, exclude from calculation
 					if ($attendance['clockOut'] < $companyClockIn) {
+						$workingTimeCounter++;
 						continue;
 					} else {
 						$stop = $attendance['clockOut'];	
@@ -516,8 +515,6 @@ class CompanyProjectAttendanceController extends ActiveController
 					${'allowance' . $workingTimeCounter} = $item['allowance'];
 				}
 
-				$workingTimeCounter++;
-
 				/*array_push($log, [
 					'totalWorkingMinutes' => $totalWorkingMinutes,
 					'workingTimeCounter' => $workingTimeCounter,
@@ -529,12 +526,20 @@ class CompanyProjectAttendanceController extends ActiveController
 					'stop' => date('Y-m-d H:i:s', $stop),
 					'clock' => $item->name,
 					'totalMainWorkingTime' => $totalMainWorkingTime,
+					'totalOvertime1' => $totalOvertime1,
+					'totalOvertime2' => $totalOvertime2,
+					'totalOvertime3' => $totalOvertime3,
 					'breakHour' => $item['break_hour']
 				]);*/
+
+				$workingTimeCounter++;
 			}
 
 			//total working time minus break hour
-			$breakHour = ($item['break_hour'] * 60);
+			if (!is_null($item['break_hour'])) {
+				$breakHour = ($item['break_hour'] * 60);
+			}
+
 			$totalMainWorkingTime -= $breakHour;
 		}
 // dd($log);
@@ -555,20 +560,20 @@ class CompanyProjectAttendanceController extends ActiveController
 		$totalOvertime1 = round($totalOvertime1 / 60);
 		$totalOvertime2 = round($totalOvertime2 / 60);
 		$totalOvertime3 = round($totalOvertime3 / 60);
-		$allowance1 = $totalOvertime1 > 0 ? $allowance1 : 0;
-		$allowance2 = $totalOvertime2 > 0 ? $allowance2 : 0;
-		$allowance3 = $totalOvertime3 > 0 ? $allowance3 : 0;
+		// $allowance1 = $totalOvertime1 > 0 ? $allowance1 : 0;
+		// $allowance2 = $totalOvertime2 > 0 ? $allowance2 : 0;
+		// $allowance3 = $totalOvertime3 > 0 ? $allowance3 : 0;
 		$totalAllowance = $allowance1 + $allowance2 + $allowance3;
 
 		$response = [
 			'userID' => $userID,
 			'companyRoleID' => $companyRoleID,
 			'projectNames' => $concatenatedProjectNames,
-			'totalWorkingTime' => ($totalMainWorkingTime < 0) ? 0 : $totalMainWorkingTime,
-			'totalOvertime1' => ($totalOvertime1 < 0) ? 0 : $totalOvertime1,
-			'totalOvertime2' => ($totalOvertime2 < 0) ? 0 : $totalOvertime2,
-			'totalOvertime3' => ($totalOvertime3 < 0) ? 0 : $totalOvertime3,
-			'totalAllowance' => ($totalAllowance < 0) ? 0 : $totalAllowance
+			'totalWorkingTime' => $totalMainWorkingTime,
+			'totalOvertime1' => $totalOvertime1,
+			'totalOvertime2' => $totalOvertime2,
+			'totalOvertime3' => $totalOvertime3,
+			'totalAllowance' => $totalAllowance
 		];
 
 		return $response;
