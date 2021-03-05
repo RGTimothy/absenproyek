@@ -31,7 +31,7 @@ $this->registerJs($search);
         <?=  $this->render('_search', ['model' => $searchModel]); ?>
     </div>
     <?php 
-    $companyClockTime = CompanyClock::find()->all();
+    /*$companyClockTime = CompanyClock::find()->all();
 
     $mainWorkingTimeDuration = 0;
     $mainWorkingTimeStart = 0;
@@ -47,7 +47,7 @@ $this->registerJs($search);
                 $mainWorkingTimeDuration -= $item->break_hour;
             }
         }
-    }
+    }*/
 
     $gridColumn = [
         ['class' => 'yii\grid\SerialColumn'],
@@ -97,8 +97,8 @@ $this->registerJs($search);
                 'filterInputOptions' => ['placeholder' => 'Grade', 'id' => 'grid-company-project-attendance-summary-search-company_role_id']
             ],
         'projects:ntext',
-        // 'work_duration',
-        [
+        'work_duration',
+        /*[
             'attribute' => 'work_duration',
             'value' => function ($model) use ($currentTime, $mainWorkingTimeDuration) {
                 if ($model->work_duration == 0) {
@@ -109,7 +109,7 @@ $this->registerJs($search);
 
                 return $model->work_duration;
             }
-        ],
+        ],*/
         'overtime_duration_1',
         'overtime_duration_2',
         'overtime_duration_3',
