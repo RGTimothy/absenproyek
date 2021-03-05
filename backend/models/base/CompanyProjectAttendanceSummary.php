@@ -106,6 +106,11 @@ class CompanyProjectAttendanceSummary extends \yii\db\ActiveRecord
     {
         return $this->hasOne(\backend\models\CompanyRole::className(), ['id' => 'company_role_id']);
     }
+
+    public function getCompanyProject()
+    {
+        return $this->hasOne(\backend\models\CompanyProject::className(), ['id' => 'company_project_id']);
+    }
         
     /**
      * @return \yii\db\ActiveQuery

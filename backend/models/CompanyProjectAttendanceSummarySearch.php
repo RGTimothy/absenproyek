@@ -18,7 +18,7 @@ use backend\models\CompanyProjectAttendanceSummary;
     public function rules()
     {
         return [
-            [['id', 'user_id', 'company_role_id', 'work_duration', 'overtime_duration_1', 'overtime_duration_2', 'overtime_duration_3', 'total_allowance', 'created_by', 'updated_by', 'deleted_by'], 'integer'],
+            [['id', 'user_id', 'company_role_id', 'company_project_id', 'work_duration', 'overtime_duration_1', 'overtime_duration_2', 'overtime_duration_3', 'total_allowance', 'created_by', 'updated_by', 'deleted_by'], 'integer'],
             [['projects', 'created_at', 'updated_at', 'deleted_at'], 'safe'],
         ];
     }
@@ -59,6 +59,7 @@ use backend\models\CompanyProjectAttendanceSummary;
             'id' => $this->id,
             'user_id' => $this->user_id,
             'company_role_id' => $this->company_role_id,
+            'company_project_id' => $this->company_project_id,
             'work_duration' => $this->work_duration,
             'overtime_duration_1' => $this->overtime_duration_1,
             'overtime_duration_2' => $this->overtime_duration_2,
@@ -72,7 +73,7 @@ use backend\models\CompanyProjectAttendanceSummary;
             'deleted_by' => $this->deleted_by,
         ]);
 
-        $query->andFilterWhere(['like', 'projects', $this->projects]);
+        // $query->andFilterWhere(['like', 'projects', $this->projects]);
         // $query->andFilterWhere(['like', 'created_at', $this->created_at]);
 
         //change query builder's logic because the filter now using date range picker

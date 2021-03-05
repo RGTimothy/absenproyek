@@ -79,7 +79,7 @@ $this->registerJs($search);
                     'pluginOptions' => ['allowClear' => true],
                 ],
                 'filterInputOptions' => ['placeholder' => 'Karyawan', 'id' => 'grid-company-project-attendance-summary-search-user_id']
-            ],
+        ],
         [
                 'attribute' => 'company_role_id',
                 'label' => Yii::t('app', 'Grade'),
@@ -95,8 +95,24 @@ $this->registerJs($search);
                     'pluginOptions' => ['allowClear' => true],
                 ],
                 'filterInputOptions' => ['placeholder' => 'Grade', 'id' => 'grid-company-project-attendance-summary-search-company_role_id']
+        ],
+        // 'projects:ntext',
+        [
+            'attribute' => 'company_project_id',
+                // 'label' => Yii::t('app', 'Company Project'),
+            'value' => function($model){
+                if ($model->companyProject)
+                    {return $model->companyProject->name;}
+                else
+                    {return NULL;}
+            },
+            'filterType' => GridView::FILTER_SELECT2,
+            'filter' => \yii\helpers\ArrayHelper::map(\backend\models\CompanyProject::find()->asArray()->all(), 'id', 'name'),
+            'filterWidgetOptions' => [
+                'pluginOptions' => ['allowClear' => true],
             ],
-        'projects:ntext',
+            'filterInputOptions' => ['placeholder' => 'Proyek', 'id' => 'grid-company-project-attendance-search-company_project_id']
+        ],
         'work_duration',
         /*[
             'attribute' => 'work_duration',
