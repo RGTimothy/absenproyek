@@ -375,11 +375,7 @@ class CompanyProjectAttendanceController extends ActiveController
 										ELSE DATE(created_at) = "'.$yesterdayDate.'"
 									END)
 									'
-								)
-								/*->andWhere([
-									'user_id' => $userID,
-									'DATE(created_at)' => $currentDate
-								])*/;
+								);
 
 		if (!is_null($companyProjectID)) {
 			$model = $model->andWhere(['company_project_id' => $companyProjectID]);
@@ -455,13 +451,20 @@ class CompanyProjectAttendanceController extends ActiveController
 		$allowance1 = 0;
 		$allowance2 = 0;
 		$allowance3 = 0;
+		$breakMainWorkingTime = 0;
+		$breakOvertime1 = 0;
+		$breakOvertime2 = 0;
+		$breakOvertime3 = 0;
 		$workingTimeCounter = 0;
-		$currentTime = time();
+		$lastCompanyClockOut = 0;
+		$calculatedAttendance = array();
 		//loop company clocks to check user's attendance history
-		// $log = array();
 		foreach ($companyClocks as $item) {
+			$totalWorkingInMinutes = 0;
 			$companyClockIn = strtotime($item['clock_in']);
 			$companyClockOut = strtotime($item['clock_out']);
+			$attendanceCounter = 0;
+			$isPaired = 1;
 
 			// dd(date('Y-m-d H:i:s', $currentTime));
 
@@ -478,12 +481,19 @@ class CompanyProjectAttendanceController extends ActiveController
 				$start = 0;
 				$stop = 0;
 
+				//if attendance has no clock out
+				if (!isset($attendance['clockOut'])) {
+					$isPaired = 0;
+					$attendance['clockOut'] = $attendance['clockIn'];
+				}
+
 				//if user comes early, then start using company's clock in
 				if ($attendance['clockIn'] <= $companyClockIn) {
 					$start = $companyClockIn;
 				} else {
 					//if user comes after company's clock out, then exclude from calculation
 					if ($attendance['clockIn'] > $companyClockOut) {
+						// $workingTimeCounter++;
 						continue;
 					} else {//if user comes late, then start using user's clock in
 						$start = $attendance['clockIn'];
@@ -494,50 +504,42 @@ class CompanyProjectAttendanceController extends ActiveController
 				if ($attendance['clockOut'] <= $companyClockOut) {
 					//if user's clock out time is earlier than company's clock in time, exclude from calculation
 					if ($attendance['clockOut'] < $companyClockIn) {
+						// $workingTimeCounter++;
 						continue;
 					} else {
-						$stop = $attendance['clockOut'];	
+						$stop = $attendance['clockOut'];
 					}
 				} else {
 					$stop = $companyClockOut;
 				}
 
-				//calculate total working time from start to stop time
-				$totalWorkingMinutes = round(abs($stop - $start) / 60);
+				//calculate total working time between start & stop time
+				$totalSeconds = $stop - $start;
+				$totalMinutes = round(abs($totalSeconds) / 60);
 
-				//if user's attendance is within main working time
-				if ($workingTimeCounter == 0) {
-					$totalMainWorkingTime += $totalWorkingMinutes;
-				} else { //if user's attendance is within overtime
-					// return date('Y-m-d H:i:s', $stop). '|' . date('Y-m-d H:i:s', $start);
-					${'totalOvertime' . $workingTimeCounter} += $totalWorkingMinutes;
+				$totalWorkingInMinutes += $totalMinutes;
 
-					//total allowance if any
-					${'allowance' . $workingTimeCounter} = $item['allowance'];
+				if (isset($attendance['clockIn'])) {
+					$attendanceCounter++;
 				}
 
-				$workingTimeCounter++;
-
-				/*array_push($log, [
-					'totalWorkingMinutes' => $totalWorkingMinutes,
-					'workingTimeCounter' => $workingTimeCounter,
-					'companyCI' => date('Y-m-d H:i:s', $companyClockIn),
-					'companyCO' => date('Y-m-d H:i:s', $companyClockOut),
-					'ci' => date('Y-m-d H:i:s', $attendance['clockIn']),
-					'co' => date('Y-m-d H:i:s', $attendance['clockOut']),
-					'start' => date('Y-m-d H:i:s', $start),
-					'stop' => date('Y-m-d H:i:s', $stop),
-					'clock' => $item->name,
-					'totalMainWorkingTime' => $totalMainWorkingTime,
-					'breakHour' => $item['break_hour']
-				]);*/
+				if ($isPaired) {
+					$attendanceCounter++;
+				}
 			}
 
-			//total working time minus break hour
-			$breakHour = ($item['break_hour'] * 60);
-			$totalMainWorkingTime -= $breakHour;
+			//final process of all attendance working times here:
+			array_push($calculatedAttendance, [
+				'companyClockID' => $item->id,
+				'companyClockName' => $item->name,
+				'totalWorkingInMinutes' => $totalWorkingInMinutes,
+				'breakTimeInHours' => is_null($item->break_hour) ? 0 : $item->break_hour,
+				'isDefault' => $item->is_default,
+				'totalAttendance' => $attendanceCounter,
+				'allowance' => $item->allowance
+			]);
 		}
-// dd($log);
+
 		$concatenatedProjectNames = '';
 		$counter = 0;
 		foreach ($projectNames as $project) {
@@ -550,25 +552,57 @@ class CompanyProjectAttendanceController extends ActiveController
 			$counter++;
 		}
 
-		//calculate
+		$totalMainWorkingTime = $calculatedAttendance[0]['totalWorkingInMinutes'] / 60;
+		$totalMainWorkingTime -= ($calculatedAttendance[0]['breakTimeInHours'] * 60);
 		$totalMainWorkingTime = round($totalMainWorkingTime / 60);
-		$totalOvertime1 = round($totalOvertime1 / 60);
-		$totalOvertime2 = round($totalOvertime2 / 60);
-		$totalOvertime3 = round($totalOvertime3 / 60);
-		$allowance1 = $totalOvertime1 > 0 ? $allowance1 : 0;
-		$allowance2 = $totalOvertime2 > 0 ? $allowance2 : 0;
-		$allowance3 = $totalOvertime3 > 0 ? $allowance3 : 0;
+
+		//calculate break time & convert to hour
+		for ($i=0; $i < count($calculatedAttendance); $i++) {
+			$totalTimeInMinutes = $calculatedAttendance[$i]['totalWorkingInMinutes'];
+			$breakTimeInHours = $calculatedAttendance[$i]['breakTimeInHours'];
+			$isDefault = $calculatedAttendance[$i]['isDefault'];
+			$totalAttendance = $calculatedAttendance[$i]['totalAttendance'];
+			$allowance = $calculatedAttendance[$i]['allowance'];
+			$isPaired = (($totalAttendance % 2) == 0) ? 1 : 0;
+
+			if ($i == 0) {
+				if ($isPaired) {
+					if ($totalAttendance > 0) {
+						$totalMainWorkingTime = $totalTimeInMinutes - ($breakTimeInHours * 60);
+						$totalMainWorkingTime = round($totalMainWorkingTime / 60);
+					} else {
+						$totalMainWorkingTime = 0;
+					}
+				} else {
+					$totalMainWorkingTime = -1;
+				}
+			} else {
+				if ($isPaired) {
+					if ($totalAttendance > 0) {
+						${'totalOvertime' . $i} = $totalTimeInMinutes - ($breakTimeInHours * 60);
+						${'totalOvertime' . $i} = round(${'totalOvertime' . $i} / 60);
+					} else {
+						${'totalOvertime' . $i} = 0;
+					}
+				} else {
+					${'totalOvertime' . $i} = -1;
+				}
+
+				${'allowance' . $i} = (${'totalOvertime' . $i} > 0) ? $allowance : 0;
+			}
+		}
+
 		$totalAllowance = $allowance1 + $allowance2 + $allowance3;
 
 		$response = [
 			'userID' => $userID,
 			'companyRoleID' => $companyRoleID,
 			'projectNames' => $concatenatedProjectNames,
-			'totalWorkingTime' => ($totalMainWorkingTime < 0) ? 0 : $totalMainWorkingTime,
-			'totalOvertime1' => ($totalOvertime1 < 0) ? 0 : $totalOvertime1,
-			'totalOvertime2' => ($totalOvertime2 < 0) ? 0 : $totalOvertime2,
-			'totalOvertime3' => ($totalOvertime3 < 0) ? 0 : $totalOvertime3,
-			'totalAllowance' => ($totalAllowance < 0) ? 0 : $totalAllowance
+			'totalWorkingTime' => $totalMainWorkingTime,
+			'totalOvertime1' => $totalOvertime1,
+			'totalOvertime2' => $totalOvertime2,
+			'totalOvertime3' => $totalOvertime3,
+			'totalAllowance' => $totalAllowance
 		];
 
 		return $response;

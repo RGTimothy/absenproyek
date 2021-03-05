@@ -49,8 +49,8 @@ use \backend\models\CompanyClock;
             'label' => Yii::t('app', 'Grade'),
         ],
         'projects:ntext',
-        // 'work_duration',
-        [
+        'work_duration',
+        /*[
             'attribute' => 'work_duration',
             'value' => function ($model) use ($currentTime, $mainWorkingTimeDuration) {
                 if ($model->work_duration == 0) {
@@ -61,7 +61,7 @@ use \backend\models\CompanyClock;
 
                 return $model->work_duration;
             }
-        ],
+        ],*/
         'overtime_duration_1',
         'overtime_duration_2',
         'overtime_duration_3',

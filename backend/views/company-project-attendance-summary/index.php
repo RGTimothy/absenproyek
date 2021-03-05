@@ -31,7 +31,7 @@ $this->registerJs($search);
         <?=  $this->render('_search', ['model' => $searchModel]); ?>
     </div>
     <?php 
-    $companyClockTime = CompanyClock::find()->all();
+    /*$companyClockTime = CompanyClock::find()->all();
 
     $mainWorkingTimeDuration = 0;
     $mainWorkingTimeStart = 0;
@@ -47,7 +47,7 @@ $this->registerJs($search);
                 $mainWorkingTimeDuration -= $item->break_hour;
             }
         }
-    }
+    }*/
 
     $gridColumn = [
         ['class' => 'yii\grid\SerialColumn'],
@@ -79,7 +79,7 @@ $this->registerJs($search);
                     'pluginOptions' => ['allowClear' => true],
                 ],
                 'filterInputOptions' => ['placeholder' => 'Karyawan', 'id' => 'grid-company-project-attendance-summary-search-user_id']
-            ],
+        ],
         [
                 'attribute' => 'company_role_id',
                 'label' => Yii::t('app', 'Grade'),
@@ -95,10 +95,26 @@ $this->registerJs($search);
                     'pluginOptions' => ['allowClear' => true],
                 ],
                 'filterInputOptions' => ['placeholder' => 'Grade', 'id' => 'grid-company-project-attendance-summary-search-company_role_id']
-            ],
-        'projects:ntext',
-        // 'work_duration',
+        ],
+        // 'projects:ntext',
         [
+            'attribute' => 'company_project_id',
+                // 'label' => Yii::t('app', 'Company Project'),
+            'value' => function($model){
+                if ($model->companyProject)
+                    {return $model->companyProject->name;}
+                else
+                    {return NULL;}
+            },
+            'filterType' => GridView::FILTER_SELECT2,
+            'filter' => \yii\helpers\ArrayHelper::map(\backend\models\CompanyProject::find()->asArray()->all(), 'id', 'name'),
+            'filterWidgetOptions' => [
+                'pluginOptions' => ['allowClear' => true],
+            ],
+            'filterInputOptions' => ['placeholder' => 'Proyek', 'id' => 'grid-company-project-attendance-search-company_project_id']
+        ],
+        'work_duration',
+        /*[
             'attribute' => 'work_duration',
             'value' => function ($model) use ($currentTime, $mainWorkingTimeDuration) {
                 if ($model->work_duration == 0) {
@@ -109,7 +125,7 @@ $this->registerJs($search);
 
                 return $model->work_duration;
             }
-        ],
+        ],*/
         'overtime_duration_1',
         'overtime_duration_2',
         'overtime_duration_3',
