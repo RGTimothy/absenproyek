@@ -24,6 +24,6 @@ class CompanyProject extends ActiveRecord
 
     public static function findByCompanyId($companyID)
     {
-        return static::find()->where(['company_id' => $companyID]);
+        return static::find()->where(['company_id' => $companyID, 'deleted_at' => null]);
     }
 }
