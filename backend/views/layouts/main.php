@@ -70,7 +70,7 @@ AppAsset::register($this);
         ]]
     ];*/
 
-    $adminMenuItems = MenuHelper::getAssignedMenu(Yii::$app->user->id, $sideMenuId);
+    $adminMenuItems = MenuHelper::getAssignedMenu(Yii::$app->user->id);
 
     //declare array to store all navbar menu
     $menuItems = array();
