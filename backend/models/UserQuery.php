@@ -12,7 +12,10 @@ class UserQuery extends \yii\db\ActiveQuery
 {
     public function init()
     {
-        $companyID = Yii::$app->user->identity->company_id;
+        $companyID = null;
+        if (isset(Yii::$app->user->identity->company_id)) {
+            $companyID = Yii::$app->user->identity->company_id;
+        }
 
         if (!is_null($companyID)) {
             $this->andOnCondition(['company_id' => $companyID]);
