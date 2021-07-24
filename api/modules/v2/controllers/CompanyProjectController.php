@@ -29,7 +29,12 @@ class CompanyProjectController extends ActiveController
 
     public function actionList() {
         $params = Yii::$app->request->post();
-        $companyProjectID = $params['companyProjectID'];
+
+        $companyProjectID = null;
+        if (isset($params['companyProjectID'])) {
+            $companyProjectID = $params['companyProjectID'];    
+        }
+        
         $companyID = Yii::$app->user->identity->company_id;
 
         $data['hasErrors'] = false;
