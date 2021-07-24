@@ -77,11 +77,13 @@ use backend\models\CompanyProjectAttendanceSummary;
         // $query->andFilterWhere(['like', 'created_at', $this->created_at]);
 
         //change query builder's logic because the filter now using date range picker
-        $rangeDate = explode(' - ', $this->created_at);
-        $startDate = $rangeDate[0];
-        $endDate = $rangeDate[1];
-        $query->andFilterWhere(['>=', 'DATE(company_project_attendance_summary.created_at)', $startDate]);
-        $query->andFilterWhere(['<=', 'DATE(company_project_attendance_summary.created_at)', $endDate]);
+        if (!is_null($this->created_at)) {
+            $rangeDate = explode(' - ', $this->created_at);
+            $startDate = $rangeDate[0];
+            $endDate = $rangeDate[1];
+            $query->andFilterWhere(['>=', 'DATE(company_project_attendance_summary.created_at)', $startDate]);
+            $query->andFilterWhere(['<=', 'DATE(company_project_attendance_summary.created_at)', $endDate]);
+        }
 
         return $dataProvider;
     }
