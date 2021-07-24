@@ -63,19 +63,19 @@ use yii\widgets\ActiveForm;
 
     <?= $form->errorSummary($model); ?>
 
-    <? //$form->field($model, 'id', ['template' => '{input}'])->textInput(['style' => 'display:none']); ?>
+    <?php //$form->field($model, 'id', ['template' => '{input}'])->textInput(['style' => 'display:none']); ?>
 
-    <? //$form->field($model, 'name')->textInput(['maxlength' => true, 'placeholder' => 'Name']) ?>
+    <?php //$form->field($model, 'name')->textInput(['maxlength' => true, 'placeholder' => 'Name']) ?>
 
-    <? //$form->field($model, 'code')->textInput(['maxlength' => true, 'placeholder' => 'Code']) ?>
+    <?php //$form->field($model, 'code')->textInput(['maxlength' => true, 'placeholder' => 'Code']) ?>
 
-    <? //$form->field($model, 'image_filename')->textInput(['maxlength' => true, 'placeholder' => 'Image Filename']) ?>
+    <?php //$form->field($model, 'image_filename')->textInput(['maxlength' => true, 'placeholder' => 'Image Filename']) ?>
 
-    <? //$form->field($model, 'description')->textarea(['rows' => 6]) ?>
+    <?php //$form->field($model, 'description')->textarea(['rows' => 6]) ?>
 
     <?= $form->field($model, 'hour_rounding')->textInput(['placeholder' => 'Hour Rounding']) ?>
 
-    <? //$form->field($model, 'status')->textInput(['maxlength' => true, 'placeholder' => 'Status']) ?>
+    <?php //$form->field($model, 'status')->textInput(['maxlength' => true, 'placeholder' => 'Status']) ?>
 
     <?php
 
