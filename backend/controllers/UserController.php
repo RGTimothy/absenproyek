@@ -91,12 +91,25 @@ class UserController extends Controller
 
         $model->company_id = Yii::$app->user->identity->company_id;
 
-        if ($model->email == '') {
-            $model->email = null;
-        }
+        $params = Yii::$app->request->post();
 
-        if ($model->loadAll(Yii::$app->request->post()) && $model->saveAll()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        $params = Yii::$app->request->post();
+        if ($model->loadAll($params)) {
+            if ($model->email == '') {
+                $model->email = null;
+            }
+
+            if ($model->validate() && $model->save()) {
+                return $this->redirect(['view', 'id' => $model->id]);   
+            } else {
+                $errors = $model->getErrors();
+                $listErrors = [];
+                foreach($errors as $key => $value) {
+                    array_push($listErrors, $value);
+                }
+                Yii::$app->session->setFlash('error', $listErrors[0]);
+                return $this->redirect(['update', 'id' => $model->id]);
+            }
         } else {
             return $this->render('update', [
                 'model' => $model,
