@@ -91,6 +91,10 @@ class UserController extends Controller
 
         $model->company_id = Yii::$app->user->identity->company_id;
 
+        if ($model->email == '') {
+            $model->email = null;
+        }
+
         if ($model->loadAll(Yii::$app->request->post()) && $model->saveAll()) {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
