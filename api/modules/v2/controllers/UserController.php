@@ -35,7 +35,7 @@ class UserController extends ActiveController
         $params = Yii::$app->request->post();
         $model->username = $params['username'];
         $model->phone = $params['phone'];
-        $model->email = $params['email'];
+        $model->email = isset($params['email']) ? $params['email'] : null;
         $model->code = $params['code'];
         $model->password = $params['password'];
         $companyRole = CompanyRole::find()->where(['is_default' => true])->one();
