@@ -622,7 +622,9 @@ class CompanyProjectAttendanceController extends ActiveController
 		$object = $bucket->upload($file, [
 			'name' => $objectName
 		]);
-		printf('Uploaded %s to gs://%s/%s' . PHP_EOL, basename($source), $bucketName, $objectName);
+
+		// printf('Uploaded %s to gs://%s/%s' . PHP_EOL, basename($source), $bucketName, $objectName);
+		return true;
 	}
 
 	private function uploadImage($decodedImage, $uploadPath, $fileName, $fileExtension) {
