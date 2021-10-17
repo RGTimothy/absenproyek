@@ -2,4 +2,8 @@
 Yii::setAlias('@backend', realpath(dirname(__FILE__).'/../../backend'));
 return [
     'adminEmail' => 'admin@example.com',
+    'cloud' => [
+        'provider' => 'gcp',
+        'bucket' => 'bucket-hadirbos-attendance-images'
+    ]
 ];

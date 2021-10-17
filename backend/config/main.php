@@ -117,12 +117,12 @@ return [
                 [
                    'pattern' => 'company/<id:\d+>/<slug:[-a-zA-Z 0-9]+>',
                    'route' => 'company/update',
-                   'defaults' => ['id' => Yii::$app->user->identity->company_id],
+                   // 'defaults' => ['id' => Yii::$app->user->identity->company_id],
                 ],
                 [
                    'pattern' => 'company/<id:\d+>/<slug:[-a-zA-Z 0-9]+>',
                    'route' => 'company/view',
-                   'defaults' => ['id' => Yii::$app->user->identity->company_id],
+                   // 'defaults' => ['id' => Yii::$app->user->identity->company_id],
                 ],
             ],
         ],

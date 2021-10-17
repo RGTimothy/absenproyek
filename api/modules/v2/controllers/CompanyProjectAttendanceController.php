@@ -9,6 +9,7 @@ use yii\filters\auth\HttpHeaderAuth;
 use api\modules\v2\models\CompanyProjectAttendance;
 use api\modules\v2\models\CompanyProjectAttendanceSummary;
 use api\modules\v2\models\CompanyClock;
+use Google\Cloud\Storage\StorageClient;
 
 class CompanyProjectAttendanceController extends ActiveController
 {
@@ -172,10 +173,7 @@ class CompanyProjectAttendanceController extends ActiveController
 			if ($model->save()) {
 				//upload image file
 				$uploadPath = Yii::getAlias('@backend') . '/web/uploads/' . self::IMAGE_FOLDER;
-				if (!file_exists($uploadPath)) {
-				    mkdir($uploadPath, 0755, true);
-				}
-				file_put_contents($uploadPath . '/' . $filename . '.' . $fileExtension, $decodedImage);
+				self::uploadImage($decodedImage, $uploadPath, $filename, $fileExtension);
 
 				$response['hasErrors'] = $model->hasErrors();
 				$response['message'] = 'Clock in success!';
@@ -287,10 +285,7 @@ class CompanyProjectAttendanceController extends ActiveController
 					if ($model->save()) {
 						//upload image file
 						$uploadPath = Yii::getAlias('@backend') . '/web/uploads/' . self::IMAGE_FOLDER;
-						if (!file_exists($uploadPath)) {
-						    mkdir($uploadPath, 0755, true);
-						}
-						file_put_contents($uploadPath . '/' . $filename . '.' . $fileExtension, $decodedImage);
+						self::uploadImage($decodedImage, $uploadPath, $filename, $fileExtension);
 
 						$response['hasErrors'] = $model->hasErrors();
 						$response['message'] = 'Clock out success!';
@@ -606,5 +601,45 @@ class CompanyProjectAttendanceController extends ActiveController
 		];
 
 		return $response;
+	}
+
+	/**
+	 * Upload a file.
+	 *
+	 * @param string $bucketName The name of your Cloud Storage bucket.
+	 * @param string $objectName The name of your Cloud Storage object.
+	 * @param string $source The path to the file to upload.
+	 */
+	private function uploadObject($bucketName, $objectName, $source)
+	{
+	    // $bucketName = 'my-bucket';
+	    // $objectName = 'my-object';
+	    // $source = '/path/to/your/file';
+
+		$storage = new StorageClient();
+		$file = fopen($source, 'r');
+		$bucket = $storage->bucket($bucketName);
+		$object = $bucket->upload($file, [
+			'name' => $objectName
+		]);
+		printf('Uploaded %s to gs://%s/%s' . PHP_EOL, basename($source), $bucketName, $objectName);
+	}
+
+	private function uploadImage($decodedImage, $uploadPath, $fileName, $fileExtension) {
+		if (!file_exists($uploadPath)) {
+			mkdir($uploadPath, 0755, true);
+		}
+
+		//save to instance server for temporary
+		file_put_contents($uploadPath . '/' . $fileName . '.' . $fileExtension, $decodedImage);
+
+		//upload to cloud storage
+		$bucketName = Yii::$app->params['cloud']['bucket'];
+		self::uploadObject($bucketName, $fileName . '.' . $fileExtension, $uploadPath . '/' . $fileName . '.' . $fileExtension);
+
+		//delete temporary file from instance server
+		unlink($uploadPath . '/' . $fileName . '.' . $fileExtension);
+
+		return true;
 	}
 }
