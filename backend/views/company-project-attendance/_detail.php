@@ -45,8 +45,17 @@ use kartik\grid\GridView;
         ],
         [
             'attribute'=>'image',
-            'format' => 'raw',
-            'value' => '<img src="data:image/jpeg;base64,' . base64_encode($model->image) . '">',
+            // 'format' => 'raw',
+            // 'value' => '<img src="data:image/jpeg;base64,' . base64_encode($model->image) . '">',
+            'format' => 'image',
+            'value' => function($model) {
+                if (!is_null($model->image_filename) && !is_null($model->image_filetype)) {
+                    $bucketName = Yii::$app->params['cloud']['bucket'];
+                    $imageUrl = 'https://storage.googleapis.com/' . $bucketName . '/' . $model->image_filename . '.' . $model->image_filetype;
+
+                    return $imageUrl;
+                }
+            }
         ],
         // 'remark:ntext',
         // 'image',

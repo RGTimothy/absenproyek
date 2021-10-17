@@ -67,8 +67,17 @@ $time = $model->created_at;
         // 'image',
         [
             'attribute'=>'image',
-            'format' => 'raw',
+            'format' => 'image',
+            // 'format' => 'raw',
             // 'value' => 'data:image/jpeg;base64,' . base64_encode($model->image),
+            'value' => function ($model) {
+                if (!is_null($model->image_filename) && !is_null($model->image_filetype)) {
+                    $bucketName = Yii::$app->params['cloud']['bucket'];
+                    $imageUrl = 'https://storage.googleapis.com/' . $bucketName . '/' . $model->image_filename . '.' . $model->image_filetype;
+
+                    return $imageUrl;
+                }
+            }
         ],
         // 'image_filename',
         // 'image_filetype',
