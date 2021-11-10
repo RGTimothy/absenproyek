@@ -152,9 +152,11 @@ class CompanyProjectAttendanceController extends Controller
     protected function findModel($id)
     {
         if (($model = CompanyProjectAttendance::findOne($id)) !== null) {
-            $image = 'data:image/jpeg;base64,' . base64_encode($model->image);
+            //note 20211110 by Ronal: code below will not be used since the image now stored in cloud, not in database
+
+            /*$image = 'data:image/jpeg;base64,' . base64_encode($model->image);
             $image = Html::img($image, ['alt' => '', 'width' => '100%', 'height' => '100%', 'style' => 'height: auto']);
-            $model->image = $image;
+            $model->image = $image;*/
 
             return $model;
         } else {

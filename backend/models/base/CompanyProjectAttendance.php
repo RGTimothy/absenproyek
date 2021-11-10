@@ -69,7 +69,7 @@ class CompanyProjectAttendance extends \yii\db\ActiveRecord
         return [
             [['user_id', 'company_project_id', 'created_by', 'updated_by', 'deleted_by'], 'integer'],
             [['latitude', 'longitude'], 'number'],
-            [['remark', 'image'], 'string'],
+            [['remark'], 'string'],
             [['created_at', 'updated_at', 'deleted_at'], 'safe'],
             [['status'], 'string', 'max' => 20],
             [['image_filename'], 'string', 'max' => 100],
@@ -98,7 +98,6 @@ class CompanyProjectAttendance extends \yii\db\ActiveRecord
             'longitude' => Yii::t('app', 'Longitude'),
             'status' => Yii::t('app', 'Status'),
             'remark' => Yii::t('app', 'Catatan'),
-            'image' => Yii::t('app', 'Foto'),
             'image_filename' => Yii::t('app', 'Image Filename'),
             'image_filetype' => Yii::t('app', 'Image Filetype'),
             'created_at' => Yii::t('app', 'Waktu'),

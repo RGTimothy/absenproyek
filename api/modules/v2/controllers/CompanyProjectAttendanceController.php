@@ -165,7 +165,7 @@ class CompanyProjectAttendanceController extends ActiveController
             //generate image filename
             $filename = 'attendance' . '_' . $userID . '_' . time();
 
-            $model->image = $decodedImage;
+            // $model->image = $decodedImage;
             $model->image_filename = $filename;
             $model->image_filetype = $fileExtension;
 			$model->status = self::CLOCK_IN;
@@ -277,7 +277,7 @@ class CompanyProjectAttendanceController extends ActiveController
 		            //generate image filename
 		            $filename = 'attendance' . '_' . $userID . '_' . time();
 
-		            $model->image = $decodedImage;
+		            // $model->image = $decodedImage;
 		            $model->image_filename = $filename;
 		            $model->image_filetype = $fileExtension;
 					$model->status = self::CLOCK_OUT;

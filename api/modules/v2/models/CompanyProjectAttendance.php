@@ -24,14 +24,15 @@ class CompanyProjectAttendance extends ActiveRecord
             
             ['longitude', 'required'],
 
-            [
+            //note by Ronal (20211110): this column has been dropped since image stored in cloud storage instead of database
+            /*[
                 'image',
                 'file',
                 'extensions' => 'jpg, gif, png, bmp, jpeg',
                 // 'maxSize' => 1024 * 1024 * 10, // 10MB
                 // 'tooBig' => 'The file was larger than 10MB. Please upload a smaller file.',
             ],
-            ['image', 'required'],
+            ['image', 'required'],*/
         ];
     }
 

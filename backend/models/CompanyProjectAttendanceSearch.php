@@ -20,7 +20,7 @@ use backend\models\CompanyProjectAttendance;
         return [
             [['id', 'user_id', 'company_project_id', 'created_by', 'updated_by', 'deleted_by'], 'integer'],
             [['latitude', 'longitude'], 'number'],
-            [['status', 'remark', 'image', 'image_filename', 'image_filetype', 'created_at', 'updated_at', 'deleted_at'], 'safe'],
+            [['status', 'remark', 'image_filename', 'image_filetype', 'created_at', 'updated_at', 'deleted_at'], 'safe'],
         ];
     }
 
@@ -72,7 +72,6 @@ use backend\models\CompanyProjectAttendance;
 
         $query->andFilterWhere(['like', 'status', $this->status])
             ->andFilterWhere(['like', 'remark', $this->remark])
-            ->andFilterWhere(['like', 'image', $this->image])
             ->andFilterWhere(['like', 'image_filename', $this->image_filename])
             ->andFilterWhere(['like', 'image_filetype', $this->image_filetype]);
 
