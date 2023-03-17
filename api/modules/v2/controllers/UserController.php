@@ -42,30 +42,47 @@ class UserController extends ActiveController
 
         $model->company_role_id = $companyRole->id;
 
-        if ($model->signup()) {
-            // $response['isSuccess'] = 201;
-            $response['hasErrors'] = $model->hasErrors();
-            $response['message'] = 'You are now a member!';
-            // $response['user'] = User::findByUsername($model->username);
-        }
-        else {
-            // $model->validate();
-            $errors = $model->getErrors();
-            $response['hasErrors'] = $model->hasErrors();
+        $model->validateTotalUser($params['code']);
 
-            $errorList = array();
-            foreach ($errors as $key => $value) {
-                array_push($errorList, [
-                    'errorField' => $key,
-                    'errorMessage' => $value[0]
-                ]);
+        $response = [];
+
+        if ($model->hasErrors()) {
+            $response = $this->handleErrors($model);
+        } else {
+            if ($model->signup()) {
+                // $response['isSuccess'] = 201;
+                $response['hasErrors'] = $model->hasErrors();
+                $response['message'] = 'You are now a member!';
+                // $response['user'] = User::findByUsername($model->username);
+            } else {
+                $response = $this->handleErrors($model);
             }
-
-            $response['message'] = $errorList[0]['errorMessage'];
-
-            // $response['errors'] = $errorList;
-            // return $model;
         }
+
+        return $response;
+    }
+
+    private function handleErrors($model) {
+        $response = [];
+
+        // $model->validate();
+        $errors = $model->getErrors();
+        $response['hasErrors'] = $model->hasErrors();
+
+        $errorList = array();
+        foreach ($errors as $key => $value) {
+            array_push($errorList, [
+                'errorField' => $key,
+                'errorMessage' => $value[0]
+            ]);
+        }
+
+        if (count($errorList) > 0) {
+            $response['message'] = $errorList[0]['errorMessage'];
+        }
+        
+        // $response['errors'] = $errorList;
+        // return $model;
 
         return $response;
     }

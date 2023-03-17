@@ -36,9 +36,14 @@ class UserController extends Controller
         $searchModel = new UserSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
+        $totalActiveUsers = $dataProvider->getTotalCount();
+        $limitMaxUsers = Yii::$app->user->identity->company->companyLimitation->max_user;
+
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'totalActiveUsers' => $totalActiveUsers,
+            'limitMaxUsers' => $limitMaxUsers,
         ]);
     }
 

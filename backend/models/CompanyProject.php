@@ -46,4 +46,19 @@ class CompanyProject extends BaseCompanyProject
             }    
         }
     }
+
+    public function validateTotalProject() {
+        $companyLimitation = Yii::$app->user->identity->companyLimitation;
+
+        $limitMaxProjects = $companyLimitation->max_project;
+        $totalActiveProjects = CompanyProject::find()->count();
+
+        if ($totalActiveProjects >= $limitMaxProjects) {
+            Yii::$app->session->setFlash('error', 'Total proyek sudah mencapai limit ('. $limitMaxProjects .' proyek). Anda bisa menghapus proyek yang ada saat ini atau hubungi tim Hadirbos untuk melakukan peningkatan limit.');
+
+            return false;
+        }
+
+        return true;
+    }
 }

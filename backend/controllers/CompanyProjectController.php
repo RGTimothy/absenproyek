@@ -36,9 +36,14 @@ class CompanyProjectController extends Controller
         $searchModel = new CompanyProjectSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
+        $totalActiveProjects = $dataProvider->getTotalCount();
+        $limitMaxProjects = Yii::$app->user->identity->company->companyLimitation->max_project;
+
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'totalActiveProjects' => $totalActiveProjects,
+            'limitMaxProjects' => $limitMaxProjects,
         ]);
     }
 
@@ -70,13 +75,20 @@ class CompanyProjectController extends Controller
 
         $model->company_id = Yii::$app->user->identity->company_id;
 
-        if ($model->loadAll(Yii::$app->request->post()) && $model->validate()) {
+        $searchModel = new CompanyProjectSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $totalActiveProjects = $dataProvider->getTotalCount();
+        $limitMaxProjects = Yii::$app->user->identity->company->companyLimitation->max_project;
+
+        if ($model->loadAll(Yii::$app->request->post()) && ($model->validate() && $model->validateTotalProject())) {
             if ($model->saveAll()) {
-                return $this->redirect(['view', 'id' => $model->id]);    
+                return $this->redirect(['view', 'id' => $model->id]);
             }
         } else {
             return $this->render('create', [
                 'model' => $model,
+                'totalActiveProjects' => $totalActiveProjects,
+                'limitMaxProjects' => $limitMaxProjects,
             ]);
         }
     }

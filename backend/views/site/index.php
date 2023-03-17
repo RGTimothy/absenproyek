@@ -16,6 +16,34 @@ $this->title = Yii::$app->name;
     </div>
 
     <div class="body-content">
+        <hr>
+        <div class="row">
+            <p class="lead" style="text-align: center;">
+                <?php 
+                    $introText = 'Anda terdaftar sebagai admin pada perusahaan dengan detail seperti berikut: ';
+                    echo $introText;
+                ?>
+            </p>
+        </div>
+
+        <table class="table table-bordered">
+            <tr>
+                <td><p class="lead">Nama Perusahaan</p></td>
+                <td><p class="lead"><?php echo Yii::$app->user->identity->company->name; ?></p></td>
+            </tr>
+            <tr>
+                <td><p class="lead">Kode Perusahaan</p></td>
+                <td><p class="lead"><?php echo Yii::$app->user->identity->company->code; ?></p></td>
+            </tr>
+            <tr>
+                <td><p class="lead">Limit Proyek</p></td>
+                <td><p class="lead"><?php echo Yii::$app->user->identity->company->companyLimitation->max_project; ?></p></td>
+            </tr>
+            <tr>
+                <td><p class="lead">Limit Karyawan</p></td>
+                <td><p class="lead"><?php echo Yii::$app->user->identity->company->companyLimitation->max_user; ?></p></td>
+            </tr>
+        </table>
 
         <!-- <div class="row">
             <div class="col-lg-4">

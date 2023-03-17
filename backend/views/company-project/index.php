@@ -17,12 +17,23 @@ $search = "$('.search-button').click(function(){
 $this->registerJs($search);
 ?>
 <div class="company-project-index">
-
+    <?php 
+        $isLimitProjectReached = ($totalActiveProjects >= $limitMaxProjects) ? 1 : 0;
+        if ($isLimitProjectReached) {
+            Yii::$app->session->setFlash('error', 'Total proyek sudah mencapai limit ('. $limitMaxProjects .' proyek). Anda bisa menghapus proyek yang ada saat ini atau hubungi tim Hadirbos untuk melakukan peningkatan limit.');
+        }
+    ?>
     <h1><?= Html::encode($this->title) ?></h1>
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-        <?= Html::a(Yii::t('app', 'Tambah ' . $this->title), ['create'], ['class' => 'btn btn-success']) ?>
+        <?php 
+            if ($isLimitProjectReached) {
+                echo Html::a(Yii::t('app', 'Tambah ' . $this->title), ['#'], ['class' => 'btn btn-success', 'disabled' => 'disabled']);
+            } else {
+                echo Html::a(Yii::t('app', 'Tambah ' . $this->title), ['create'], ['class' => 'btn btn-success']);
+            }
+        ?>
         <?php //Html::a(Yii::t('app', 'Advance Search'), '#', ['class' => 'btn btn-info search-button']) ?>
     </p>
     <div class="search-form" style="display:none">

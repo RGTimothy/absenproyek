@@ -6,6 +6,8 @@ use Yii;
 // use yii\base\Model;
 use yii\db\ActiveRecord;
 use api\modules\v2\models\User;
+use api\modules\v2\models\CompanyLimitation;
+use api\modules\v2\models\Company;
 
 /**
  * This is the model class for table "user".
@@ -89,6 +91,21 @@ class Register extends ActiveRecord
            $this->addError($attribute, 'Username tidak boleh ada spasi.');
         } else {
             return $value;
+        }
+    }
+
+    public function validateTotalUser($companyCode) {
+        $company = Company::find()->where(['company.code' => $companyCode])->one();
+        if (is_null($company)) {
+            $this->addError('*', 'Kode perusahaan tidak ditemukan. Hubungi tim kami untuk informasi lebih lanjut.');
+        } else {
+            $companyID = $company->id;
+            $totalActiveUsers = User::find()->where(['user.company_id' => $companyID, 'user.deleted_by' => 0])->count();
+            $limitMaxUsers = $company->companyLimitation->max_user;
+
+            if ($totalActiveUsers >= $limitMaxUsers) {
+                $this->addError('*', 'Jumlah karyawan sudah mencapai batas limit. Hubungi admin perusahaan anda untuk meningkatkan limit.');
+            }
         }
     }
 

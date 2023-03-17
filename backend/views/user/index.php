@@ -18,6 +18,13 @@ $this->registerJs($search);
 ?>
 <div class="user-index">
 
+    <?php 
+        $isLimitUserReached = ($totalActiveUsers >= $limitMaxUsers) ? 1 : 0;
+        if ($isLimitUserReached) {
+            Yii::$app->session->setFlash('error', 'Total karyawan sudah mencapai limit ('. $limitMaxUsers .' orang). Anda bisa menghapus karyawan yang ada saat ini atau hubungi tim Hadirbos untuk melakukan peningkatan limit.');
+        }
+    ?>
+
     <h1><?= Html::encode($this->title) ?></h1>
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
@@ -86,7 +93,7 @@ $this->registerJs($search);
         // 'verification_token',
         [
             'class' => 'yii\grid\ActionColumn', 
-            'template' => '{view} {update}',
+            'template' => '{view} {update} {delete}',
         ],
     ]; 
     ?>
