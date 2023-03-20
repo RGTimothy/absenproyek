@@ -101,7 +101,15 @@ class Register extends ActiveRecord
         } else {
             $companyID = $company->id;
             $totalActiveUsers = User::find()->where(['user.company_id' => $companyID, 'user.deleted_by' => 0])->count();
-            $limitMaxUsers = $company->companyLimitation->max_user;
+
+            if (isset($company->companyLimitation->max_user)) {
+                // when company has limitation
+                $limitMaxUsers = $company->companyLimitation->max_user;
+            } else {
+                // when company has no limitation yet
+                $limitMaxUsers = $totalActiveUsers * 2;
+            }
+            
 
             if ($totalActiveUsers >= $limitMaxUsers) {
                 $this->addError('*', 'Jumlah karyawan sudah mencapai batas limit. Hubungi admin perusahaan anda untuk meningkatkan limit.');

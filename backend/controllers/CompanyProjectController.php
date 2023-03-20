@@ -37,7 +37,13 @@ class CompanyProjectController extends Controller
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         $totalActiveProjects = $dataProvider->getTotalCount();
-        $limitMaxProjects = Yii::$app->user->identity->company->companyLimitation->max_project;
+
+        $limitMaxProjects = 0;
+        if (isset(Yii::$app->user->identity->company->companyLimitation->max_project)) {
+            $limitMaxProjects = Yii::$app->user->identity->company->companyLimitation->max_project;    
+        } else {
+            $limitMaxProjects = $totalActiveProjects * 2;
+        }
 
         return $this->render('index', [
             'searchModel' => $searchModel,
@@ -77,8 +83,15 @@ class CompanyProjectController extends Controller
 
         $searchModel = new CompanyProjectSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        
         $totalActiveProjects = $dataProvider->getTotalCount();
-        $limitMaxProjects = Yii::$app->user->identity->company->companyLimitation->max_project;
+
+        $limitMaxProjects = 0;
+        if (isset(Yii::$app->user->identity->company->companyLimitation->max_project)) {
+            $limitMaxProjects = Yii::$app->user->identity->company->companyLimitation->max_project;
+        } else {
+            $limitMaxProjects = $totalActiveProjects * 2;
+        }
 
         if ($model->loadAll(Yii::$app->request->post()) && ($model->validate() && $model->validateTotalProject())) {
             if ($model->saveAll()) {

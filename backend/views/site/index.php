@@ -29,19 +29,55 @@ $this->title = Yii::$app->name;
         <table class="table table-bordered">
             <tr>
                 <td><p class="lead">Nama Perusahaan</p></td>
-                <td><p class="lead"><?php echo Yii::$app->user->identity->company->name; ?></p></td>
+                <td><p class="lead">
+                    <?php 
+                        if (isset(Yii::$app->user->identity->company->name)) {
+                            echo Yii::$app->user->identity->company->name;
+                        } else {
+                            echo '-';
+                        }
+                    ?>
+                    </p>
+                </td>
             </tr>
             <tr>
                 <td><p class="lead">Kode Perusahaan</p></td>
-                <td><p class="lead"><?php echo Yii::$app->user->identity->company->code; ?></p></td>
+                <td><p class="lead">
+                    <?php 
+                        if (isset(Yii::$app->user->identity->company->code)) {
+                            echo Yii::$app->user->identity->company->code;
+                        } else {
+                            echo '-';
+                        }
+                    ?>
+                    </p>
+                </td>
             </tr>
             <tr>
                 <td><p class="lead">Limit Proyek</p></td>
-                <td><p class="lead"><?php echo Yii::$app->user->identity->company->companyLimitation->max_project; ?></p></td>
+                <td><p class="lead">
+                    <?php 
+                        if (isset(Yii::$app->user->identity->company->companyLimitation->max_project)) {
+                            echo Yii::$app->user->identity->company->companyLimitation->max_project;
+                        } else {
+                            echo '-';
+                        }
+                    ?>
+                    </p>
+                </td>
             </tr>
             <tr>
                 <td><p class="lead">Limit Karyawan</p></td>
-                <td><p class="lead"><?php echo Yii::$app->user->identity->company->companyLimitation->max_user; ?></p></td>
+                <td><p class="lead">
+                    <?php 
+                        if (isset(Yii::$app->user->identity->company->companyLimitation->max_user)) {
+                            echo Yii::$app->user->identity->company->companyLimitation->max_user;
+                        } else {
+                            echo '-';
+                        }
+                    ?>
+                    </p>
+                </td>
             </tr>
         </table>
 
