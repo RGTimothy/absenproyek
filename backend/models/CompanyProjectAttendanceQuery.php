@@ -16,7 +16,8 @@ class CompanyProjectAttendanceQuery extends \yii\db\ActiveQuery
 
         if (!is_null($companyID)) {
             $this->leftJoin('user', '`user`.`id` = `company_project_attendance`.`user_id`')
-                 ->andOnCondition(['user.company_id' => $companyID]);
+                ->onCondition(['user.deleted_at' => null])
+                ->andOnCondition(['user.company_id' => $companyID]);
         }
         
         parent::init();
